@@ -39,7 +39,8 @@ object dmFR: TdmFR
       '      ,[Beskrivning]'
       '      ,[StoredProcName]'
       '      ,[DatasetUserName]'
-      '  FROM [vis_vida].[dbo].[FastReportNames]')
+      '  FROM [vis_vida].[dbo].[FastReportNames]'
+      '  ORDER BY [DocType]')
     Left = 40
     Top = 80
     object qryFastReportsReportNo: TIntegerField
