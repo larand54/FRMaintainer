@@ -32,6 +32,7 @@ type
     qrySubreportsStoredProcName: TStringField;
     qrySubreportsDatasetUserName: TStringField;
     qrySubreportsDescription: TStringField;
+    qryFastReport: TFDQuery;
   private
     { Private declarations }
   public

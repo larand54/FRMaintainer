@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nodeSet version="1.0">
+  <view uin="0olvqm2eksh_v">
+    <property name="$defaultDiagram" value="true" />
+    <property name="$metaclass" value="Package Diagram" />
+    <property name="$name" value="default" />
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReportController.@unitclass">
+      <property name="$shortcutReference" value="true" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReportController.TCMReportController">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="10,10,221,358" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FTemplatePath" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FReport" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FSubReports" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FMedia" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FStoredProc" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FDataset" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.frxReport" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMReportController.FParams" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.Preview()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.Print()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.ReportOnFile()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.createReport(System.Integer,uReport.TCMParams)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.createSubReports(System.Integer)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.setUpFastReport()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.addParams(uReport.TCMMReport,uReport.TCMParams)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.RemoveDBObject(System.string)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.create(System.Integer,uReport.TCMParams,uReportController.TCMMediaType)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReportController.TCMReportController.RunReport(uReportController.TCMMediaType)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReportController.TCMReportController.report" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReportController.TCMReportController.FMedia">
+        <property name="sourceAnchor" value="231,54" />
+        <property name="targetAnchor" value="250,54" />
+        <property name="bendpoints" value="" />
+      </reference>
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReportController.TCMMediaType">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="250,1,105,98" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMMediaType.frPreview" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMMediaType.frFile" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReportController.TCMMediaType.frPrint" />
+    </reference>
+  </view>
+</nodeSet>

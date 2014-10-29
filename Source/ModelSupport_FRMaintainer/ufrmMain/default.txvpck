@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nodeSet version="1.0">
+  <view uin="v70mcqivcek_v">
+    <property name="$defaultDiagram" value="true" />
+    <property name="$metaclass" value="Package Diagram" />
+    <property name="$name" value="default" />
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:ufrmMain.@unitclass">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.@unitclass.frmMain" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:ufrmMain.TCMMReport">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="240,20,180,420" />
+      <property name="bounds_setted_by_user" value="True" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.params">
+        <property name="bounds" value="135,96,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.Fparams" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.Setparams(System.Classes.TStrings)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.storedProc">
+        <property name="bounds" value="55,116,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.FstoredProc" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.SetstoredProc(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.path">
+        <property name="bounds" value="55,96,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.Fpath" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.Setpath(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.name">
+        <property name="bounds" value="35,91,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.Fname" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.Setname(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.docType">
+        <property name="bounds" value="55,51,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.FdocType" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.SetdocType(System.Integer)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.description">
+        <property name="bounds" value="55,31,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.Fdescription" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.Setdescription(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:ufrmMain.TCMMReport.datasetUserName" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:ufrmMain.TCMMReport.SetdatasetUserName(System.string)" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMReport.FdatasetUserName" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:ufrmMain.TCMMMainReport">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="40,440,160,80" />
+      <property name="location_set_by_user" value="True" />
+      <property name="bounds_setted_by_user" value="True" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:ufrmMain.TCMMMainReport:ufrmMain.TCMMReport">
+        <property name="sourceAnchor" value="148,440" />
+        <property name="targetAnchor" value="240,308" />
+        <property name="bendpoints" value="" />
+      </reference>
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:ufrmMain.TCMMSubReport">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="460,440,161,84" />
+      <property name="location_set_by_user" value="True" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:ufrmMain.TCMMSubReport:ufrmMain.TCMMReport">
+        <property name="sourceAnchor" value="510,440" />
+        <property name="targetAnchor" value="420,308" />
+        <property name="bendpoints" value="" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:ufrmMain.TCMMSubReport.Field1" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:ufrmMain.TCMMSubReport.Field1">
+        <property name="sourceAnchor" value="460,480" />
+        <property name="targetAnchor" value="200,480" />
+        <property name="bendpoints" value="" />
+      </reference>
+    </reference>
+  </view>
+</nodeSet>

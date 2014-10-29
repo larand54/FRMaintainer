@@ -1,13 +1,13 @@
 object dmFR: TdmFR
   OldCreateOrder = False
   Height = 322
-  Width = 215
+  Width = 247
   object tblDBProps: TFDTable
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'dbProps'
     CatalogName = 'vis_vida'
     TableName = 'dbProps'
-    Left = 48
+    Left = 72
     Top = 24
     object tblDBPropsFastPath: TStringField
       FieldName = 'FastPath'
@@ -27,8 +27,8 @@ object dmFR: TdmFR
       'Password=woods2011'
       'DriverID=MSSQL')
     Connected = True
-    Left = 144
-    Top = 32
+    Left = 24
+    Top = 8
   end
   object qryFastReports: TFDQuery
     Connection = FDConnection1
@@ -41,8 +41,8 @@ object dmFR: TdmFR
       '      ,[DatasetUserName]'
       '  FROM [vis_vida].[dbo].[FastReportNames]'
       '  ORDER BY [DocType]')
-    Left = 40
-    Top = 80
+    Left = 120
+    Top = 8
     object qryFastReportsReportNo: TIntegerField
       FieldName = 'ReportNo'
       Origin = 'ReportNo'
@@ -82,9 +82,17 @@ object dmFR: TdmFR
       '      ,[StoredProcName]'
       '      ,[DatasetUserName]'
       '      ,[Description]'
-      '  FROM [vis_vida].[dbo].[FastSubReportNames]')
-    Left = 48
-    Top = 128
+      '  FROM [vis_vida].[dbo].[FastSubReportNames]'
+      'WHERE ReportNo = :REPNO')
+    Left = 176
+    Top = 24
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '105'
+      end>
     object qrySubreportsReportNo: TIntegerField
       FieldName = 'ReportNo'
       Origin = 'ReportNo'
@@ -113,13 +121,13 @@ object dmFR: TdmFR
   end
   object qryParam: TFDQuery
     Connection = FDConnection1
-    Left = 32
-    Top = 176
+    Left = 72
+    Top = 80
   end
   object qryParamSR: TFDQuery
     Connection = FDConnection1
-    Left = 32
-    Top = 232
+    Left = 120
+    Top = 64
   end
   object qryParamInfo: TFDQuery
     Connection = FDConnection1
@@ -128,8 +136,8 @@ object dmFR: TdmFR
         'select PARAMETER_NAME, DATA_TYPE from information_schema.paramet' +
         'ers'
       'where specific_name=:SP_NAME')
-    Left = 136
-    Top = 216
+    Left = 176
+    Top = 72
     ParamData = <
       item
         Name = 'SP_NAME'
@@ -149,5 +157,23 @@ object dmFR: TdmFR
       Required = True
       Size = 128
     end
+  end
+  object qryFastReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT [ReportName]'
+      '      ,[StoredProcName]'
+      '      ,[DatasetUserName]'
+      '  FROM [vis_vida].[dbo].[FastReportNames]'
+      '  WHERE ReportNo = :REPNO')
+    Left = 120
+    Top = 136
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 105
+      end>
   end
 end

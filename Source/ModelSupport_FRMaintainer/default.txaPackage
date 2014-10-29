@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nodeSet version="1.0">
+  <node uin="irb40udscgg_n">
+    <property name="$metaclass" value="Actor" />
+    <property name="$name" value="Administrator" />
+    <property name="Access" value="" />
+    <property name="password" value="" />
+    <property name="Username" value="" />
+    <link uin="ayd3865d8xe_l">
+      <property name="$metaclass" value="Association Link" />
+      <property name="$name" value="Association Link1" />
+      <property name="@stereotype" value="communicate" />
+      <participant referencedUin="design:node:::irb40udscgg_n" role="Client" />
+      <participant referencedUin="design:node:::d4zk838n4os_n:l3frll0hl7i2kp4g_n" role="Supplier" />
+    </link>
+    <link uin="51jvq660sdf_l">
+      <property name="$metaclass" value="Association Link" />
+      <property name="$name" value="Association Link2" />
+      <property name="@stereotype" value="communicate" />
+      <participant referencedUin="design:node:::irb40udscgg_n" role="Client" />
+      <participant referencedUin="design:node:::w4ztwawip9o_n:l3frll0hl7i2kp4g_n" role="Supplier" />
+    </link>
+    <link uin="qlcmmyi9dsj_l">
+      <property name="$metaclass" value="Association Link" />
+      <property name="$name" value="Association Link3" />
+      <property name="@stereotype" value="communicate" />
+      <participant referencedUin="design:node:::irb40udscgg_n" role="Client" />
+      <participant referencedUin="design:node:::d8mfwdthrqj_n:l3frll0hl7i2kp4g_n" role="Supplier" />
+    </link>
+    <link uin="t5htn54ge8k_l">
+      <property name="$metaclass" value="Association Link" />
+      <property name="$name" value="Association Link4" />
+      <property name="@stereotype" value="communicate" />
+      <participant referencedUin="design:node:::irb40udscgg_n" role="Client" />
+      <participant referencedUin="design:node:::5zd9es68v8y8eldh_n:l3frll0hl7i2kp4g_n" role="Supplier" />
+    </link>
+  </node>
+  <node uin="l3frll0hl7i2kp4g_n">
+    <property name="$metaclass" value="System Boundary" />
+    <property name="$name" value="FastReport Template maintainer Program" />
+    <node uin="d4zk838n4os_n">
+      <property name="$metaclass" value="Use Case" />
+      <property name="$name" value="Create report" />
+      <node uin="8q4uoha18bj_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Save report" />
+      </node>
+      <node uin="00dyvc60awn_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Create Stored Procedures" />
+      </node>
+      <node uin="0l29o6pxuufsv8tnr_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Determine parameters" />
+      </node>
+    </node>
+    <node uin="w4ztwawip9o_n">
+      <property name="$metaclass" value="Use Case" />
+      <property name="$name" value="Edit Report" />
+      <node uin="ofpvrjwjf71a706ie_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Load Report" />
+      </node>
+      <node uin="ry08sblkpn2pqyppn_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Save Report" />
+      </node>
+      <node uin="khvglk2bn34xphcoh_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Edit Stored Procedure" />
+      </node>
+      <node uin="m1hmdr5xk2s8d58pt_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Edit parameters" />
+      </node>
+    </node>
+    <node uin="d8mfwdthrqj_n">
+      <property name="$metaclass" value="Use Case" />
+      <property name="$name" value="Run Report" />
+      <node uin="o7cn4rrn26s_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Preview" />
+      </node>
+      <node uin="vu6n3jhhant_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Print" />
+      </node>
+      <node uin="lrj6bhn7ios_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Email" />
+      </node>
+      <node uin="pzljo3gyt1g_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Store report on file" />
+        <property name="Filetype" value="PDF&#xD;&#xA;OpenDoc&#xD;&#xA;HTML" />
+      </node>
+    </node>
+    <node uin="5zd9es68v8y8eldh_n">
+      <property name="$metaclass" value="Use Case" />
+      <property name="$name" value="Delete Report" />
+      <node uin="sgytg9lwsmdm4uqup_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Remove from Database" />
+      </node>
+      <node uin="ps0plhxdidgheis1o_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Delete Stored Procedure" />
+      </node>
+      <node uin="fflf61hua8jxopqyr_n">
+        <property name="$metaclass" value="Extension Point" />
+        <property name="$name" value="Delete parameters" />
+      </node>
+    </node>
+    <node uin="ka3lvn5v99l_n">
+      <property name="$metaclass" value="Note" />
+      <property name="$name" value="Note1" />
+      <property name="$note_text" value="Remember! A report can contain subreports which needs their own stored procedures and parameter sets." />
+    </node>
+  </node>
+</nodeSet>
