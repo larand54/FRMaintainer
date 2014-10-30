@@ -15,32 +15,26 @@ uses
 
 type
   TCMMediaType = (frPreview, frFile, frPrint);
-  // TCMMSubReports = TList<TCMMReport>;
 
   TCMReportController = class
   private
-    FTemplatePath: string;
-    FReport: TCMMMReport;
-    FSubReports: TCMMSubReports;
-    FMedia: TCMMediaType;
-    FStoredProc: TFDStoredProc;
-    FDataset: TfrxDBDataset;
     frxReport: TfrxReport;
-    // FWantedParams: TCMParamsInfo;
-    FParams: TCMParams; // Input parameters both for Main- and Sub-reports
     procedure Preview;
     procedure Print;
     procedure ReportOnFile;
-    function createReport(aRepNo: integer; aParams: TCMParams): TCMMMReport;
-    function createSubReports(aRepNo: integer): TCMMSubReports;
+    procedure CollectParameters_ForReportData(aReportData: TCMReportData);
+    function createSubReports(aReport: TCMMReport): TCMSubReports;
     function setUpFastReport: TfrxReport;
-    procedure addParams(aReport: TCMMReport; aParams: TCMParams);
+    procedure addParams(aReport: TCMReport; aParams: TCMParams);
     function RemoveDBObject(proc: String): string;
   public
-    constructor create(aRepNo: integer; aParams: TCMParams;
-      media: TCMMediaType);
-    procedure RunReport(mt: TCMMediaType);
-    property report: TCMMMReport read FReport write FReport;
+    constructor create(aRepNo: integer; aParams: TCMParams; media: TCMMediaType);
+    function createReport(aReportData: TCMMReportData): TCMMReport;
+    procedure RunReport(aReport: TCMMReport; aMedia: TCMMediaType);
+    function NewReport(aTemplate: string; aReportNo: integer; aDataType: integer;
+                       aStoredProcName: string; aDatasetName: string): TCMMReportData;
+    procedure AddSubreport(aReportNo: integer; aSubReportName: string;
+                           aStoreProcName: string; aDatasetName: string);
   end;
 
 implementation
@@ -49,8 +43,7 @@ implementation
 
 uses ufrmMain;
 
-procedure TCMReportController.addParams(aReport: TCMMReport;
-  aParams: TCMParams);
+procedure TCMReportController.addParams(aReport: TCMReport; aParams: TCMParams);
 var
   qry: TFDQuery;
   wantedParams: TCMParamsInfo;
@@ -109,7 +102,7 @@ begin
 end;
 
 function TCMReportController.createReport(aRepNo: integer; aParams: TCMParams)
-  : TCMMMReport;
+  : TCMMReport;
 var
   qry: TFDQuery;
   SP_Name: string;
@@ -134,7 +127,7 @@ begin
     else
       SP_Name := '';
     Template := qry['ReportName'];
-    result := TCMMMReport.create(Template, aRepNo, '', 0, SP_Name, DsU_name,
+    result := TCMMReport.create(Template, aRepNo, '', 0, SP_Name, DsU_name,
       Descr, dmFR.FDConnection1);
     if aParams <> nil then
       addParams(result, aParams);
@@ -144,19 +137,19 @@ begin
   end;
 end;
 
-function TCMReportController.createSubReports(aRepNo: integer): TCMMSubReports;
+function TCMReportController.createSubReports(aRepNo: integer): TCMSubReports;
 var
   qry: TFDQuery;
   SP_Name: string;
   DsU_name: string;
   Descr: string;
   SubR_Name: string;
-  srs: TCMMSubReports;
-  sr: TCMMSubReport;
+  srs: TCMSubReports;
+  sr: TCMSubReport;
 
 begin
   try
-    srs := TCMMSubReports.create;
+    srs := TCMSubReports.create;
     qry := dmFR.qrySubreports;
     qry.Active := true;
     qry.First;
@@ -175,7 +168,7 @@ begin
         SubR_Name := qry['SubReportName']
       else
         SubR_Name := '';
-      sr := TCMMSubReport.create(aRepNo, SubR_Name, SP_Name, DsU_name, '',
+      sr := TCMSubReport.create(aRepNo, SubR_Name, SP_Name, DsU_name, '',
         dmFR.FDConnection1);
 
       srs.Add(SubR_Name, sr);
@@ -213,8 +206,8 @@ end;
 procedure TCMReportController.RunReport(mt: TCMMediaType);
 var
   i: integer;
-  srArr: TArray<TPair<string, TCMMSubReport>>;
-  sr: TCMMSubReport;
+  srArr: TArray<TPair<string, TCMSubReport>>;
+  sr: TCMSubReport;
 begin
   report.storedProc.Active := true;
   srArr := report.Subreports.ToArray;

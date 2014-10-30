@@ -7,112 +7,118 @@
     <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.@unitclass">
       <property name="$shortcutReference" value="true" />
     </reference>
-    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMMReport">
-      <property name="$shortcutReference" value="true" />
-      <property name="bounds" value="10,10,112,178" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMMReport.FTemplate" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMMReport.SetTemplate(System.string)" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMMReport.Template" />
-      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMMMReport:uReport.TCMMReport">
-        <property name="sourceAnchor" value="122,126" />
-        <property name="targetAnchor" value="340,126" />
-        <property name="bendpoints" value="" />
-      </reference>
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMMReport.docType" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMMReport.FdocType" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMMReport.SetdocType(System.Integer)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMMReport.Create(System.string,System.Integer,System.Integer,System.string,System.string,System.string)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMMReport.Create(System.string,System.Integer,System.string,System.Integer,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
-    </reference>
     <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReport">
       <property name="$shortcutReference" value="true" />
-      <property name="bounds" value="340,20,294,613" />
+      <property name="bounds" value="40,0,112,178" />
       <property name="location_set_by_user" value="True" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.StoredProc">
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FTemplate" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetTemplate(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.Template" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMMReport:uReport.TCMReport">
+        <property name="sourceAnchor" value="152,99" />
+        <property name="targetAnchor" value="340,99" />
+        <property name="bendpoints" value="" />
+      </reference>
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.docType" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FdocType" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetdocType(System.Integer)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMMReport.Create(System.string,System.Integer,System.Integer,System.string,System.string,System.string)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.Create(System.string,System.Integer,System.string,System.Integer,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMReport">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="340,20,201,613" />
+      <property name="location_set_by_user" value="True" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.StoredProc">
         <property name="bounds" value="25,131,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.DataSet">
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.DataSet">
         <property name="bounds" value="43,105,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FStoredProc">
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FStoredProc">
         <property name="bounds" value="34,125,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FDataset">
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FDataset">
         <property name="bounds" value="50,124,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.addParamInfo(uReport.TCMParamInfo)">
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.addParamInfo(uReport.TCMParamInfo)">
         <property name="bounds" value="57,27,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FdatasetUserName" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FdatasetUserName" />
       <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FstoredProc" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.Fname" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.Fdescription" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.Fparams" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FparamsInfo" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetdatasetUserName(System.string)" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.Fname" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.Fdescription" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.Fparams" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FparamsInfo" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.SetdatasetUserName(System.string)" />
       <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetstoredProc(System.string)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.Setname(System.string)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.Setdescription(System.string)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetParams(uReport.TCMParams)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetparamsInfo(uReport.TCMParamsInfo)" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.datasetUserName" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.Setname(System.string)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.Setdescription(System.string)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.SetParams(uReport.TCMParams)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.SetparamsInfo(uReport.TCMParamsInfo)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.datasetUserName" />
       <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.storedProc" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.name" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.description" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.params" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.paramsInfo" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.GetParamType(System.string)" />
-      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMMReport.Fparams">
-        <property name="sourceAnchor" value="634,59" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.name" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.description" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.params" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.paramsInfo" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.GetParamType(System.string)" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.Fparams">
+        <property name="sourceAnchor" value="541,59" />
         <property name="targetAnchor" value="680,59" />
         <property name="bendpoints" value="" />
       </reference>
-      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMMReport.FparamsInfo">
-        <property name="sourceAnchor" value="634,389" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.FparamsInfo">
+        <property name="sourceAnchor" value="541,389" />
         <property name="targetAnchor" value="680,389" />
         <property name="bendpoints" value="" />
       </reference>
-      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMMReport.params">
-        <property name="sourceAnchor" value="634,51" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.params">
+        <property name="sourceAnchor" value="541,51" />
         <property name="targetAnchor" value="680,51" />
         <property name="bendpoints" value="" />
       </reference>
-      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMMReport.paramsInfo">
-        <property name="sourceAnchor" value="634,381" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.paramsInfo">
+        <property name="sourceAnchor" value="541,381" />
         <property name="targetAnchor" value="680,381" />
         <property name="bendpoints" value="" />
       </reference>
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.Subreports">
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.Subreports">
         <property name="bounds" value="25,36,0,0" />
       </reference>
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FSubreports" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetSubreports(System.Generics.Collections.TDictionary&lt;System.string,uReport.TCMMSubReport&gt;)" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FReportNo" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.addParam(System.string,System.Variant)" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FSubreports" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.SetSubreports(System.Generics.Collections.TDictionary&lt;System.string,uReport.TCMSubReport&gt;)" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FReportNo" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.addParam(System.string,System.Variant)" />
       <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.Create(System.Integer,System.string,System.string,System.string)" />
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FstoredProcName" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.SetstoredProcName(System.string)" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.ReportNo" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.storedProcName" />
-      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMMReport.Subreports">
-        <property name="sourceAnchor" value="634,135" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FstoredProcName" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.SetstoredProcName(System.string)" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.ReportNo" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.storedProcName" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.Subreports">
+        <property name="sourceAnchor" value="541,135" />
         <property name="targetAnchor" value="653,135" />
         <property name="bendpoints" value="" />
       </reference>
-      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReport.FConnection" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.createDataset()" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.createStoredProc()" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.Create(System.Integer,System.string,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReport.freeUpDBComponents()" />
-      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReport.Connection" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMReport.FConnection" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.createDataset()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.createStoredProc()" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.Create(System.Integer,System.string,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMReport.freeUpDBComponents()" />
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMReport.Connection" />
+      <reference referencedUin="delphi:l_ast:src:FRMaintainer:uReport.TCMReport.FSubreports">
+        <property name="sourceAnchor" value="541,127" />
+        <property name="targetAnchor" value="653,127" />
+        <property name="bendpoints" value="" />
+      </reference>
     </reference>
-    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMSubReport">
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReport">
       <property name="$shortcutReference" value="true" />
-      <property name="bounds" value="20,300,114,84" />
+      <property name="bounds" value="180,180,103,84" />
       <property name="location_set_by_user" value="True" />
-      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMMSubReport:uReport.TCMMReport">
-        <property name="sourceAnchor" value="134,342" />
-        <property name="targetAnchor" value="340,342" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMSubReport:uReport.TCMReport">
+        <property name="sourceAnchor" value="283,222" />
+        <property name="targetAnchor" value="340,222" />
         <property name="bendpoints" value="" />
       </reference>
       <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMSubReport.Create(System.Integer,System.string,System.string,System.string,uReport.TCMMSParams)">
@@ -131,7 +137,7 @@
           <property name="bounds" value="74,192,11,16" />
         </reference>
       </reference>
-      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMSubReport.Create(System.Integer,System.string,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMSubReport.Create(System.Integer,System.string,System.string,System.string,System.string,FireDAC.Comp.Client.TFDConnection)" />
     </reference>
     <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMParam">
       <property name="$shortcutReference" value="true" />
@@ -157,9 +163,9 @@
       <property name="location_set_by_user" value="True" />
       <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMParamsInfo.GetParamType(System.string)" />
     </reference>
-    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMSubReports">
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReports">
       <property name="$shortcutReference" value="true" />
-      <property name="bounds" value="653,117,342,36" />
+      <property name="bounds" value="653,117,321,36" />
     </reference>
     <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMReportData">
       <property name="$shortcutReference" value="true" />
@@ -205,5 +211,45 @@
         <property name="bendpoints" value="" />
       </reference>
     </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReportData">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="280,640,130,67" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMSubReportData:uReport.TCMReportData">
+        <property name="sourceAnchor" value="280,665" />
+        <property name="targetAnchor" value="218,665" />
+        <property name="bendpoints" value="" />
+      </reference>
+    </reference>
+    <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReportData">
+      <property name="$shortcutReference" value="true" />
+      <property name="bounds" value="40,200,118,163" />
+      <property name="location_set_by_user" value="True" />
+      <reference referencedUin="delphi:l_gnt:src:FRMaintainer:uReport.TCMMReportData:uReport.TCMReportData">
+        <property name="sourceAnchor" value="99,363" />
+        <property name="targetAnchor" value="99,400" />
+        <property name="bendpoints" value="" />
+      </reference>
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReportData.Template">
+        <property name="bounds" value="37,-21,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_property:src:FRMaintainer:uReport.TCMMReportData.docType">
+        <property name="bounds" value="37,-21,0,0" />
+      </reference>
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReportData.FTemplate" />
+      <reference referencedUin="delphi:e_field:src:FRMaintainer:uReport.TCMMReportData.FdocType" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReportData.SetTemplate(System.string)" />
+      <reference referencedUin="delphi:e_method:src:FRMaintainer:uReport.TCMMReportData.SetdocType(System.Integer)" />
+      <reference referencedUin="design:link:::4iq3c2uqqns_l">
+        <property name="sourceAnchor" value="158,281" />
+        <property name="targetAnchor" value="340,281" />
+        <property name="bendpoints" value="" />
+      </reference>
+    </reference>
   </view>
+  <link uin="4iq3c2uqqns_l">
+    <property name="$metaclass" value="Dependency Link" />
+    <property name="$name" value="Dependency Link1" />
+    <participant referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReportData" role="Client" />
+    <participant referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMReport" role="Supplier" />
+  </link>
 </nodeSet>

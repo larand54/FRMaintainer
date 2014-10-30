@@ -11,8 +11,9 @@ uses System.Generics.Collections, System.SysUtils,
 
 type
   ETCMStoredProcNameMissing = class(EDatabaseError);
-  TCMMSubReport = class; // Forward declaration
-  TCMMSubReports = TDictionary<string, TCMMSubReport>; // List keyed by SubRep name
+  TCMSubReport = class; // Forward declaration
+  TCMSubReports = TDictionary<string, TCMSubReport>;
+  // List keyed by SubRep name
 
   TCMParam = class
     pair: TPair<string, variant>;
@@ -35,7 +36,7 @@ type
     function GetParamType(paramName: string): string;
   end;
 
-  TCMMReport = class
+  TCMReport = class
   private
     FReportNo: integer;
     FdatasetUserName: String;
@@ -43,7 +44,7 @@ type
     Fname: string;
     Fdescription: string;
     Fparams: TCMParams;
-    FSubreports: TDictionary<string, TCMMSubReport>;
+    FSubreports: TCMSubReports;
     FparamsInfo: TCMParamsInfo;
     FDataset: TfrxDBDataset;
     FStoredProc: TFDStoredProc;
@@ -54,7 +55,7 @@ type
     procedure Setdescription(val: string);
     procedure SetParams(val: TCMParams);
     procedure SetparamsInfo(val: TCMParamsInfo);
-    procedure SetSubreports(val: TCMMSubReports);
+    procedure SetSubreports(val: TCMSubReports);
     function createDataset: TfrxDBDataset;
     function createStoredProc: TFDStoredProc;
   public
@@ -73,13 +74,13 @@ type
                        aDescription: string; aConnection: TFDConnection);
     procedure addParamInfo(aParamInfo: TCMParamInfo);
     procedure freeUpDBComponents;
-    property Subreports: TCMMSubReports read FSubreports write SetSubreports;
+    property Subreports: TCMSubReports read FSubreports write SetSubreports;
     property DataSet: TfrxDBDataset read FDataset;
     property StoredProc: TFDStoredProc read FStoredProc;
     property Connection: TFDConnection read FConnection;
   end;
 
-  TCMMMReport = class(TCMMReport)
+  TCMMReport = class(TCMReport)
   private
     FTemplate: string;
     FdocType: integer;
@@ -94,7 +95,7 @@ type
     property docType: integer read FdocType write SetdocType;
   end;
 
-  TCMMSubReport = class(TCMMReport)
+  TCMSubReport = class(TCMReport)
   public
     constructor Create(aReportNo: integer; aname: string;
                        aStoredProcName: string;
@@ -117,25 +118,39 @@ type
     procedure Setdescription(val: string);
     procedure SetparamsInfo(val: TCMParamsInfo);
   public
-    property ReportNo: integer read FReportNo1 write FReportNo1;
-    property datasetUserName: string read FdatasetUserName1
+    property ReportNo: integer read FReportNo write FReportNo;
+    property datasetUserName: string read FdatasetUserName
       write SetdatasetUserName;
-    property storedProcName: string read FstoredProcName1
+    property storedProcName: string read FstoredProcName
       write SetstoredProcName;
-    property name: string read Fname1 write Setname;
-    property description: string read Fdescription1 write Setdescription;
-    property paramsInfo: TCMParamsInfo read FparamsInfo1 write SetparamsInfo;
+    property name: string read Fname write Setname;
+    property description: string read Fdescription write Setdescription;
+    property paramsInfo: TCMParamsInfo read FparamsInfo write SetparamsInfo;
+  end;
+
+  TCMSubReportData = class(TCMReportData)
+  end;
+
+  TCMMReportData = class(TCMReportData)
+  private
+    FTemplate: string;
+    FdocType: integer;
+    procedure SetTemplate(val: string);
+    procedure SetdocType(val: integer);
+  public
+    property Template: string read FTemplate write SetTemplate;
+    property docType: integer read FdocType write SetdocType;
   end;
 
 implementation
 
 uses udmFR;
 
-procedure TCMMReport.freeUpDBComponents;
+procedure TCMReport.freeUpDBComponents;
 var
   SRName: string;
-  fs: TCMMSubReports;
-  sr: TCMMSubReport;
+  fs: TCMSubReports;
+  sr: TCMSubReport;
 begin
   FreeAndNil(FDataSet);
   FreeAndNil(FStoredProc);
@@ -149,46 +164,46 @@ begin
   end;
 end;
 
-procedure TCMMReport.SetdatasetUserName(val: String);
+procedure TCMReport.SetdatasetUserName(val: String);
 begin
   FdatasetUserName := val;
 end;
 
-procedure TCMMReport.SetstoredProcName(val: string);
+procedure TCMReport.SetstoredProcName(val: string);
 begin
   FStoredProcName := val;
 end;
 
-procedure TCMMReport.SetSubreports(val: TDictionary<string, TCMMSubReport>);
+procedure TCMReport.SetSubreports(val: TCMSubReports);
 begin
   FSubReports := val;
 end;
 
-procedure TCMMReport.Setname(val: string);
+procedure TCMReport.Setname(val: string);
 begin
   FName := val;
 end;
 
-procedure TCMMReport.Setdescription(val: string);
+procedure TCMReport.Setdescription(val: string);
 begin
   FDescription := val;
 end;
 
-procedure TCMMReport.SetParams(val: TCMParams);
+procedure TCMReport.SetParams(val: TCMParams);
 begin
   FParams := val
 end;
 
-procedure TCMMReport.addParam(aKey: string; aValue: variant);
+procedure TCMReport.addParam(aKey: string; aValue: variant);
 begin
   params.add(aKey, aValue);
 end;
 
-procedure TCMMReport.SetparamsInfo(val: TCMParamsInfo);
+procedure TCMReport.SetparamsInfo(val: TCMParamsInfo);
 begin
 end;
 
-function TCMMReport.GetParamType(paramName: string): string;
+function TCMReport.GetParamType(paramName: string): string;
 begin
   Result := ParamsInfo.GetParamType(paramName);
 end;
@@ -198,8 +213,7 @@ begin
   result := Items[paramName];
 end;
 
-constructor TCMMMReport.Create(aTemplate: string; aReportNo: integer;
-                               aname: string; adocType: integer;
+constructor TCMMReport.Create(aTemplate: string; aReportNo: integer; aname: string; adocType: integer;
                                aStoredProc: string; aDatasetUserName: string;
                                aDescription: string; aConnection: TFDConnection);
 begin
@@ -208,13 +222,12 @@ begin
   FDocType := adocType;
 end;
 
-procedure TCMMReport.addParamInfo(aParamInfo: TCMParamInfo);
+procedure TCMReport.addParamInfo(aParamInfo: TCMParamInfo);
 begin
 
 end;
 
-constructor TCMMReport.Create(aReportNo: integer; aname: string;
-                              aStoredProcName: string; aDatasetUserName: string;
+constructor TCMReport.Create(aReportNo: integer; aname: string; aStoredProcName: string; aDatasetUserName: string;
                               aDescription: string; aConnection: TFDConnection);
 begin
   inherited Create;
@@ -228,12 +241,12 @@ begin
   FDataset := createDataset;
 end;
 
-procedure TCMMMReport.SetdocType(val: integer);
+procedure TCMMReport.SetdocType(val: integer);
 begin
   FdocType := val;
 end;
 
-procedure TCMMMReport.SetTemplate(val: string);
+procedure TCMMReport.SetTemplate(val: string);
 begin
   FTemplate := val;
 end;
@@ -243,8 +256,7 @@ begin
   inherited add(aKey, aValue);
 end;
 
-constructor TCMMSubReport.Create(aReportNo: integer; aname: string;
-                                 aStoredProcName: string;
+constructor TCMSubReport.Create(aReportNo: integer; aname: string; aStoredProcName: string;
                                  aDatasetUserName: string;
                                  aDescription: string;
                                  aConnection: TFDConnection);
@@ -254,7 +266,7 @@ begin
   FDataset := createDataset;
 end;
 
-function TCMMReport.createDataset: TfrxDBDataset;
+function TCMReport.createDataset: TfrxDBDataset;
 var
   ds: TfrxDBDataset;
 begin
@@ -270,7 +282,7 @@ begin
   Result := ds;
 end;
 
-function TCMMReport.createStoredProc: TFDStoredProc;
+function TCMReport.createStoredProc: TFDStoredProc;
 var
   sp: TFDStoredProc;
 begin
@@ -306,6 +318,16 @@ end;
 
 procedure TCMReportData.SetparamsInfo(val: TCMParamsInfo);
 begin
+end;
+
+procedure TCMMReportData.SetTemplate(val: string);
+begin
+  FTemplate := val;
+end;
+
+procedure TCMMReportData.SetdocType(val: integer);
+begin
+  FdocType := val;
 end;
 
 end.

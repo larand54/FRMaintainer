@@ -149,6 +149,15 @@ object frmMain: TfrmMain
       TabOrder = 4
     end
   end
+  object Button1: TButton
+    Left = 64
+    Top = 536
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 4
+    OnClick = Button1Click
+  end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
     ScreenCursor = gcrHourGlass

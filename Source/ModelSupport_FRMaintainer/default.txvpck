@@ -29,17 +29,19 @@
     <reference referencedUin="design:view:::iyiqgw4bi6h_v">
       <property name="$shortcutReference" value="true" />
       <property name="@__package_fqn" value="uReport" />
-      <property name="bounds" value="277,1,119,256" />
-      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReport" />
+      <property name="bounds" value="277,1,135,286" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMReport" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.@unitclass" />
-      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMMReport" />
-      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMSubReport" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReport" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReport" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMParamInfo" />
-      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMSubReports" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReports" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMParamsInfo" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMParam" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMParams" />
       <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMReportData" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMSubReportData" />
+      <reference referencedUin="delphi:e_class:src:FRMaintainer:uReport.TCMMReportData" />
     </reference>
     <reference referencedUin="design:view:::y4zts8xmjfj_v">
       <property name="$shortcutReference" value="true" />

@@ -35,16 +35,17 @@ type
     btnNewReport: TButton;
     btnProperties: TButton;
     Label2: TLabel;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure btnDesignReportClick(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure btnRunReportClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
-    FReport: TCMMMReport;
-
+    FReport: TCMMReport;
     FfrxDataSet: TfrxDBDataset;
     FfdStoredProc: TFDStoredProc;
 
@@ -53,13 +54,13 @@ type
 
     procedure BuildTree;
     procedure createDBComponents;
-    procedure getParameters(aReport: TCMMReport);
+    procedure getParameters(aReport: TCMReport);
     procedure freeUpDBComponents;
     procedure freeUpReport;
 
   public
     { Public declarations }
-    Property report: TCMMMReport read FReport write FReport;
+    Property report: TCMMReport read FReport write FReport;
     Property frxDataset: TfrxDBDataset read FfrxDataSet write FfrxDataSet;
     Property fdStoredProc: TFDStoredProc read FfdStoredProc write FfdStoredProc;
     Property frxDSList: TList<TfrxDBDataset> read FfrxDSList write FfrxDSList;
@@ -81,7 +82,7 @@ end;
 
 procedure TfrmMain.btnDesignReportClick(Sender: TObject);
 var
-  report: TCMMMReport;
+  report: TCMMReport;
   node: TTreeNode;
   templateFile: string;
 begin
@@ -144,7 +145,7 @@ begin
   FreeAndNil(FReport);
 end;
 
-procedure TfrmMain.getParameters(aReport: TCMMReport);
+procedure TfrmMain.getParameters(aReport: TCMReport);
 begin
   aReport.params := frmAddParams.execute;
 end;
@@ -206,7 +207,7 @@ begin
     else
       Descr := '';
     try
-      report := TCMMMReport.Create(Template, RepNo, '', docType, sp_name,
+      report := TCMMReport.Create(Template, RepNo, '', docType, sp_name,
         DsU_name, Descr, dmFR.FDConnection1);
       subItmIndx := 1;
     except
@@ -234,12 +235,36 @@ begin
   qry.close;
 end;
 
+procedure TfrmMain.Button1Click(Sender: TObject);
+var
+  dic: TDictionary<String, string>;
+  lb: TListbox;
+  key: string;
+begin
+  // Test something -- TDictionary for instance
+  dic := TDictionary<String, string>.create;
+  try
+  dic.Add('ABC','123');
+  dic.Add('DEF','456');
+  dic.Add('GHI','789');
+  dic.Add('JKL','012');
+  dic.Add('ABC','776');
+  dic.Add('MNO','888');
+  except on E: EListError do
+  end;
+  lb := TListBox.Create(self);
+  lb.parent := frmMain;
+  for key in dic.Keys do
+
+  lb.Items.Add(key+':  '+dic.Items[key]);
+end;
+
 procedure TfrmMain.createDBComponents;
 var
 
-  srs: TCMMSubReports;
-  srArr: TArray<TPair<String, TCMMSubReport>>;
-  sr: TCMMSubReport;
+  srs: TCMSubReports;
+  srArr: TArray<TPair<String, TCMSubReport>>;
+  sr: TCMSubReport;
   srParams: TFDParams;
   i, k: integer;
 
