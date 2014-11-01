@@ -36,7 +36,7 @@ object dmFR: TdmFR
       'SELECT [ReportNo]'
       '      ,[DocType]'
       '      ,[ReportName]'
-      '      ,[Beskrivning]'
+      '      ,[Description]'
       '      ,[StoredProcName]'
       '      ,[DatasetUserName]'
       '  FROM [vis_vida].[dbo].[FastReportNames]'
@@ -53,14 +53,14 @@ object dmFR: TdmFR
       FieldName = 'DocType'
       Origin = 'DocType'
     end
+    object qryFastReportsDescription: TStringField
+      FieldName = 'Description'
+      Origin = 'Description'
+      Size = 100
+    end
     object qryFastReportsReportName: TStringField
       FieldName = 'ReportName'
       Origin = 'ReportName'
-      Size = 100
-    end
-    object qryFastReportsBeskrivning: TStringField
-      FieldName = 'Beskrivning'
-      Origin = 'Beskrivning'
       Size = 100
     end
     object qryFastReportsStoredProcName: TStringField
@@ -89,9 +89,9 @@ object dmFR: TdmFR
     ParamData = <
       item
         Name = 'REPNO'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '105'
+        Value = 105
       end>
     object qrySubreportsReportNo: TIntegerField
       FieldName = 'ReportNo'

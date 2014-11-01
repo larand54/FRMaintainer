@@ -24,7 +24,6 @@ type
     qryFastReportsReportNo: TIntegerField;
     qryFastReportsDocType: TIntegerField;
     qryFastReportsReportName: TStringField;
-    qryFastReportsBeskrivning: TStringField;
     qryFastReportsStoredProcName: TStringField;
     qryFastReportsDatasetUserName: TStringField;
     qrySubreportsReportNo: TIntegerField;
@@ -33,6 +32,7 @@ type
     qrySubreportsDatasetUserName: TStringField;
     qrySubreportsDescription: TStringField;
     qryFastReport: TFDQuery;
+    qryFastReportsDescription: TStringField;
   private
     { Private declarations }
   public

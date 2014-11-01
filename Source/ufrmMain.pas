@@ -45,22 +45,24 @@ type
   private
     { Private declarations }
     FReportPath: string;
-    FReport: TCMMReport;
     FfrxDataSet: TfrxDBDataset;
     FfdStoredProc: TFDStoredProc;
 
     FspList: TList<TFDStoredProc>;
     FfrxDSList: TList<TfrxDBDataset>;
+    FReportData: TCMMReportData;
+    FSReportData: TCMSReportData;
+    FParams: TCMParams;
 
     procedure BuildTree;
     procedure createDBComponents;
-    procedure getParameters(aReport: TCMReport);
+    procedure getParameters;
     procedure freeUpDBComponents;
     procedure freeUpReport;
 
   public
     { Public declarations }
-    Property report: TCMMReport read FReport write FReport;
+    Property report: TCMMReportData read FReportData write FReportData;
     Property frxDataset: TfrxDBDataset read FfrxDataSet write FfrxDataSet;
     Property fdStoredProc: TFDStoredProc read FfdStoredProc write FfdStoredProc;
     Property frxDSList: TList<TfrxDBDataset> read FfrxDSList write FfrxDSList;
@@ -82,7 +84,7 @@ end;
 
 procedure TfrmMain.btnDesignReportClick(Sender: TObject);
 var
-  report: TCMMReport;
+  report: TCMMReportData;
   node: TTreeNode;
   templateFile: string;
 begin
@@ -111,11 +113,15 @@ begin
     RepNo := report.ReportNo;
     if RepNo > 0 then
     begin
-      getParameters(report);
-      RC := TCMReportController.Create(RepNo, report.params, frPreview);
-      if (RC <> nil) then
+//      getParameters;
+  FParams := TCMParams.Create;
+  FParams.Add('@INVOICENO', 29366);
+
+      TCMReportController.Preparereport(report,FParams);
+        TCMReportController.RunReport(report,frPreview);
+      if (true) then
       begin
-        RC.RunReport(frPreview);
+        TCMReportController.RunReport(report,frPreview);
       end;
     end;
   end;
@@ -125,6 +131,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Memo1.Clear;
   try
+    TCMReportController.initController;
     dmFR.tblDBProps.Open();
     dmFR.qryFastReports.Active;
     FReportPath := dmFR.tblDBProps['FastPath'];
@@ -137,17 +144,17 @@ end;
 
 procedure TfrmMain.freeUpDBComponents;
 begin
-  Report.freeUpDBComponents;
+//  Report.freeUpDBComponents;
 end;
 
 procedure TfrmMain.freeUpReport;
 begin
-  FreeAndNil(FReport);
+//  FreeAndNil(FReport);
 end;
 
-procedure TfrmMain.getParameters(aReport: TCMReport);
+procedure TfrmMain.getParameters;
 begin
-  aReport.params := frmAddParams.execute;
+  FParams := frmAddParams.execute;
 end;
 
 procedure TfrmMain.ReportTreeClick(Sender: TObject);
@@ -161,7 +168,7 @@ begin
     report := node.Data;
     freeUpDBComponents;
     Memo1.Clear;
-    Descr := TCMMReport(node.Data).description;
+    Descr := TCMMReportData(node.Data).description;
     if Descr <> '' then
       Memo1.Lines.Add(Descr);
     createDBComponents;
@@ -180,59 +187,36 @@ var
   Template: string;
   docType, LastDocType: integer;
   subItmIndx : integer;
+  Reportsdata: TCMMReportsdata;
+  Reportdata: TCMMReportData;
 
 begin
   node := ReportTree.Items.Add(nil, 'Avalable Reports...');
   node.ImageIndex := 0;
-
-  qry := dmFR.qryFastReports;
-  qry.Active := true;
-  qry.First;
+  try
+    Reportsdata := TCMReportController.AllReports;
+  except on E: ETCMStoredProcNameMissing do
+  end;
   LastDocType := -1; // To identify First record in the loop
-  while not qry.Eof do
-  begin
-    if (qry['DatasetUserName'] <> null) then
-      DsU_name := qry['DatasetUserName']
+  for Reportdata in Reportsdata do begin
+    if ReportData.StoredProcName = '' then
+      subItmIndx := 2
     else
-      DsU_name := '';
-    if (qry['StoredProcName'] <> null) then
-      sp_name := qry['StoredProcName']
-    else
-      sp_name := '';
-    RepNo := qry['ReportNo'];
-    docType := qry['DocType'];
-    Template := qry['ReportName'];
-    if (qry['Beskrivning'] <> null) then
-      Descr := qry['Beskrivning']
-    else
-      Descr := '';
-    try
-      report := TCMMReport.Create(Template, RepNo, '', docType, sp_name,
-        DsU_name, Descr, dmFR.FDConnection1);
       subItmIndx := 1;
-    except
-      on E: ETCMStoredProcNameMissing do
-      begin
-        subItmIndx := 2;
-      end;
-    end;
+    docType := ReportData.docType;
+    Template := ReportData.Template;
     if LastDocType <> docType then
     begin
       node := ReportTree.Items.AddChildObject(ReportTree.Selected,
         intToStr(docType), nil);
       LastDocType := docType;
     end;
-    subItem := ReportTree.Items.AddChildObject(node, Template, report);
+    subItem := ReportTree.Items.AddChildObject(node, Template, ReportData);
 
     subItem.ImageIndex := subItmIndx;
     subItem.SelectedIndex := subItmIndx;
-
-
-    // node.Parent := ReportTree;
-    qry.Next;
   end;
   node.Free;
-  qry.close;
 end;
 
 procedure TfrmMain.Button1Click(Sender: TObject);
@@ -270,7 +254,7 @@ var
 
 begin
   // Create and prepare Stored procedure used by the Main report
-  fdStoredProc := TFDStoredProc.Create(nil);
+{  fdStoredProc := TFDStoredProc.Create(nil);
   fdStoredProc.Connection := dmFR.FDConnection1;
   fdStoredProc.Active := false;
   fdStoredProc.StoredProcName := FReport.StoredProcName;
@@ -325,7 +309,7 @@ begin
       inc(i);
     end;
 
-  end;
+  end; }
 end;
 
 end.
