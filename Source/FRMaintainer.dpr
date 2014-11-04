@@ -7,7 +7,8 @@ uses
   ufrmMain in 'ufrmMain.pas' {frmMain},
   uReportController in 'uReportController.pas',
   ufrmAddParams in 'ufrmAddParams.pas' {frmAddParams},
-  ufrmSubReportSettings in 'ufrmSubReportSettings.pas' {frmSubReportSettings};
+  ufrmSubReportSettings in 'ufrmSubReportSettings.pas' {frmSubReportSettings},
+  ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings};
 
 {$R *.res}
 
@@ -18,5 +19,6 @@ begin
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmAddParams, frmAddParams);
   Application.CreateForm(TfrmSubReportSettings, frmSubReportSettings);
+  Application.CreateForm(TfrmReportSettings, frmReportSettings);
   Application.Run;
 end.

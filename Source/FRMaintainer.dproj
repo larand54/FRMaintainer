@@ -107,6 +107,10 @@
             <Form>frmSubReportSettings</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ufrmReportSettings.pas">
+            <Form>frmReportSettings</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_FRMaintainer\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\ufrmAddParams\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\FRMaintainer\default.txvpck"/>

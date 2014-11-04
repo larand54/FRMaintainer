@@ -1,7 +1,7 @@
 object frmReportSettings: TfrmReportSettings
   Left = 0
   Top = 0
-  Caption = 'frmReportSettings'
+  Caption = 'Report settings'
   ClientHeight = 328
   ClientWidth = 293
   Color = clBtnFace
