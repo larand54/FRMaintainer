@@ -7,7 +7,7 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL,
-  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, frxClass, frxExportPDF;
 
 type
   TdmFR = class(TDataModule)
@@ -33,6 +33,7 @@ type
     qrySubreportsDescription: TStringField;
     qryFastReport: TFDQuery;
     qryFastReportsDescription: TStringField;
+    frxPDFExport1: TfrxPDFExport;
   private
     { Private declarations }
   public

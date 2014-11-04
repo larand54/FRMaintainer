@@ -15,6 +15,7 @@ uses
   uReport, udmFR;
 
 type
+  ETCMReportNotFound = class(Exception);
   TCMMediaType = (frPreview, frFile, frPrint);
 
   TCMSubReport = class
@@ -24,69 +25,76 @@ type
     FParams: TCMParams;
   public
     constructor create(aSP: TFDStoredProc; aDS: TfrxDBDataset);
-    property StoredProc: TFDStoredProc read FStoredProc write FStoredProc;
-    property DataSet: TfrxDBDataset read FDataset write FDataset;
+    property StoredProc: TFDStoredProc read FStoredProc;
+    property DataSet: TfrxDBDataset read FDataset;
   end;
 
   TCMSubReports = TDictionary<string, TCMSubReport>;
 
   TCMReportController = class
   private
-    class var frxReport: TfrxReport;
-    class var FReportData: TCMMReportData;
-    class var FTemplatePath: string;
-    class var FParams: TCMParams;
-    class var FSubReports: TCMSubReports;
+     frxReport: TfrxReport;
+     FReportData: TCMMReportData;
+     FTemplatePath: string;
+     FParams: TCMParams;
+     FSubReports: TCMSubReports;
 
-    class var FStoredProc: TFDStoredProc;
-    class var FDataset: TfrxDBDataset;
+     FStoredProc: TFDStoredProc;
+     FDataset: TfrxDBDataset;
 
-    class procedure Preview;
-    class procedure Print;
-    class procedure ReportOnFile;
+    procedure Preview;
+    procedure Print;
+    procedure ReportOnFile;
 
-    class function setUpFastReport: TfrxReport;
-    class procedure addParams(var asp: TFDStoredProc; aParams:TCMParams);
-    class function RemoveDBObject(proc: String): string;
-    class function getReportNo: integer; static;
-    class function GetReportData(ReportNo: integer): TCMMReportData; static;
-    class function getParamsInfo(spName: string): TCMParamsInfo;
-    class procedure createDBComponents(var aSP: TFDStoredProc; var aDS: TfrxDBDataset;
-      aSp_Name, aDs_Name: string; aParams: TCMParams);
+    function setUpFastReport: TfrxReport;
+    procedure addParams(var aSP: TFDStoredProc; aParams: TCMParams);
+    function RemoveDBObject(proc: String): string;
+    function getReportNo: integer;
+    function GetReportData(ReportNo: integer): TCMMReportData;
+    function getParamsInfo(spName: string): TCMParamsInfo;
+    procedure createDBComponents(var aSP: TFDStoredProc;
+      var aDS: TfrxDBDataset; anameSuffix: string; aSp_Name, aDs_Name: string;
+      aParams: TCMParams);
 
     { FetchReportData fetches data from database about actual report and builds
       an object of type TReportData containing fetched data
     }
-    class function FetchReportData(aRepNo: integer): TCMMReportData;
+    function FetchReportData(aRepNo: integer): TCMMReportData;
 
-    { CreateReport builds an object containing Datasets, Stored procedures,
+    { SetupReport and SetUpSubReports builds Datasets and Stored procedures,
       of the mainreport and its subreports used by the frxReport object.
-      It also contains parameters needed by the stored procedures.
+      It also add parameters to the stored procedures.
     }
-    class procedure setupReport(var aReportData: TCMMReportData; aParams: TCMParams);
-    class function setUpSubReports(var aReportData: TCMMReportData;
-                      aParams: TCMParams): TCMSubReports;
-  public
-    { }
-    class procedure RunReport(aReportData: TCMMReportData;
-      aMedia: TCMMediaType)overload;  static;
-    class procedure RunReport(aReportNo: integer; aMedia: TCMMediaType)overload; static;
+    procedure setupReport(var aReportData: TCMMReportData;
+      aParams: TCMParams);
 
-    class function NewReport(aTemplate: string; aReportNo: integer;
+    function setUpSubReports(var aReportData: TCMMReportData;
+      aParams: TCMParams): TCMSubReports;
+
+    { }
+  public
+    constructor create;
+    procedure RunReport(aReportData: TCMMReportData; aMedia: TCMMediaType)
+      overload;
+    procedure RunReport(aReportNo: integer; aParams: TCMParams;
+      aMedia: TCMMediaType)overload;
+
+    function NewReport(aTemplate: string; aReportNo: integer;
       aDataType: integer; aStoredProcName: string; aDatasetName: string)
       : TCMMReportData;
 
-    class procedure AddSubreport(aReportNo: integer; aSubReportName: string;
+    procedure AddSubreport(aReportNo: integer; aSubReportName: string;
       aStoreProcName: string; aDatasetName: string);
-    class procedure DeleteReport(aReportNo: integer);
+    procedure DeleteReport(aReportNo: integer);
 
-    class function AllReports: TList<TCMMReportData>;
-    class procedure prepareReport(aReportData: TCMMReportData; aParams: TCMParams);
-    class procedure initController;
+    function AllReports: TList<TCMMReportData>;
+    procedure prepareReport(var aReportData: TCMMReportData;
+      aParams: TCMParams);
+    procedure initController;
 
-    class property ReportData: TCMMReportData
-      read FReportData;
-    class property ReportNo: integer read getReportNo;
+    property ReportData: TCMMReportData read FReportData;
+    property ReportNo: integer read getReportNo;
+    property TemplatePath: string read FTemplatePath;
 
   end;
 
@@ -96,7 +104,8 @@ implementation
 
 uses ufrmMain;
 
-class procedure TCMReportController.addParams(var asp: TFDStoredProc; aParams:TCMParams );
+procedure TCMReportController.addParams(var aSP: TFDStoredProc;
+  aParams: TCMParams);
 var
   qry: TFDQuery;
   wantedParams: TCMParamsInfo;
@@ -110,7 +119,7 @@ begin
   offeredParams := TCMParams.create();
   qry := dmFR.qryParamInfo;
   qry.Prepare;
-  qry.ParamByName('SP_NAME').AsString := RemoveDBObject(asp.StoredProcName);
+  qry.ParamByName('SP_NAME').AsString := RemoveDBObject(aSP.StoredProcName);
   qry.Active := true;
   qry.First;
   while not qry.Eof do
@@ -124,18 +133,18 @@ begin
     if aParams.ContainsKey(key) then
     begin
       aParams.TryGetValue(key, Value);
-      asp.Params.ParamByName(key).value := Value;
+      aSP.Params.ParamByName(key).Value := Value;
     end;
   end;
 end;
 
-class procedure TCMReportController.AddSubreport(aReportNo: integer;
+procedure TCMReportController.AddSubreport(aReportNo: integer;
   aSubReportName, aStoreProcName, aDatasetName: string);
 begin
 
 end;
 
-class function TCMReportController.AllReports: TCMMReportsData;
+function TCMReportController.AllReports: TCMMReportsData;
 var
   paramsInfo: TCMParamsInfo;
   ReportData: TCMMReportData;
@@ -225,8 +234,8 @@ begin
   Result := getReportDataFromDB(false);
 end;
 
-class function TCMReportController.setUpSubReports(var aReportData: TCMMReportData; aParams: TCMParams)
-  : TCMSubReports;
+function TCMReportController.setUpSubReports(var aReportData
+  : TCMMReportData; aParams: TCMParams): TCMSubReports;
 var
   srs: TCMSubReports;
   sr: TCMSubReport;
@@ -241,45 +250,40 @@ begin
   begin
     for srd in subReportsData do
     begin
-      spName := srd.storedProcName;
+      spName := srd.StoredProcName;
       dsName := srd.DatasetUserName;
-      createDBComponents(sp, sd, spName, dsName, aParams);
+      createDBComponents(sp, sd, name, spName, dsName, aParams);
       srs.Add(srd.name, TCMSubReport.create(sp, sd));
     end;
   end;
   Result := srs;
 end;
-{ TCMSubReport }
 
-constructor TCMSubReport.create(aSP: TFDStoredProc; aDS: TfrxDBDataset);
-begin
-  FStoredProc := aSP;
-  FDataset := aDS;
-end;
-
-class procedure TCMReportController.DeleteReport(aReportNo: integer);
+procedure TCMReportController.DeleteReport(aReportNo: integer);
 begin
 
 end;
 
-class function TCMReportController.FetchReportData(aRepNo: integer): TCMMReportData;
+function TCMReportController.FetchReportData(aRepNo: integer)
+  : TCMMReportData;
 var
   paramsInfo: TCMParamsInfo;
-  ReportData: TCMMReportData;
+  RepData: TCMMReportData;
   SubReportData: TCMSReportData;
   SubRepDataList: TCMSReportsData;
-  closeThis : boolean;
-function getReportDataFromDB(isSubreport: boolean): TCMMReportData;
- var
+  closeThis: boolean;
+  RepNo: integer;
+  function getReportDataFromDB(isSubreport: boolean): TCMMReportData;
+  var
     name: string;
     qry: TFDQuery;
     sp_name: string;
     DsU_name: string;
-    RepNo: integer;
     Descr: string;
     Template: string;
     docType: integer;
   begin
+    Result := nil;
     if isSubreport then
     begin
       qry := dmFR.qrySubreports;
@@ -289,15 +293,15 @@ function getReportDataFromDB(isSubreport: boolean): TCMMReportData;
     end
     else
     begin
-      qry := dmFR.qryFastReports;
-      qry.prepare;
+      qry := dmFR.qryFastReport;
+      qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
     end;
     qry.Active := true;
     qry.First;
     while not qry.Eof do
     begin
-      RepNo := qry['ReportNo'];
+      // RepNo := qry['ReportNo'];
       if (qry['DatasetUserName'] <> null) then
         DsU_name := qry['DatasetUserName']
       else
@@ -306,44 +310,42 @@ function getReportDataFromDB(isSubreport: boolean): TCMMReportData;
         sp_name := qry['StoredProcName']
       else
         sp_name := '';
-      if (qry['Description'] <> null) then
+      { if (qry['Description'] <> null) then
         Descr := qry['Description']
-      else
-        Descr := '';
-      try
-        if isSubreport then
-        begin
-          if (qry['SubReportName'] <> null) then
-            name := qry['Name']
-          else
-            name := '';
-          SubReportData := TCMSReportData.create(RepNo, DsU_name, sp_name,
-            Descr, name, paramsInfo);
-          if SubReportData <> nil then
-            SubRepDataList.Add(SubReportData);
-        end
         else
+        Descr := '';
+      }
+      if isSubreport then
+      begin
+        if (qry['SubReportName'] <> null) then
+          name := qry['SubReportName']
+        else
+          name := '';
+        SubReportData := TCMSReportData.create(RepNo, DsU_name, sp_name, Descr,
+          name, paramsInfo);
+        if SubReportData <> nil then
+          SubRepDataList.Add(SubReportData);
+      end
+      else
+      begin
+        // docType := qry['DocType'];
+        Template := qry['ReportName'];
+        RepData := TCMMReportData.create(RepNo, DsU_name, sp_name, Descr,
+          Template, 0, paramsInfo);
+        if RepData <> nil then
         begin
-          docType := qry['DocType'];
-          Template := qry['ReportName'];
-          ReportData := TCMMReportData.create(RepNo, DsU_name, sp_name, Descr,
-            Template, docType, paramsInfo);
-          if ReportData <> nil then
-          begin
-            getReportDataFromDB(true);
-            if SubRepDataList <> nil then
-              ReportData.subReportsData := SubRepDataList;
-            result := ReportData;
-            closeThis := true;
-          end;
-
+          getReportDataFromDB(true);
+          if SubRepDataList <> nil then
+            RepData.subReportsData := SubRepDataList;
+          Result := RepData;
+          closeThis := true;
         end;
-      except
-        on E: ETCMStoredProcNameMissing do
-          FreeAndNil(ReportData);
+
       end;
-      if not closeThis then  qry.Next
-      else begin
+      if not closeThis then
+        qry.Next
+      else
+      begin
         qry.close;
         exit;
       end;
@@ -352,11 +354,16 @@ function getReportDataFromDB(isSubreport: boolean): TCMMReportData;
   end;
 
 begin
+  ParamsInfo := nil;
+  SubReportData := nil;
+  SubRepDataList := nil;
   closeThis := false;
+  RepNo := aRepNo;
+  RepData := nil;
   Result := getReportDataFromDB(false);
 end;
 
-class function TCMReportController.getParamsInfo(spName: string): TCMParamsInfo;
+function TCMReportController.getParamsInfo(spName: string): TCMParamsInfo;
 var
   qry: TFDQuery;
   Pi: TCMParamsInfo;
@@ -373,7 +380,8 @@ begin
   Result := Pi;
 end;
 
-class function TCMReportController.GetReportData(ReportNo: integer): TCMMReportData;
+function TCMReportController.GetReportData(ReportNo: integer)
+  : TCMMReportData;
 begin
   if (FReportData <> nil) and (FReportData.ReportNo = ReportNo) then
     Result := FReportData
@@ -381,44 +389,51 @@ begin
     Result := FetchReportData(ReportNo);
 end;
 
-class function TCMReportController.getReportNo: integer;
+function TCMReportController.getReportNo: integer;
 begin
   Result := ReportData.ReportNo
 end;
 
-class procedure TCMReportController.initController;
+procedure TCMReportController.initController;
 begin
-  dmFR.tblDBProps.Active := true;
-  FTemplatePath := dmFR.tblDBProps['FastPath'];
+   try
+   dmFR.tblDBProps.Open;
+    FTemplatePath := dmFR.tblDBProps['FastPath'];
   if (FTemplatePath[FTemplatePath.Length - 1] <> '\') then
     FTemplatePath := FTemplatePath + '\';
-  dmFR.tblDBProps.close;
+  finally
+    dmFR.tblDBProps.close;
+    dmFR.qryFastReports.close;
+  end;
+
 end;
 
-class function TCMReportController.NewReport(aTemplate: string;
+function TCMReportController.NewReport(aTemplate: string;
   aReportNo, aDataType: integer; aStoredProcName, aDatasetName: string)
   : TCMMReportData;
 begin
 
 end;
 
-class procedure TCMReportController.prepareReport( aReportData: TCMMReportData; aParams: TCMParams);
+procedure TCMReportController.prepareReport(var aReportData
+  : TCMMReportData; aParams: TCMParams);
 begin
-  FReportData := aReportData;
+  FreeAndNil(FStoredProc);
+  FreeAndNil(FDataset);
   setupReport(aReportData, aParams);
 end;
 
-class procedure TCMReportController.Preview;
+procedure TCMReportController.Preview;
 begin
 
 end;
 
-class procedure TCMReportController.Print;
+procedure TCMReportController.Print;
 begin
 
 end;
 
-class function TCMReportController.RemoveDBObject(proc: String): string;
+function TCMReportController.RemoveDBObject(proc: String): string;
 var
   i: integer;
 begin
@@ -426,63 +441,105 @@ begin
   Result := proc.Substring(i + 1, proc.Length - i - 1);
 end;
 
-class procedure TCMReportController.ReportOnFile;
+procedure TCMReportController.ReportOnFile;
 begin
 
 end;
 
-class procedure TCMReportController.RunReport(aReportData: TCMMReportData;
+procedure TCMReportController.RunReport(aReportData: TCMMReportData;
   aMedia: TCMMediaType);
 begin
-    frxReport := setUpFastReport;
-    frxReport.showReport;
+  frxReport := setUpFastReport;
+  frxReport.showReport;
 end;
 
-class procedure TCMReportController.RunReport(aReportNo: integer;  aMedia: TCMMediaType);
+procedure TCMReportController.RunReport(aReportNo: integer;
+  aParams: TCMParams; aMedia: TCMMediaType);
 begin
-  if (aReportNo = -1) and ( ReportData <> nil) then begin
-    frxReport := setUpFastReport;
-    frxReport.showReport;
+try
+  if (aReportNo > -1) then
+  begin
+    FReportData := FetchReportData(aReportNo);
+    if FReportData <> nil then
+    begin
+      prepareReport(FReportData, aParams);
+      frxReport := setUpFastReport;
+      if aMedia = frPrint then begin
+        frxReport.PrepareReport;
+        frxReport.Print
+      end
+      else if aMedia = frPreview then
+        frxReport.showReport
+      else if aMedia = frFile then begin
+        frxReport.PrepareReport;
+        frxReport.Export(dmFR.frxPDFExport1);
+      end;
+    end
+    else
+      raise ETCMReportNotFound.Create('Requested report number: '+intToStr(aReportNo)+' was not found in the database!');
   end;
+finally
+  FreeAndNil(FReportData);
+  FreeAndNil(FStoredProc);
+  FreeAndNil(FDataset);
+end;
 end;
 
-class function TCMReportController.setUpFastReport: TfrxReport;
+function TCMReportController.setUpFastReport: TfrxReport;
 begin
   FreeAndNil(frxReport);
   frxReport := TfrxReport.create(frmMain);
   frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
-  frxReport.DataSet := FDataSet;
+  frxReport.DataSet :=nil;
   Result := frxReport;
 end;
 
-class procedure TCMReportController.setupReport(var aReportData: TCMMReportData; aParams: TCMParams);
+procedure TCMReportController.setupReport(var aReportData: TCMMReportData;
+  aParams: TCMParams);
 begin
   with aReportData do
   begin
-    createDBComponents(FStoredProc, FDataset, storedProcName, DatasetUserName, aParams);
+    createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
+      DatasetUserName, aParams);
   end;
-  FStoredProc.Active := true;
-  FSubReports := setUpSubReports( aReportData, aParams);
+  FSubReports := setUpSubReports(aReportData, aParams);
 end;
 
-class procedure TCMReportController.createDBComponents(var aSP: TFDStoredProc;
-  var aDS: TfrxDBDataset; aSp_Name, aDs_Name: string; aParams: TCMParams);
+constructor TCMReportController.create;
+begin
+  initController;
+end;
+
+procedure TCMReportController.createDBComponents(var aSP: TFDStoredProc;
+  var aDS: TfrxDBDataset; anameSuffix: string; aSp_Name, aDs_Name: string;
+  aParams: TCMParams);
 begin
   // Create and prepare the TFDStoredProc component
-  aSP := TFDStoredProc.create(frmMain);
+
+  aSP := TFDStoredProc.create(nil);
+  aSP.name := anameSuffix;
   aSP.Connection := dmFR.FDConnection1;
   aSP.Active := false;
-  aSP.storedProcName := aSp_Name;
+  aSP.StoredProcName := aSp_Name;
   aSP.Prepare;
   addParams(aSP, aParams);
+  aSP.Active := true;
 
   // Create and prepare the TfrxDBDataset component
-  aDS := TfrxDBDataset.create(frmMain);
-  aDS.CloseDataSource := false;
-  aDS.BCDToCurrency := false;
+
+  aDS := TfrxDBDataset.create(nil);
+  aDS.name := 'DS' + anameSuffix;
   aDS.DataSet := aSP;
   aDS.UserName := aDs_Name;
-  aSP.Active := true;
+
+end;
+
+{ TCMSubReport }
+
+constructor TCMSubReport.create(aSP: TFDStoredProc; aDS: TfrxDBDataset);
+begin
+  FStoredProc := aSP;
+  FDataset := aDS;
 end;
 
 end.

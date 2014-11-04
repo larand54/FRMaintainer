@@ -2,16 +2,10 @@ unit uReport;
 
 interface
 
-uses System.Generics.Collections, System.SysUtils,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
-  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL,
-  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
-  frxDBset;
+uses System.Generics.Collections, System.SysUtils;
 
 type
-  ETCMStoredProcNameMissing = class(EDatabaseError);
+  ETCMStoredProcNameMissing = class(Exception);
 
   // Subreport(s)
   TCMSReportData = class; // Forward declaration
@@ -20,10 +14,6 @@ type
   // Mainreport(s)
   TCMMReportData = class; // Forward declaration
   TCMMReportsData = TList<TCMMReportData>;
-
-  TCMParam = class
-    pair: TPair<string, variant>;
-  end;
 
   // TODO!! Test this what happends if it exists same Parametername in two different subreports or mainreport.
   // An exception is likely - we want to know, in such case, what exception is thrown so that we can ignore that exception.
@@ -49,6 +39,7 @@ type
     constructor Create(aReportNo: integer; aDatasetName: string;
       aStoredProcName: string; aDescription: string; aname: string;
       aParamsInfo: TCMParamsInfo);
+    destructor destroy;
     property ReportNo: integer read FReportNo write FReportNo;
     property datasetUserName: string read FdatasetUserName
       write FDatasetUserName;
@@ -146,5 +137,17 @@ begin
   FTemplate := aTemplate;
 end;
 
+
+destructor TCMReportData.destroy;
+var
+  SRD :TCMSReportData;
+begin
+  ParamsInfo.Free;
+  Params.Free;
+  for SRD in FSubReportsData do begin
+    SRD.destroy;
+    SRD.Free;
+  end;
+end;
 
 end.

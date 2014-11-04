@@ -109,18 +109,18 @@ object frmMain: TfrmMain
       Caption = 'Remove'
       TabOrder = 0
     end
-    object btnRunReport: TButton
+    object ptnPreview: TButton
       Left = 54
-      Top = 208
+      Top = 144
       Width = 75
       Height = 25
-      Caption = 'Run'
+      Caption = 'Preview'
       TabOrder = 1
-      OnClick = btnRunReportClick
+      OnClick = ptnPreviewClick
     end
     object btnDesignReport: TButton
       Left = 54
-      Top = 152
+      Top = 104
       Width = 75
       Height = 25
       Caption = 'Design'
@@ -129,7 +129,7 @@ object frmMain: TfrmMain
     end
     object btnNewReport: TButton
       Left = 54
-      Top = 40
+      Top = 24
       Width = 75
       Height = 25
       Caption = 'New'
@@ -137,7 +137,7 @@ object frmMain: TfrmMain
     end
     object btnProperties: TButton
       Left = 54
-      Top = 95
+      Top = 64
       Width = 75
       Height = 25
       Hint = 
@@ -147,6 +147,24 @@ object frmMain: TfrmMain
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+    object btnPrint: TButton
+      Left = 54
+      Top = 184
+      Width = 75
+      Height = 25
+      Caption = 'Print'
+      TabOrder = 5
+      OnClick = btnPrintClick
+    end
+    object btnFile: TButton
+      Left = 54
+      Top = 224
+      Width = 75
+      Height = 25
+      Caption = 'PDF'
+      TabOrder = 6
+      OnClick = btnFileClick
     end
   end
   object Button1: TButton
@@ -215,7 +233,7 @@ object frmMain: TfrmMain
     Left = 174
     Top = 228
     Bitmap = {
-      494C0101030004002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000400340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
