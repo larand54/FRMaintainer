@@ -34,7 +34,7 @@ object frmSubReportSettings: TfrmSubReportSettings
     Height = 13
     Caption = 'Dataset:'
   end
-  object edTemplate: TEdit
+  object edName: TEdit
     Left = 128
     Top = 29
     Width = 121

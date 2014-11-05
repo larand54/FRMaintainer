@@ -33,18 +33,14 @@ type
 
   TCMReportController = class
   private
-     frxReport: TfrxReport;
-     FReportData: TCMMReportData;
-     FTemplatePath: string;
-     FParams: TCMParams;
-     FSubReports: TCMSubReports;
+    frxReport: TfrxReport;
+    FReportData: TCMMReportData;
+    FTemplatePath: string;
+    FParams: TCMParams;
+    FSubReports: TCMSubReports;
 
-     FStoredProc: TFDStoredProc;
-     FDataset: TfrxDBDataset;
-
-    procedure Preview;
-    procedure Print;
-    procedure ReportOnFile;
+    FStoredProc: TFDStoredProc;
+    FDataset: TfrxDBDataset;
 
     function setUpFastReport: TfrxReport;
     procedure addParams(var aSP: TFDStoredProc; aParams: TCMParams);
@@ -52,9 +48,8 @@ type
     function getReportNo: integer;
     function GetReportData(ReportNo: integer): TCMMReportData;
     function getParamsInfo(spName: string): TCMParamsInfo;
-    procedure createDBComponents(var aSP: TFDStoredProc;
-      var aDS: TfrxDBDataset; anameSuffix: string; aSp_Name, aDs_Name: string;
-      aParams: TCMParams);
+    procedure createDBComponents(var aSP: TFDStoredProc; var aDS: TfrxDBDataset;
+      anameSuffix: string; aSp_Name, aDs_Name: string; aParams: TCMParams);
 
     { FetchReportData fetches data from database about actual report and builds
       an object of type TReportData containing fetched data
@@ -65,8 +60,7 @@ type
       of the mainreport and its subreports used by the frxReport object.
       It also add parameters to the stored procedures.
     }
-    procedure setupReport(var aReportData: TCMMReportData;
-      aParams: TCMParams);
+    procedure setupReport(var aReportData: TCMMReportData; aParams: TCMParams);
 
     function setUpSubReports(var aReportData: TCMMReportData;
       aParams: TCMParams): TCMSubReports;
@@ -74,18 +68,18 @@ type
     { }
   public
     constructor create;
-    procedure RunReport(aReportData: TCMMReportData; aMedia: TCMMediaType)
-      overload;
+    procedure RunReport(aReportData: TCMMReportData;
+      aMedia: TCMMediaType)overload;
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
       aMedia: TCMMediaType)overload;
 
-    function NewReport(aTemplate: string;
-      aDocType: string; aStoredProcName: string; aDatasetName: string;
-      aDescription: string)
+    function NewReport(aTemplate: string; aDocType: string;
+      aStoredProcName: string; aDatasetName: string; aDescription: string)
       : TCMMReportData;
 
-    procedure AddSubreport(aReportNo: integer; aSubReportName: string;
-      aStoreProcName: string; aDatasetName: string);
+    function NewSubReport(aRepNo: integer; aName: string; aStoredProcName: string;
+      aDatasetName: string): TCMSReportData;
+
     procedure DeleteReport(aReportNo: integer);
 
     function AllReports: TList<TCMMReportData>;
@@ -103,7 +97,7 @@ implementation
 
 { TCMReportController }
 
-uses vcl.dialogs, ufrmMain;
+uses Vcl.dialogs, ufrmMain;
 
 procedure TCMReportController.addParams(var aSP: TFDStoredProc;
   aParams: TCMParams);
@@ -137,12 +131,6 @@ begin
       aSP.Params.ParamByName(key).Value := Value;
     end;
   end;
-end;
-
-procedure TCMReportController.AddSubreport(aReportNo: integer;
-  aSubReportName, aStoreProcName, aDatasetName: string);
-begin
-
 end;
 
 function TCMReportController.AllReports: TCMMReportsData;
@@ -235,8 +223,8 @@ begin
   Result := getReportDataFromDB(false);
 end;
 
-function TCMReportController.setUpSubReports(var aReportData
-  : TCMMReportData; aParams: TCMParams): TCMSubReports;
+function TCMReportController.setUpSubReports(var aReportData: TCMMReportData;
+  aParams: TCMParams): TCMSubReports;
 var
   srs: TCMSubReports;
   sr: TCMSubReport;
@@ -265,8 +253,7 @@ begin
 
 end;
 
-function TCMReportController.FetchReportData(aRepNo: integer)
-  : TCMMReportData;
+function TCMReportController.FetchReportData(aRepNo: integer): TCMMReportData;
 var
   paramsInfo: TCMParamsInfo;
   RepData: TCMMReportData;
@@ -355,7 +342,7 @@ var
   end;
 
 begin
-  ParamsInfo := nil;
+  paramsInfo := nil;
   SubReportData := nil;
   SubRepDataList := nil;
   closeThis := false;
@@ -381,8 +368,7 @@ begin
   Result := Pi;
 end;
 
-function TCMReportController.GetReportData(ReportNo: integer)
-  : TCMMReportData;
+function TCMReportController.GetReportData(ReportNo: integer): TCMMReportData;
 begin
   if (FReportData <> nil) and (FReportData.ReportNo = ReportNo) then
     Result := FReportData
@@ -397,11 +383,11 @@ end;
 
 procedure TCMReportController.initController;
 begin
-   try
-   dmFR.tblDBProps.Open;
+  try
+    dmFR.tblDBProps.Open;
     FTemplatePath := dmFR.tblDBProps['FastPath'];
-  if (FTemplatePath[FTemplatePath.Length - 1] <> '\') then
-    FTemplatePath := FTemplatePath + '\';
+    if (FTemplatePath[FTemplatePath.Length - 1] <> '\') then
+      FTemplatePath := FTemplatePath + '\';
   finally
     dmFR.tblDBProps.close;
     dmFR.qryFastReports.close;
@@ -409,45 +395,44 @@ begin
 
 end;
 
-function TCMReportController.NewReport(aTemplate: string;
-  aDocType: string; aStoredProcName, aDatasetName: string;
-  aDescription: string)
-  : TCMMReportData;
+function TCMReportController.NewReport(aTemplate: string; aDocType: string;
+  aStoredProcName, aDatasetName: string; aDescription: string): TCMMReportData;
 var
-  DocType, RepNo : integer;
+  docType, RepNo: integer;
   RepData: TCMMReportData;
   parInf: TCMParamsInfo;
 begin
   try
-  Result := nil;
-  RepNo := dmFR.getNextAvalableReportNumber;
-  DocType := strToInt(aDoctype);
-  RepData := TCMMReportData.create(RepNo, aDatasetName, aStoredProcName,
-                                   aDescription, aTemplate, DocType, parInf);
-  Result := RepData;
-  except on E: EConvertError do
-    MessageDlg('Datatype is not numeric!',mtError, [mbOK],0);
-  on E: Exception do
-    MessageDlg('Could not create report!\n Cause: '+E.Message, mtError, [mbOK],0);
+    Result := nil;
+    docType := strToInt(aDocType);
+    RepNo := dmFR.getNextAvalableReportNumber;
+    RepData := TCMMReportData.create(RepNo, aDatasetName, aStoredProcName,
+      aDescription, aTemplate, docType, parInf);
+    Result := RepData;
+  except
+    on E: EConvertError do
+      MessageDlg('Datatype is not numeric!', mtError, [mbOK], 0);
+    on E: Exception do
+      MessageDlg('Could not create report!  --- Cause:' + sLineBreak +
+        E.Message, mtError, [mbOK], 0);
   end;
 end;
 
-procedure TCMReportController.prepareReport(var aReportData
-  : TCMMReportData; aParams: TCMParams);
+function TCMReportController.NewSubReport(aRepNo: integer; aName: string;
+  aStoredProcName, aDatasetName: string): TCMSReportData;
+var
+  parInf: TCMParamsInfo;
+begin
+  Result := TCMSReportData.create(aRepNo, aDatasetName, aStoredProcName,'',
+    aName, parInf);
+end;
+
+procedure TCMReportController.prepareReport(var aReportData: TCMMReportData;
+  aParams: TCMParams);
 begin
   FreeAndNil(FStoredProc);
   FreeAndNil(FDataset);
   setupReport(aReportData, aParams);
-end;
-
-procedure TCMReportController.Preview;
-begin
-
-end;
-
-procedure TCMReportController.Print;
-begin
-
 end;
 
 function TCMReportController.RemoveDBObject(proc: String): string;
@@ -458,11 +443,6 @@ begin
   Result := proc.Substring(i + 1, proc.Length - i - 1);
 end;
 
-procedure TCMReportController.ReportOnFile;
-begin
-
-end;
-
 procedure TCMReportController.RunReport(aReportData: TCMMReportData;
   aMedia: TCMMediaType);
 begin
@@ -470,36 +450,39 @@ begin
   frxReport.showReport;
 end;
 
-procedure TCMReportController.RunReport(aReportNo: integer;
-  aParams: TCMParams; aMedia: TCMMediaType);
+procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
+  aMedia: TCMMediaType);
 begin
-try
-  if (aReportNo > -1) then
-  begin
-    FReportData := FetchReportData(aReportNo);
-    if FReportData <> nil then
+  try
+    if (aReportNo > -1) then
     begin
-      prepareReport(FReportData, aParams);
-      frxReport := setUpFastReport;
-      if aMedia = frPrint then begin
-        frxReport.PrepareReport;
-        frxReport.Print
+      FReportData := FetchReportData(aReportNo);
+      if FReportData <> nil then
+      begin
+        prepareReport(FReportData, aParams);
+        frxReport := setUpFastReport;
+        if aMedia = frPrint then
+        begin
+          frxReport.prepareReport;
+          frxReport.Print
+        end
+        else if aMedia = frPreview then
+          frxReport.showReport
+        else if aMedia = frFile then
+        begin
+          frxReport.prepareReport;
+          frxReport.Export(dmFR.frxPDFExport1);
+        end;
       end
-      else if aMedia = frPreview then
-        frxReport.showReport
-      else if aMedia = frFile then begin
-        frxReport.PrepareReport;
-        frxReport.Export(dmFR.frxPDFExport1);
-      end;
-    end
-    else
-      raise ETCMReportNotFound.Create('Requested report number: '+intToStr(aReportNo)+' was not found in the database!');
+      else
+        raise ETCMReportNotFound.create('Requested report number: ' +
+          intToStr(aReportNo) + ' was not found in the database!');
+    end;
+  finally
+    FreeAndNil(FReportData);
+    FreeAndNil(FStoredProc);
+    FreeAndNil(FDataset);
   end;
-finally
-  FreeAndNil(FReportData);
-  FreeAndNil(FStoredProc);
-  FreeAndNil(FDataset);
-end;
 end;
 
 function TCMReportController.setUpFastReport: TfrxReport;
@@ -507,7 +490,7 @@ begin
   FreeAndNil(frxReport);
   frxReport := TfrxReport.create(frmMain);
   frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
-  frxReport.DataSet :=nil;
+  frxReport.DataSet := nil;
   Result := frxReport;
 end;
 

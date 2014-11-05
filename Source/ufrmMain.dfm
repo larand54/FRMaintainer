@@ -134,6 +134,7 @@ object frmMain: TfrmMain
       Height = 25
       Caption = 'New'
       TabOrder = 3
+      OnClick = btnNewReportClick
     end
     object btnProperties: TButton
       Left = 54

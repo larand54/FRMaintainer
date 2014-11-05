@@ -3,7 +3,7 @@ object frmReportSettings: TfrmReportSettings
   Top = 0
   Caption = 'Report settings'
   ClientHeight = 366
-  ClientWidth = 293
+  ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -48,8 +48,8 @@ object frmReportSettings: TfrmReportSettings
     Height = 13
     Caption = 'Subreports:'
   end
-  object SpeedButton1: TSpeedButton
-    Left = 248
+  object sbtnAddSR: TSpeedButton
+    Left = 288
     Top = 208
     Width = 23
     Height = 22
@@ -89,9 +89,10 @@ object frmReportSettings: TfrmReportSettings
       FEFFFEFEFEFFFEFEFDFFD7AE9EFF00000009000000000000000000000003A386
       7AC0DBB5A5FFDAB5A4FFDAB5A4FFDAB4A4FFD9B3A3FFD9B3A3FFD9B3A2FFD9B2
       A2FFD8B2A2FFD8B1A1FFA08277C2000000060000000000000000}
+    OnClick = sbtnAddSRClick
   end
-  object SpeedButton2: TSpeedButton
-    Left = 248
+  object sbtnRemoveSR: TSpeedButton
+    Left = 288
     Top = 232
     Width = 23
     Height = 22
@@ -142,41 +143,41 @@ object frmReportSettings: TfrmReportSettings
   object edTemplate: TEdit
     Left = 128
     Top = 29
-    Width = 121
+    Width = 161
     Height = 21
     TabOrder = 0
   end
   object edDoctype: TEdit
     Left = 128
     Top = 61
-    Width = 121
+    Width = 161
     Height = 21
     TabOrder = 1
   end
   object edStoredProc: TEdit
     Left = 128
     Top = 93
-    Width = 121
+    Width = 161
     Height = 21
     TabOrder = 2
   end
   object edDataset: TEdit
     Left = 128
     Top = 125
-    Width = 121
+    Width = 161
     Height = 21
     TabOrder = 3
   end
-  object ListBox1: TListBox
+  object lbxSubReports: TListBox
     Left = 128
     Top = 208
-    Width = 121
+    Width = 161
     Height = 97
     ItemHeight = 13
     TabOrder = 4
   end
-  object BitBtn1: TBitBtn
-    Left = 174
+  object bbnApply: TBitBtn
+    Left = 342
     Top = 327
     Width = 75
     Height = 25
@@ -185,8 +186,8 @@ object frmReportSettings: TfrmReportSettings
     NumGlyphs = 2
     TabOrder = 5
   end
-  object BitBtn2: TBitBtn
-    Left = 80
+  object bbnCancel: TBitBtn
+    Left = 32
     Top = 327
     Width = 75
     Height = 25
@@ -197,8 +198,17 @@ object frmReportSettings: TfrmReportSettings
   object edDescription: TEdit
     Left = 128
     Top = 157
-    Width = 121
+    Width = 300
     Height = 21
     TabOrder = 7
+  end
+  object bbnCrtMain: TBitBtn
+    Left = 256
+    Top = 327
+    Width = 75
+    Height = 25
+    Caption = 'Create Main'
+    TabOrder = 8
+    OnClick = bbnCrtMainClick
   end
 end

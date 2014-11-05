@@ -3,9 +3,10 @@ unit ufrmReportSettings;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-   uReport, uReportController;
+  uReport, uReportController, ufrmSubReportSettings;
 
 type
   TfrmReportSettings = class(TForm)
@@ -17,16 +18,21 @@ type
     edDoctype: TEdit;
     edStoredProc: TEdit;
     edDataset: TEdit;
-    ListBox1: TListBox;
+    lbxSubReports: TListBox;
     lblSubreports: TLabel;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    BitBtn1: TBitBtn;
-    BitBtn2: TBitBtn;
+    sbtnAddSR: TSpeedButton;
+    sbtnRemoveSR: TSpeedButton;
+    bbnApply: TBitBtn;
+    bbnCancel: TBitBtn;
     edDescription: TEdit;
     lblDescription: TLabel;
+    bbnCrtMain: TBitBtn;
+    procedure bbnCrtMainClick(Sender: TObject);
+    procedure sbtnAddSRClick(Sender: TObject);
   private
     { Private declarations }
+    FReportData: TCMMReportData;
+    FReportController: TCMReportController;
   public
     { Public declarations }
     function Execute(TCMC: TCMReportController): TCMMReportData;
@@ -43,15 +49,49 @@ uses udmFR;
 
 { TfrmReportSettings }
 
-function TfrmReportSettings.Execute(TCMC: TCMReportController): TCMMReportData;
+procedure TfrmReportSettings.bbnCrtMainClick(Sender: TObject);
 begin
-  if (ShowModal = mrOK) then begin
-    Result := TCMC.NewReport(edTemplate.Text, edDoctype.Text, edStoredProc.Text,
-     edDataset.Text, edDescription.Text);
+  FReportData := FReportController.NewReport(edTemplate.Text, edDoctype.Text,
+    edStoredProc.Text, edDataset.Text, edDescription.Text);
+  if FReportData <> nil then
+  begin
+    bbnApply.Enabled := true;
+    sbtnAddSR.Enabled := true;
+    sbtnRemoveSR.Enabled := true;
+  end;
+
+end;
+
+function TfrmReportSettings.Execute(TCMC: TCMReportController): TCMMReportData;
+var
+  srName: string;
+  srl: TCMSReportsData;
+  i: integer;
+begin
+  FReportController := TCMC;
+  bbnApply.Enabled := false;
+  sbtnAddSR.Enabled := false;
+  sbtnRemoveSR.Enabled := false;
+  FReportData := nil;
+  if (ShowModal = mrOK) then
+  begin
+     srl := TCMSReportsData.Create;
+     for i := 0 to lbxSubreports.Items.Count-1 do begin
+       srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
+     end;
+     FReportData.subReportsData := srl;
+     Result := FReportData;
   end
   else
     Result := nil;
+end;
 
+procedure TfrmReportSettings.sbtnAddSRClick(Sender: TObject);
+var
+  srd: TCMSReportData;
+begin
+  srd := frmSubReportSettings.execute(FReportController,FReportData.ReportNo);
+  lbxSubReports.Items.AddObject(srd.name, srd);
 end;
 
 end.

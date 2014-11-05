@@ -56,12 +56,12 @@ var
   RepNo : integer;
 begin
   try
-   spGetNextReportNumber.Active := true;
+   spGetNextReportNumber.ExecProc;
    error := spGetNextReportNumber.Params[0].AsInteger;
    if error <> 0 then
       Result := -1
    else
-   result := spGetNextReportNumber['@MaxNo'].AsInteger;
+   result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
   finally
     spGetNextReportNumber.Active := false;
   end;
