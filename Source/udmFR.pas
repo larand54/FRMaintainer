@@ -50,8 +50,8 @@ type
     function deleteAllSubReports(aRepno: integer): boolean;
     function deleteSubReport(aRepno: integer; aName: string): boolean;
     function deleteReport(aRepno: integer): boolean;
-    function upDateReport(aRepno: integer): boolean;
-    function upDateSubReport(aRepno: integer; aName: string): boolean;
+    function upDateReport(aRepno: integer; aReportData: TCMMReportData): boolean;
+    function upDateSubReport(aRepno: integer; aName: string; aReportData: TCMSReportData): boolean;
     function addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
     function addSubReport(aRepno: integer; aSubReportData: TCMSReportData): boolean;
     function addallSubReports(aRepno: integer; aSubReportsData: TCMSReportsData): boolean;
@@ -74,7 +74,9 @@ end;
 
 function TdmFR.addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
 begin
-
+  qryInsertFastReport.Active := false;
+  qryInsertFastReport.Prepare;
+  qryInsertFastReport.ParamByName('')
 end;
 
 function TdmFR.addSubReport(aRepno: integer;
@@ -154,12 +156,12 @@ cmd.ExecuteNonQuery();
 conn.Close();}
 end;
 
-function TdmFR.upDateReport(aRepno: integer): boolean;
+function TdmFR.upDateReport(aRepno: integer; aReportData: TCMMReportData): boolean;
 begin
 
 end;
 
-function TdmFR.upDateSubReport(aRepno: integer; aName: string): boolean;
+function TdmFR.upDateSubReport(aRepno: integer; aName: string; aReportData: TCMSReportData): boolean;
 begin
 
 end;
