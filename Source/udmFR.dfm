@@ -1,7 +1,7 @@
 object dmFR: TdmFR
   OldCreateOrder = False
   Height = 283
-  Width = 494
+  Width = 623
   object tblDBProps: TFDTable
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'dbProps'
@@ -251,8 +251,8 @@ object dmFR: TdmFR
     Connection = FDConnection1
     SchemaName = 'dbo'
     StoredProcName = 'Vida_GetMaxNo'
-    Left = 232
-    Top = 112
+    Left = 464
+    Top = 16
     ParamData = <
       item
         Position = 1
@@ -275,6 +275,173 @@ object dmFR: TdmFR
         DataType = ftInteger
         ParamType = ptInputOutput
         Value = 221
+      end>
+  end
+  object qrySubReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT [SubReportName]'
+      '      ,[StoredProcName]'
+      '      ,[DatasetUserName]'
+      '  FROM [vis_vida].[dbo].[FastSubReportNames]'
+      '  WHERE ReportNo = :REPNO AND'
+      'SubReportName = :NAME')
+    Left = 216
+    Top = 64
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 105
+      end
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'certWoodInv'
+      end>
+  end
+  object qryUpdateFastReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'UPDATE [vis_vida].[dbo].[FastReportNames]'
+      '   SET [DocType] = :DOCTYPE'
+      '      ,[ReportName] = :TEMPLATE'
+      '      ,[Description] = :DESCRIPTION'
+      '      ,[StoredProcName] = :STPROCNAME'
+      '      ,[DatasetUserName] = :DSNAME'
+      ' WHERE ReportNo = :REPNO '
+      '    ')
+    Left = 232
+    Top = 120
+    ParamData = <
+      item
+        Name = 'DOCTYPE'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '3'
+      end
+      item
+        Name = 'TEMPLATE'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'test55'
+      end
+      item
+        Name = 'DESCRIPTION'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'Nyaste rapporten'
+      end
+      item
+        Name = 'STPROCNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SP23'
+      end
+      item
+        Name = 'DSNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'DS23'
+      end
+      item
+        Name = 'REPNO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '2200'
+      end>
+  end
+  object qryInsertSubReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'INSERT INTO [vis_vida].[dbo].[FastSubReportNames]'
+      '           (ReportNo'
+      '           ,SubReportName'
+      '           ,Description'
+      '           ,StoredProcName'
+      '           ,DatasetUserName)'
+      '     VALUES'
+      '           (:REPNO'
+      '           ,:SRNAME'
+      '           ,:DESCRIPTION'
+      '           ,:STPROC'
+      '           ,:DATASET)')
+    Left = 120
+    Top = 192
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '2200'
+      end
+      item
+        Name = 'SRNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SUBREP_no1'
+      end
+      item
+        Name = 'DESCRIPTION'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'Test av subrapport'
+      end
+      item
+        Name = 'STPROC'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SP1'
+      end
+      item
+        Name = 'DATASET'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'DS1'
+      end>
+  end
+  object qryUpdateSubReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'UPDATE [vis_vida].[dbo].[FastSubReportNames]'
+      '   SET [Description] = :DESCRIPTION'
+      '      ,[StoredProcName] = :STPROCNAME'
+      '      ,[DatasetUserName] = :DSNAME'
+      ' WHERE ReportNo = :REPNO AND SubReportName = :SRNAME')
+    Left = 256
+    Top = 192
+    ParamData = <
+      item
+        Name = 'DESCRIPTION'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'Ny Subrapport'
+      end
+      item
+        Name = 'STPROCNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SPSR25'
+      end
+      item
+        Name = 'DSNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'DSSR25'
+      end
+      item
+        Name = 'REPNO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '2200'
+      end
+      item
+        Name = 'SRNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SUBREPORT1'
       end>
   end
 end

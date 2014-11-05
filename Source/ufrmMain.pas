@@ -180,11 +180,12 @@ end;
 procedure TfrmMain.updateReportDB(rd: TCMMReportData);
 begin
   // Update table "FastReportNames" with new record if not already exist otherwise just update existing record
-    // Check if record exist
-    // Update Existing Recod
-    // Create new record
-  // For each subreport create new record or update existing records.
-
+  // Check if record exist
+  // Update Existing Record
+  // Create new subreportrecords when needed and update existing
+  // Create new record
+  // Create new subreport records
+  // Insert new object into tree
 end;
 
 procedure TfrmMain.BuildTree;
@@ -256,6 +257,24 @@ begin
   for key in dic.Keys do
 
     lb.Items.Add(key + ':  ' + dic.Items[key]);
+  if dmFR.reportExist(105) then
+    MessageDlg('Rapport 105 existerar', mtInformation, [mbOK], 0)
+  else
+    MessageDlg('Rapport 105 existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+  if dmFR.reportExist(405) then
+    MessageDlg('Rapport 405 existerar', mtInformation, [mbOK], 0)
+  else
+    MessageDlg('Rapport 405 existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+
+  if dmFR.subReportExist(105,'CertWoodInv') then
+    MessageDlg('Rapport CertWoodInv existerar', mtInformation, [mbOK], 0)
+  else
+    MessageDlg('Rapport CertWoodInv existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+
+  if dmFR.subReportExist(105,'CertWood') then
+    MessageDlg('Rapport CertWood existerar', mtInformation, [mbOK], 0)
+  else
+    MessageDlg('Rapport CertWood existerar  I N T E !!!!', mtInformation, [mbOK], 0);
 end;
 
 procedure TfrmMain.btnPrintClick(Sender: TObject);
@@ -270,8 +289,9 @@ end;
 
 procedure TfrmMain.btnNewReportClick(Sender: TObject);
 begin
-  FReportData := frmReportSettings.Execute(reportController);
-  if FReportData <> nil then begin
+  FReportData := frmReportSettings.execute(reportController);
+  if FReportData <> nil then
+  begin
     updateReportDB(FReportData);
   end;
 end;

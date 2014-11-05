@@ -7,7 +7,8 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL,
-  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, frxClass, frxExportPDF;
+  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, frxClass, frxExportPDF,
+  uReport;
 
 type
   TdmFR = class(TDataModule)
@@ -34,11 +35,26 @@ type
     frxPDFExport1: TfrxPDFExport;
     qryInsertFastReport: TFDQuery;
     spGetNextReportNumber: TFDStoredProc;
+    qrySubReport: TFDQuery;
+    qryUpdateFastReport: TFDQuery;
+    qryInsertSubReport: TFDQuery;
+    qryUpdateSubReport: TFDQuery;
   private
     { Private declarations }
   public
     { Public declarations }
+    function updateRecord(aTable: string; aRepNo: integer; name: string): boolean;
     function getNextAvalableReportNumber: integer;
+    function reportExist(aRepno:integer): boolean;
+    function subReportExist(aRepno: integer; aName: string): boolean;
+    function deleteAllSubReports(aRepno: integer): boolean;
+    function deleteSubReport(aRepno: integer; aName: string): boolean;
+    function deleteReport(aRepno: integer): boolean;
+    function upDateReport(aRepno: integer): boolean;
+    function upDateSubReport(aRepno: integer; aName: string): boolean;
+    function addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
+    function addSubReport(aRepno: integer; aSubReportData: TCMSReportData): boolean;
+    function addallSubReports(aRepno: integer; aSubReportsData: TCMSReportsData): boolean;
   end;
 
 var
@@ -49,6 +65,38 @@ implementation
 {$R *.dfm}
 
 { TdmFR }
+
+function TdmFR.addallSubReports(aRepno: integer;
+  aSubReportsData: TCMSReportsData): boolean;
+begin
+
+end;
+
+function TdmFR.addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
+begin
+
+end;
+
+function TdmFR.addSubReport(aRepno: integer;
+  aSubReportData: TCMSReportData): boolean;
+begin
+
+end;
+
+function TdmFR.deleteAllSubReports(aRepno: integer): boolean;
+begin
+
+end;
+
+function TdmFR.deleteReport(aRepno: integer): boolean;
+begin
+
+end;
+
+function TdmFR.deleteSubReport(aRepno: integer; aName: string): boolean;
+begin
+
+end;
 
 function TdmFR.getNextAvalableReportNumber: integer;
 var
@@ -65,6 +113,55 @@ begin
   finally
     spGetNextReportNumber.Active := false;
   end;
+end;
+
+function TdmFR.reportExist(aRepno: integer): boolean;
+begin
+try
+  qryFastReport.active := false;
+  qryFastReport.Prepare;
+  qryFastReport.ParamByName('REPNO').AsInteger := aRepno;
+  qryFastReport.Active := true;
+finally
+  result := (qryFastReport.RecordCount > 0);
+  qryFastReport.Active := false;
+end;
+end;
+
+function TdmFR.subReportExist(aRepno: integer; aName: string): boolean;
+begin
+try
+  qrySubReport.active := false;
+  qrySubReport.Prepare;
+  qrySubReport.ParamByName('REPNO').AsInteger := aRepno;
+  qrySubReport.ParamByName('NAME').AsString := aName;
+  qrySubReport.Active := true;
+finally
+  result := (qrySubReport.RecordCount > 0);
+  qrySubReport.Active := false;
+end;
+end;
+
+function TdmFR.updateRecord(aTable: string; aRepNo: integer;
+  name: string): boolean;
+begin
+{SqlConnection conn = new SqlConnection("...");
+SqlCommand cmd = new SqlCommand(@"IF EXISTS(SELECT 0 FROM SomeTable
+WHERE ID = 0) BEGIN UPDATE SomeTable SET ID = ID + 1 END
+ELSE BEGIN INSERT INTO SomeTable(ID) VALUES(0) END", conn);
+conn.Open();
+cmd.ExecuteNonQuery();
+conn.Close();}
+end;
+
+function TdmFR.upDateReport(aRepno: integer): boolean;
+begin
+
+end;
+
+function TdmFR.upDateSubReport(aRepno: integer; aName: string): boolean;
+begin
+
 end;
 
 end.
