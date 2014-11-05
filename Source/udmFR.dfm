@@ -1,14 +1,14 @@
 object dmFR: TdmFR
   OldCreateOrder = False
-  Height = 322
-  Width = 247
+  Height = 283
+  Width = 494
   object tblDBProps: TFDTable
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'dbProps'
     CatalogName = 'vis_vida'
     TableName = 'dbProps'
-    Left = 72
-    Top = 24
+    Left = 112
+    Top = 8
     object tblDBPropsFastPath: TStringField
       FieldName = 'FastPath'
       Origin = 'FastPath'
@@ -41,7 +41,7 @@ object dmFR: TdmFR
       '      ,[DatasetUserName]'
       '  FROM [vis_vida].[dbo].[FastReportNames]'
       '  ORDER BY [DocType]')
-    Left = 120
+    Left = 200
     Top = 8
     object qryFastReportsReportNo: TIntegerField
       FieldName = 'ReportNo'
@@ -84,8 +84,8 @@ object dmFR: TdmFR
       '      ,[Description]'
       '  FROM [vis_vida].[dbo].[FastSubReportNames]'
       'WHERE ReportNo = :REPNO')
-    Left = 176
-    Top = 24
+    Left = 280
+    Top = 8
     ParamData = <
       item
         Name = 'REPNO'
@@ -119,16 +119,6 @@ object dmFR: TdmFR
       Size = 100
     end
   end
-  object qryParam: TFDQuery
-    Connection = FDConnection1
-    Left = 72
-    Top = 80
-  end
-  object qryParamSR: TFDQuery
-    Connection = FDConnection1
-    Left = 120
-    Top = 64
-  end
   object qryParamInfo: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
@@ -136,8 +126,8 @@ object dmFR: TdmFR
         'select PARAMETER_NAME, DATA_TYPE from information_schema.paramet' +
         'ers'
       'where specific_name=:SP_NAME')
-    Left = 176
-    Top = 72
+    Left = 352
+    Top = 16
     ParamData = <
       item
         Name = 'SP_NAME'
@@ -166,8 +156,8 @@ object dmFR: TdmFR
       '      ,[DatasetUserName]'
       '  FROM [vis_vida].[dbo].[FastReportNames]'
       '  WHERE ReportNo = :REPNO')
-    Left = 120
-    Top = 136
+    Left = 112
+    Top = 64
     ParamData = <
       item
         Name = 'REPNO'
@@ -196,7 +186,95 @@ object dmFR: TdmFR
     CenterWindow = False
     PrintScaling = False
     CheckboxAsShape = False
-    Left = 48
-    Top = 208
+    Left = 24
+    Top = 88
+  end
+  object qryInsertFastReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'INSERT INTO [vis_vida].[dbo].[FastReportNames]'
+      '           (ReportNo'
+      '           ,DocType'
+      '           ,ReportName'
+      '           ,Description'
+      '           ,StoredProcName'
+      '           ,DatasetUserName)'
+      '     VALUES'
+      '           (:ReportNo'
+      '           ,:DocType'
+      '           ,:ReportName'
+      '           ,:Description'
+      '           ,:StoredProcName'
+      '           ,:DatasetUserName)'
+      '')
+    Left = 112
+    Top = 120
+    ParamData = <
+      item
+        Name = 'REPORTNO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '2200'
+      end
+      item
+        Name = 'DOCTYPE'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '2'
+      end
+      item
+        Name = 'REPORTNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'TestRapport'
+      end
+      item
+        Name = 'DESCRIPTION'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'En test att insert-sql:en fungerar'
+      end
+      item
+        Name = 'STOREDPROCNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SP1_Test'
+      end
+      item
+        Name = 'DATASETUSERNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'Dataset 1'
+      end>
+  end
+  object spGetNextReportNumber: TFDStoredProc
+    Connection = FDConnection1
+    SchemaName = 'dbo'
+    StoredProcName = 'Vida_GetMaxNo'
+    Left = 232
+    Top = 112
+    ParamData = <
+      item
+        Position = 1
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        ParamType = ptResult
+        Value = 0
+      end
+      item
+        Position = 2
+        Name = '@TableName'
+        DataType = ftString
+        ParamType = ptInput
+        Size = 50
+        Value = 'FastReportNames'
+      end
+      item
+        Position = 3
+        Name = '@MaxNo'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+        Value = 221
+      end>
   end
 end

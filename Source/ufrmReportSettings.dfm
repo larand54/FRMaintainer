@@ -2,7 +2,7 @@ object frmReportSettings: TfrmReportSettings
   Left = 0
   Top = 0
   Caption = 'Report settings'
-  ClientHeight = 328
+  ClientHeight = 366
   ClientWidth = 293
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,12 +20,12 @@ object frmReportSettings: TfrmReportSettings
     Height = 13
     Caption = 'Template name:'
   end
-  object lblDataType: TLabel
+  object lblDocType: TLabel
     Left = 32
     Top = 64
-    Width = 49
+    Width = 44
     Height = 13
-    Caption = 'Datatype:'
+    Caption = 'Doctype:'
   end
   object lblSP_Name: TLabel
     Left = 34
@@ -43,14 +43,14 @@ object frmReportSettings: TfrmReportSettings
   end
   object lblSubreports: TLabel
     Left = 32
-    Top = 168
+    Top = 200
     Width = 57
     Height = 13
     Caption = 'Subreports:'
   end
   object SpeedButton1: TSpeedButton
     Left = 248
-    Top = 176
+    Top = 208
     Width = 23
     Height = 22
     Hint = 'Add new subreport'
@@ -92,7 +92,7 @@ object frmReportSettings: TfrmReportSettings
   end
   object SpeedButton2: TSpeedButton
     Left = 248
-    Top = 200
+    Top = 232
     Width = 23
     Height = 22
     Hint = 'Remove selected subreport'
@@ -132,6 +132,13 @@ object frmReportSettings: TfrmReportSettings
       7AC0DBB5A5FFDAB5A4FFDAB5A4FFDAB4A4FFD9B3A3FFD9B3A3FFD9B3A2FFD9B2
       A2FFD8B2A2FFD8B1A1FFA08277C2000000060000000000000000}
   end
+  object lblDescription: TLabel
+    Left = 32
+    Top = 160
+    Width = 53
+    Height = 13
+    Caption = 'Description'
+  end
   object edTemplate: TEdit
     Left = 128
     Top = 29
@@ -139,7 +146,7 @@ object frmReportSettings: TfrmReportSettings
     Height = 21
     TabOrder = 0
   end
-  object edDatatype: TEdit
+  object edDoctype: TEdit
     Left = 128
     Top = 61
     Width = 121
@@ -162,7 +169,7 @@ object frmReportSettings: TfrmReportSettings
   end
   object ListBox1: TListBox
     Left = 128
-    Top = 176
+    Top = 208
     Width = 121
     Height = 97
     ItemHeight = 13
@@ -170,7 +177,7 @@ object frmReportSettings: TfrmReportSettings
   end
   object BitBtn1: TBitBtn
     Left = 174
-    Top = 295
+    Top = 327
     Width = 75
     Height = 25
     Caption = 'Apply'
@@ -180,11 +187,18 @@ object frmReportSettings: TfrmReportSettings
   end
   object BitBtn2: TBitBtn
     Left = 80
-    Top = 295
+    Top = 327
     Width = 75
     Height = 25
     Kind = bkCancel
     NumGlyphs = 2
     TabOrder = 6
+  end
+  object edDescription: TEdit
+    Left = 128
+    Top = 157
+    Width = 121
+    Height = 21
+    TabOrder = 7
   end
 end

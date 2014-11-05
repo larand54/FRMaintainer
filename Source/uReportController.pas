@@ -79,8 +79,9 @@ type
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
       aMedia: TCMMediaType)overload;
 
-    function NewReport(aTemplate: string; aReportNo: integer;
-      aDataType: integer; aStoredProcName: string; aDatasetName: string)
+    function NewReport(aTemplate: string;
+      aDocType: string; aStoredProcName: string; aDatasetName: string;
+      aDescription: string)
       : TCMMReportData;
 
     procedure AddSubreport(aReportNo: integer; aSubReportName: string;
@@ -102,7 +103,7 @@ implementation
 
 { TCMReportController }
 
-uses ufrmMain;
+uses vcl.dialogs, ufrmMain;
 
 procedure TCMReportController.addParams(var aSP: TFDStoredProc;
   aParams: TCMParams);
@@ -409,10 +410,26 @@ begin
 end;
 
 function TCMReportController.NewReport(aTemplate: string;
-  aReportNo, aDataType: integer; aStoredProcName, aDatasetName: string)
+  aDocType: string; aStoredProcName, aDatasetName: string;
+  aDescription: string)
   : TCMMReportData;
+var
+  DocType, RepNo : integer;
+  RepData: TCMMReportData;
+  parInf: TCMParamsInfo;
 begin
-
+  try
+  Result := nil;
+  RepNo := dmFR.getNextAvalableReportNumber;
+  DocType := strToInt(aDoctype);
+  RepData := TCMMReportData.create(RepNo, aDatasetName, aStoredProcName,
+                                   aDescription, aTemplate, DocType, parInf);
+  Result := RepData;
+  except on E: EConvertError do
+    MessageDlg('Datatype is not numeric!',mtError, [mbOK],0);
+  on E: Exception do
+    MessageDlg('Could not create report!\n Cause: '+E.Message, mtError, [mbOK],0);
+  end;
 end;
 
 procedure TCMReportController.prepareReport(var aReportData

@@ -16,8 +16,6 @@ type
     tblDBPropsFastPath: TStringField;
     qryFastReports: TFDQuery;
     qrySubreports: TFDQuery;
-    qryParam: TFDQuery;
-    qryParamSR: TFDQuery;
     qryParamInfo: TFDQuery;
     qryParamInfoPARAMETER_NAME: TWideStringField;
     qryParamInfoDATA_TYPE: TWideStringField;
@@ -34,10 +32,13 @@ type
     qryFastReport: TFDQuery;
     qryFastReportsDescription: TStringField;
     frxPDFExport1: TfrxPDFExport;
+    qryInsertFastReport: TFDQuery;
+    spGetNextReportNumber: TFDStoredProc;
   private
     { Private declarations }
   public
     { Public declarations }
+    function getNextAvalableReportNumber: integer;
   end;
 
 var
@@ -46,5 +47,24 @@ var
 implementation
 
 {$R *.dfm}
+
+{ TdmFR }
+
+function TdmFR.getNextAvalableReportNumber: integer;
+var
+  error : integer;
+  RepNo : integer;
+begin
+  try
+   spGetNextReportNumber.Active := true;
+   error := spGetNextReportNumber.Params[0].AsInteger;
+   if error <> 0 then
+      Result := -1
+   else
+   result := spGetNextReportNumber['@MaxNo'].AsInteger;
+  finally
+    spGetNextReportNumber.Active := false;
+  end;
+end;
 
 end.
