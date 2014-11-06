@@ -308,9 +308,9 @@ object dmFR: TdmFR
       'UPDATE [vis_vida].[dbo].[FastReportNames]'
       '   SET [DocType] = :DOCTYPE'
       '      ,[ReportName] = :TEMPLATE'
-      '      ,[Description] = :DESCRIPTION'
-      '      ,[StoredProcName] = :STPROCNAME'
-      '      ,[DatasetUserName] = :DSNAME'
+      '      ,[Description] = :DESCR'
+      '      ,[StoredProcName] = :STPROC'
+      '      ,[DatasetUserName] = :DATASET'
       ' WHERE ReportNo = :REPNO '
       '    ')
     Left = 232
@@ -318,9 +318,9 @@ object dmFR: TdmFR
     ParamData = <
       item
         Name = 'DOCTYPE'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '3'
+        Value = 3
       end
       item
         Name = 'TEMPLATE'
@@ -329,28 +329,28 @@ object dmFR: TdmFR
         Value = 'test55'
       end
       item
-        Name = 'DESCRIPTION'
+        Name = 'DESCR'
         DataType = ftString
         ParamType = ptInput
-        Value = 'Nyaste rapporten'
+        Value = Null
       end
       item
-        Name = 'STPROCNAME'
+        Name = 'STPROC'
         DataType = ftString
         ParamType = ptInput
-        Value = 'SP23'
+        Value = Null
       end
       item
-        Name = 'DSNAME'
+        Name = 'DATASET'
         DataType = ftString
         ParamType = ptInput
-        Value = 'DS23'
+        Value = Null
       end
       item
         Name = 'REPNO'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '2200'
+        Value = 2200
       end>
   end
   object qryInsertSubReport: TFDQuery
@@ -442,6 +442,58 @@ object dmFR: TdmFR
         DataType = ftString
         ParamType = ptInput
         Value = 'SUBREPORT1'
+      end>
+  end
+  object qryDeleteReport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'DELETE FROM FastReportNames '
+      'WHERE ReportNo = :REPNO')
+    Left = 392
+    Top = 144
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 3000
+      end>
+  end
+  object qryDeleteSubreport: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'DELETE FROM FastSubreportNames '
+      'WHERE ReportNo = :REPNO AND'
+      '      SubReportName = :SRNAME')
+    Left = 384
+    Top = 208
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 3000
+      end
+      item
+        Name = 'SRNAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = 'SubReport1'
+      end>
+  end
+  object qryDeleteSubreports: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'DELETE FROM FastSubReportNames'
+      'WHERE ReportNo = :REPNO')
+    Left = 488
+    Top = 216
+    ParamData = <
+      item
+        Name = 'REPNO'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 3000
       end>
   end
 end

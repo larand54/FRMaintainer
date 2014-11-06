@@ -108,6 +108,7 @@ object frmMain: TfrmMain
       Height = 25
       Caption = 'Remove'
       TabOrder = 0
+      OnClick = btnRemoveReportClick
     end
     object ptnPreview: TButton
       Left = 54

@@ -80,7 +80,7 @@ type
     function NewSubReport(aRepNo: integer; aName: string; aStoredProcName: string;
       aDatasetName: string): TCMSReportData;
 
-    procedure DeleteReport(aReportNo: integer);
+    function DeleteReport(aReportNo: integer): boolean;
 
     function AllReports: TList<TCMMReportData>;
     procedure prepareReport(var aReportData: TCMMReportData;
@@ -157,7 +157,6 @@ var
       qry := dmFR.qrySubreports;
       qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
-      SubRepDataList := TList<TCMSReportData>.create;
     end
     else
     begin
@@ -184,6 +183,9 @@ var
       try
         if isSubreport then
         begin
+          if not Assigned(SubRepDataList)  then
+            SubRepDataList := TList<TCMSReportData>.create;
+
           if (qry['SubReportName'] <> null) then
             name := qry['SubReportName']
           else
@@ -202,9 +204,8 @@ var
           if ReportData <> nil then
           begin
             getReportDataFromDB(true);
-            if SubRepDataList <> nil then
 
-              ReportData.subReportsData := SubRepDataList;
+            ReportData.subReportsData := SubRepDataList;
             ReportDataList.Add(ReportData);
           end;
 
@@ -220,6 +221,7 @@ var
   end;
 
 begin
+  subRepDataList := nil;
   Result := getReportDataFromDB(false);
 end;
 
@@ -248,9 +250,16 @@ begin
   Result := srs;
 end;
 
-procedure TCMReportController.DeleteReport(aReportNo: integer);
+function TCMReportController.DeleteReport(aReportNo: integer): boolean;
 begin
+  Result := false;
+   try
+     dmFR.deleteReport(aReportNo);
+     dmFR.deleteAllSubReports(aReportNo);
+     Result := true;
+   finally
 
+   end;
 end;
 
 function TCMReportController.FetchReportData(aRepNo: integer): TCMMReportData;
@@ -289,7 +298,6 @@ var
     qry.First;
     while not qry.Eof do
     begin
-      // RepNo := qry['ReportNo'];
       if (qry['DatasetUserName'] <> null) then
         DsU_name := qry['DatasetUserName']
       else

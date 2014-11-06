@@ -39,6 +39,9 @@ type
     qryUpdateFastReport: TFDQuery;
     qryInsertSubReport: TFDQuery;
     qryUpdateSubReport: TFDQuery;
+    qryDeleteReport: TFDQuery;
+    qryDeleteSubreport: TFDQuery;
+    qryDeleteSubreports: TFDQuery;
   private
     { Private declarations }
   public
@@ -105,26 +108,27 @@ begin
       MessageDlg('Could not add report to database!  --- Cause:' + sLineBreak +
         E.Message, mtError, [mbOK], 0);
   end;
-  for subRepData in aReportData.subReportsData do
-    addSubReport(aRepNo, subRepData);
+  if assigned(aReportData.subReportsData) then
+    for subRepData in aReportData.subReportsData do
+      addSubReport(aRepNo, subRepData);
 end;
 
 function TdmFR.addSubReport(aRepNo: integer;
   aSubReportData: TCMSReportData): boolean;
 begin
   try
-      qryInsertSubReport.Active := false;
-      qryInsertSubReport.Prepare;
-      qryInsertSubReport.ParamByName('REPNO').AsInteger := aRepNo;
-      qryInsertSubReport.ParamByName('DESCR').AsString :=
-        aSubReportData.description;
-      qryInsertSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
-      qryInsertSubReport.ParamByName('STPROC').AsString :=
-        aSubReportData.storedProcName;
-      qryInsertSubReport.ParamByName('DATASET').AsString :=
-        aSubReportData.datasetUserName;
-      qryInsertSubReport.ExecSQL;
-      result := true;
+    qryInsertSubReport.Active := false;
+    qryInsertSubReport.Prepare;
+    qryInsertSubReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qryInsertSubReport.ParamByName('DESCR').AsString :=
+      aSubReportData.description;
+    qryInsertSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
+    qryInsertSubReport.ParamByName('STPROC').AsString :=
+      aSubReportData.storedProcName;
+    qryInsertSubReport.ParamByName('DATASET').AsString :=
+      aSubReportData.datasetUserName;
+    qryInsertSubReport.ExecSQL;
+    result := true;
 
   except
     ON E: EDatabaseError do
@@ -140,17 +144,27 @@ end;
 
 function TdmFR.deleteAllSubReports(aRepNo: integer): boolean;
 begin
-
+  qryDeleteSubreports.Active := false;
+  qryDeleteSubreports.Prepare;
+  qryDeleteSubreports.ParamByName('REPNO').AsInteger := aRepNo;
+  qryDeleteSubreports.ExecSQL;
 end;
 
 function TdmFR.deleteReport(aRepNo: integer): boolean;
 begin
-
+  qryDeleteReport.Active := false;
+  qryDeleteReport.Prepare;
+  qryDeleteReport.ParamByName('REPNO').AsInteger := aRepNo;
+  qryDeleteReport.ExecSQL;
 end;
 
 function TdmFR.deleteSubReport(aRepNo: integer; aName: string): boolean;
 begin
-
+  qryDeleteSubreport.Active := false;
+  qryDeleteSubreport.Prepare;
+  qryDeleteSubreport.ParamByName('REPNO').AsInteger := aRepNo;
+  qryDeleteSubreport.ParamByName('SRNAME').AsString := aName;
+  qryDeleteSubreport.ExecSQL;
 end;
 
 function TdmFR.getNextAvalableReportNumber: integer;
@@ -234,13 +248,12 @@ begin
       MessageDlg('Could not update report to database!  --- Cause:' + sLineBreak
         + E.Message, mtError, [mbOK], 0);
   end;
+
+  deleteAllSubReports(aRepNo);
   for subRepData in aReportData.subReportsData do
   begin
     srName := subRepData.name;
-    if subReportExist(aRepNo, srName) then
-      upDateSubReport(aRepNo, srName, subRepData)
-    else
-      addSubReport(aRepNo, subRepData);
+    addSubReport(aRepNo, subRepData);
   end;
 end;
 
@@ -248,18 +261,18 @@ function TdmFR.upDateSubReport(aRepNo: integer; aName: string;
   aSubReportData: TCMSReportData): boolean;
 begin
   try
-      qryUpdateSubReport.Active := false;
-      qryUpdateSubReport.Prepare;
-      qryUpdateSubReport.ParamByName('REPNO').AsInteger := aRepNo;
-      qryUpdateSubReport.ParamByName('DESCR').AsString :=
-        aSubReportData.description;
-      qryUpdateSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
-      qryUpdateSubReport.ParamByName('STPROC').AsString :=
-        aSubReportData.storedProcName;
-      qryUpdateSubReport.ParamByName('DATASET').AsString :=
-        aSubReportData.datasetUserName;
-      qryUpdateSubReport.ExecSQL;
-      result := true;
+    qryUpdateSubReport.Active := false;
+    qryUpdateSubReport.Prepare;
+    qryUpdateSubReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qryUpdateSubReport.ParamByName('DESCR').AsString :=
+      aSubReportData.description;
+    qryUpdateSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
+    qryUpdateSubReport.ParamByName('STPROC').AsString :=
+      aSubReportData.storedProcName;
+    qryUpdateSubReport.ParamByName('DATASET').AsString :=
+      aSubReportData.datasetUserName;
+    qryUpdateSubReport.ExecSQL;
+    result := true;
 
   except
     ON E: EDatabaseError do

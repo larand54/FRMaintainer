@@ -49,6 +49,7 @@ type
     procedure btnFileClick(Sender: TObject);
     procedure btnNewReportClick(Sender: TObject);
     procedure btnPropertiesClick(Sender: TObject);
+    procedure btnRemoveReportClick(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -67,7 +68,6 @@ type
     procedure freeUpDBComponents;
     procedure freeUpReport;
     function prepareForOutput: integer;
-    procedure updateReportDB(rd: TCMMReportData);
 
   public
     { Public declarations }
@@ -116,6 +116,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Memo1.Clear;
+  FReportData := nil;
   try
     FReportController := TCMReportController.create;
     FReportPath := FReportController.TemplatePath;
@@ -176,17 +177,6 @@ begin
     if Descr <> '' then
       Memo1.Lines.Add(Descr);
   end;
-end;
-
-procedure TfrmMain.updateReportDB(rd: TCMMReportData);
-begin
-  // Update table "FastReportNames" with new record if not already exist otherwise just update existing record
-  // Check if record exist
-  // Update Existing Record
-  // Create new subreportrecords when needed and update existing
-  // Create new record
-  // Create new subreport records
-  // Insert new object into tree
 end;
 
 procedure TfrmMain.BuildTree;
@@ -267,15 +257,17 @@ begin
   else
     MessageDlg('Rapport 405 existerar  I N T E !!!!', mtInformation, [mbOK], 0);
 
-  if dmFR.subReportExist(105,'CertWoodInv') then
+  if dmFR.subReportExist(105, 'CertWoodInv') then
     MessageDlg('Rapport CertWoodInv existerar', mtInformation, [mbOK], 0)
   else
-    MessageDlg('Rapport CertWoodInv existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+    MessageDlg('Rapport CertWoodInv existerar  I N T E !!!!', mtInformation,
+      [mbOK], 0);
 
-  if dmFR.subReportExist(105,'CertWood') then
+  if dmFR.subReportExist(105, 'CertWood') then
     MessageDlg('Rapport CertWood existerar', mtInformation, [mbOK], 0)
   else
-    MessageDlg('Rapport CertWood existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+    MessageDlg('Rapport CertWood existerar  I N T E !!!!', mtInformation,
+      [mbOK], 0);
   dmFR.addReport(105, FReportData);
 end;
 
@@ -289,12 +281,39 @@ var
   node: TTreeNode;
   subItem: TTreeNode;
 begin
-  FReportData := frmReportSettings.execute(reportController);
-  if FReportData <> nil then begin
-    if dmFR.upDateReport(FReportData.ReportNo, FReportData) then begin
-      buildTree;
+  if not assigned(FReportData) then begin
+    MessageDlg('Please select a report!', mtInformation, [mbOk],0);
+    exit;
+  end;
+
+  FReportData := frmReportSettings.execute(reportController, FReportData);
+  if FReportData <> nil then
+  begin
+    if dmFR.upDateReport(FReportData.ReportNo, FReportData) then
+    begin
+      BuildTree;
+      ReportTree.Refresh;
     end;
-     end;
+  end;
+end;
+
+procedure TfrmMain.btnRemoveReportClick(Sender: TObject);
+var
+  report: TCMMReportData;
+  node: TTreeNode;
+  templateFile: string;
+begin
+  report := ReportTree.Selected.Data;
+  if report <> nil then
+  begin
+    if MessageDlg('You are going to remove the report: ' + report.Template,
+      mtWarning, [mbOK, mbCancel], 0) = mrOK then
+    begin
+      if reportController.DeleteReport(report.ReportNo) then
+        ReportTree.Selected.Delete;
+      ReportTree.Refresh;
+    end;
+  end;
 end;
 
 procedure TfrmMain.btnFileClick(Sender: TObject);
@@ -310,8 +329,10 @@ begin
   FReportData := frmReportSettings.execute(reportController);
   if FReportData <> nil then
   begin
-    if dmFR.addReport(FReportData.ReportNo, FReportData) then begin
+    if dmFR.addReport(FReportData.ReportNo, FReportData) then
+    begin
       BuildTree;
+      ReportTree.Refresh
     end;
   end;
 end;
