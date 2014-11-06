@@ -200,51 +200,51 @@ object dmFR: TdmFR
       '           ,StoredProcName'
       '           ,DatasetUserName)'
       '     VALUES'
-      '           (:ReportNo'
-      '           ,:DocType'
-      '           ,:ReportName'
-      '           ,:Description'
-      '           ,:StoredProcName'
-      '           ,:DatasetUserName)'
+      '           (:REPNO'
+      '           ,:DOCTYPE'
+      '           ,:TEMPLATE'
+      '           ,:DESCR'
+      '           ,:STPROC'
+      '           ,:DATASET)'
       '')
     Left = 112
     Top = 120
     ParamData = <
       item
-        Name = 'REPORTNO'
-        DataType = ftString
+        Name = 'REPNO'
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '2200'
+        Value = Null
       end
       item
         Name = 'DOCTYPE'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '2'
+        Value = 2
       end
       item
-        Name = 'REPORTNAME'
+        Name = 'TEMPLATE'
         DataType = ftString
         ParamType = ptInput
-        Value = 'TestRapport'
+        Value = Null
       end
       item
-        Name = 'DESCRIPTION'
+        Name = 'DESCR'
         DataType = ftString
         ParamType = ptInput
-        Value = 'En test att insert-sql:en fungerar'
+        Value = Null
       end
       item
-        Name = 'STOREDPROCNAME'
+        Name = 'STPROC'
         DataType = ftString
         ParamType = ptInput
-        Value = 'SP1_Test'
+        Value = Null
       end
       item
-        Name = 'DATASETUSERNAME'
+        Name = 'DATASET'
         DataType = ftString
         ParamType = ptInput
-        Value = 'Dataset 1'
+        Value = Null
       end>
   end
   object spGetNextReportNumber: TFDStoredProc
@@ -365,7 +365,7 @@ object dmFR: TdmFR
       '     VALUES'
       '           (:REPNO'
       '           ,:SRNAME'
-      '           ,:DESCRIPTION'
+      '           ,:DESCR'
       '           ,:STPROC'
       '           ,:DATASET)')
     Left = 120
@@ -373,9 +373,9 @@ object dmFR: TdmFR
     ParamData = <
       item
         Name = 'REPNO'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '2200'
+        Value = 2200
       end
       item
         Name = 'SRNAME'
@@ -384,10 +384,10 @@ object dmFR: TdmFR
         Value = 'SUBREP_no1'
       end
       item
-        Name = 'DESCRIPTION'
+        Name = 'DESCR'
         DataType = ftString
         ParamType = ptInput
-        Value = 'Test av subrapport'
+        Value = 'My Description of a subreport'
       end
       item
         Name = 'STPROC'
@@ -406,7 +406,7 @@ object dmFR: TdmFR
     Connection = FDConnection1
     SQL.Strings = (
       'UPDATE [vis_vida].[dbo].[FastSubReportNames]'
-      '   SET [Description] = :DESCRIPTION'
+      '   SET [Description] = :DESCR'
       '      ,[StoredProcName] = :STPROCNAME'
       '      ,[DatasetUserName] = :DSNAME'
       ' WHERE ReportNo = :REPNO AND SubReportName = :SRNAME')
@@ -414,10 +414,10 @@ object dmFR: TdmFR
     Top = 192
     ParamData = <
       item
-        Name = 'DESCRIPTION'
+        Name = 'DESCR'
         DataType = ftString
         ParamType = ptInput
-        Value = 'Ny Subrapport'
+        Value = 'Changed the description'
       end
       item
         Name = 'STPROCNAME'
@@ -433,9 +433,9 @@ object dmFR: TdmFR
       end
       item
         Name = 'REPNO'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptInput
-        Value = '2200'
+        Value = 2200
       end
       item
         Name = 'SRNAME'

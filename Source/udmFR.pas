@@ -43,18 +43,23 @@ type
     { Private declarations }
   public
     { Public declarations }
-    function updateRecord(aTable: string; aRepNo: integer; name: string): boolean;
+    function updateRecord(aTable: string; aRepNo: integer;
+      name: string): boolean;
     function getNextAvalableReportNumber: integer;
-    function reportExist(aRepno:integer): boolean;
-    function subReportExist(aRepno: integer; aName: string): boolean;
-    function deleteAllSubReports(aRepno: integer): boolean;
-    function deleteSubReport(aRepno: integer; aName: string): boolean;
-    function deleteReport(aRepno: integer): boolean;
-    function upDateReport(aRepno: integer; aReportData: TCMMReportData): boolean;
-    function upDateSubReport(aRepno: integer; aName: string; aReportData: TCMSReportData): boolean;
-    function addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
-    function addSubReport(aRepno: integer; aSubReportData: TCMSReportData): boolean;
-    function addallSubReports(aRepno: integer; aSubReportsData: TCMSReportsData): boolean;
+    function reportExist(aRepNo: integer): boolean;
+    function subReportExist(aRepNo: integer; aName: string): boolean;
+    function deleteAllSubReports(aRepNo: integer): boolean;
+    function deleteSubReport(aRepNo: integer; aName: string): boolean;
+    function deleteReport(aRepNo: integer): boolean;
+    function upDateReport(aRepNo: integer; aReportData: TCMMReportData)
+      : boolean;
+    function upDateSubReport(aRepNo: integer; aName: string;
+      aSubReportData: TCMSReportData): boolean;
+    function addReport(aRepNo: integer; aReportData: TCMMReportData): boolean;
+    function addSubReport(aRepNo: integer;
+      aSubReportData: TCMSReportData): boolean;
+    function addallSubReports(aRepNo: integer;
+      aSubReportsData: TCMSReportsData): boolean;
   end;
 
 var
@@ -65,104 +70,206 @@ implementation
 {$R *.dfm}
 
 { TdmFR }
+uses Vcl.dialogs;
 
-function TdmFR.addallSubReports(aRepno: integer;
+const
+  EC_DUPLICATE_KEY = 2627;
+
+function TdmFR.addallSubReports(aRepNo: integer;
   aSubReportsData: TCMSReportsData): boolean;
 begin
 
 end;
 
-function TdmFR.addReport(aRepno: integer; aReportData: TCMMReportData): boolean;
+function TdmFR.addReport(aRepNo: integer; aReportData: TCMMReportData): boolean;
+var
+  subRepData: TCMSReportData;
+  i: integer;
 begin
-  qryInsertFastReport.Active := false;
-  qryInsertFastReport.Prepare;
-  qryInsertFastReport.ParamByName('')
+  try
+    qryInsertFastReport.Active := false;
+    qryInsertFastReport.Prepare;
+    qryInsertFastReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qryInsertFastReport.ParamByName('DOCTYPE').AsInteger := aReportData.docType;
+    qryInsertFastReport.ParamByName('DESCR').AsString :=
+      aReportData.description;
+    qryInsertFastReport.ParamByName('TEMPLATE').AsString :=
+      aReportData.Template;
+    qryInsertFastReport.ParamByName('STPROC').AsString :=
+      aReportData.storedProcName;
+    qryInsertFastReport.ParamByName('DATASET').AsString :=
+      aReportData.datasetUserName;
+    qryInsertFastReport.ExecSQL;
+  except
+    ON E: EDatabaseError do
+      MessageDlg('Could not add report to database!  --- Cause:' + sLineBreak +
+        E.Message, mtError, [mbOK], 0);
+  end;
+  for subRepData in aReportData.subReportsData do
+    addSubReport(aRepNo, subRepData);
 end;
 
-function TdmFR.addSubReport(aRepno: integer;
+function TdmFR.addSubReport(aRepNo: integer;
   aSubReportData: TCMSReportData): boolean;
 begin
+  try
+      qryInsertSubReport.Active := false;
+      qryInsertSubReport.Prepare;
+      qryInsertSubReport.ParamByName('REPNO').AsInteger := aRepNo;
+      qryInsertSubReport.ParamByName('DESCR').AsString :=
+        aSubReportData.description;
+      qryInsertSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
+      qryInsertSubReport.ParamByName('STPROC').AsString :=
+        aSubReportData.storedProcName;
+      qryInsertSubReport.ParamByName('DATASET').AsString :=
+        aSubReportData.datasetUserName;
+      qryInsertSubReport.ExecSQL;
+      result := true;
+
+  except
+    ON E: EDatabaseError do
+    begin
+      result := false;
+      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
+    end;
+
+  end;
 
 end;
 
-function TdmFR.deleteAllSubReports(aRepno: integer): boolean;
+function TdmFR.deleteAllSubReports(aRepNo: integer): boolean;
 begin
 
 end;
 
-function TdmFR.deleteReport(aRepno: integer): boolean;
+function TdmFR.deleteReport(aRepNo: integer): boolean;
 begin
 
 end;
 
-function TdmFR.deleteSubReport(aRepno: integer; aName: string): boolean;
+function TdmFR.deleteSubReport(aRepNo: integer; aName: string): boolean;
 begin
 
 end;
 
 function TdmFR.getNextAvalableReportNumber: integer;
 var
-  error : integer;
-  RepNo : integer;
+  Error: integer;
+  RepNo: integer;
 begin
   try
-   spGetNextReportNumber.ExecProc;
-   error := spGetNextReportNumber.Params[0].AsInteger;
-   if error <> 0 then
-      Result := -1
-   else
-   result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
+    spGetNextReportNumber.ExecProc;
+    Error := spGetNextReportNumber.Params[0].AsInteger;
+    if Error <> 0 then
+      result := -1
+    else
+      result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
   finally
     spGetNextReportNumber.Active := false;
   end;
 end;
 
-function TdmFR.reportExist(aRepno: integer): boolean;
+function TdmFR.reportExist(aRepNo: integer): boolean;
 begin
-try
-  qryFastReport.active := false;
-  qryFastReport.Prepare;
-  qryFastReport.ParamByName('REPNO').AsInteger := aRepno;
-  qryFastReport.Active := true;
-finally
-  result := (qryFastReport.RecordCount > 0);
-  qryFastReport.Active := false;
-end;
+  try
+    qryFastReport.Active := false;
+    qryFastReport.Prepare;
+    qryFastReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qryFastReport.Active := true;
+  finally
+    result := (qryFastReport.RecordCount > 0);
+    qryFastReport.Active := false;
+  end;
 end;
 
-function TdmFR.subReportExist(aRepno: integer; aName: string): boolean;
+function TdmFR.subReportExist(aRepNo: integer; aName: string): boolean;
 begin
-try
-  qrySubReport.active := false;
-  qrySubReport.Prepare;
-  qrySubReport.ParamByName('REPNO').AsInteger := aRepno;
-  qrySubReport.ParamByName('NAME').AsString := aName;
-  qrySubReport.Active := true;
-finally
-  result := (qrySubReport.RecordCount > 0);
-  qrySubReport.Active := false;
-end;
+  try
+    qrySubReport.Active := false;
+    qrySubReport.Prepare;
+    qrySubReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qrySubReport.ParamByName('NAME').AsString := aName;
+    qrySubReport.Active := true;
+  finally
+    result := (qrySubReport.RecordCount > 0);
+    qrySubReport.Active := false;
+  end;
 end;
 
 function TdmFR.updateRecord(aTable: string; aRepNo: integer;
   name: string): boolean;
 begin
-{SqlConnection conn = new SqlConnection("...");
-SqlCommand cmd = new SqlCommand(@"IF EXISTS(SELECT 0 FROM SomeTable
-WHERE ID = 0) BEGIN UPDATE SomeTable SET ID = ID + 1 END
-ELSE BEGIN INSERT INTO SomeTable(ID) VALUES(0) END", conn);
-conn.Open();
-cmd.ExecuteNonQuery();
-conn.Close();}
+  { SqlConnection conn = new SqlConnection("...");
+    SqlCommand cmd = new SqlCommand(@"IF EXISTS(SELECT 0 FROM SomeTable
+    WHERE ID = 0) BEGIN UPDATE SomeTable SET ID = ID + 1 END
+    ELSE BEGIN INSERT INTO SomeTable(ID) VALUES(0) END", conn);
+    conn.Open();
+    cmd.ExecuteNonQuery();
+    conn.Close(); }
 end;
 
-function TdmFR.upDateReport(aRepno: integer; aReportData: TCMMReportData): boolean;
+function TdmFR.upDateReport(aRepNo: integer;
+  aReportData: TCMMReportData): boolean;
+var
+  subRepData: TCMSReportData;
+  srName: string;
 begin
-
+  try
+    qryUpdateFastReport.Active := false;
+    qryUpdateFastReport.Prepare;
+    qryUpdateFastReport.ParamByName('REPNO').AsInteger := aRepNo;
+    qryUpdateFastReport.ParamByName('DOCTYPE').AsInteger := aReportData.docType;
+    qryUpdateFastReport.ParamByName('DESCR').AsString :=
+      aReportData.description;
+    qryUpdateFastReport.ParamByName('TEMPLATE').AsString :=
+      aReportData.Template;
+    qryUpdateFastReport.ParamByName('STPROC').AsString :=
+      aReportData.storedProcName;
+    qryUpdateFastReport.ParamByName('DATASET').AsString :=
+      aReportData.datasetUserName;
+    qryUpdateFastReport.ExecSQL;
+  except
+    ON E: EDatabaseError do
+      MessageDlg('Could not update report to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
+  end;
+  for subRepData in aReportData.subReportsData do
+  begin
+    srName := subRepData.name;
+    if subReportExist(aRepNo, srName) then
+      upDateSubReport(aRepNo, srName, subRepData)
+    else
+      addSubReport(aRepNo, subRepData);
+  end;
 end;
 
-function TdmFR.upDateSubReport(aRepno: integer; aName: string; aReportData: TCMSReportData): boolean;
+function TdmFR.upDateSubReport(aRepNo: integer; aName: string;
+  aSubReportData: TCMSReportData): boolean;
 begin
+  try
+      qryUpdateSubReport.Active := false;
+      qryUpdateSubReport.Prepare;
+      qryUpdateSubReport.ParamByName('REPNO').AsInteger := aRepNo;
+      qryUpdateSubReport.ParamByName('DESCR').AsString :=
+        aSubReportData.description;
+      qryUpdateSubReport.ParamByName('SRNAME').AsString := aSubReportData.name;
+      qryUpdateSubReport.ParamByName('STPROC').AsString :=
+        aSubReportData.storedProcName;
+      qryUpdateSubReport.ParamByName('DATASET').AsString :=
+        aSubReportData.datasetUserName;
+      qryUpdateSubReport.ExecSQL;
+      result := true;
+
+  except
+    ON E: EDatabaseError do
+    begin
+      result := false;
+      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
+    end;
+
+  end;
 
 end;
 

@@ -48,6 +48,7 @@ type
     procedure btnPrintClick(Sender: TObject);
     procedure btnFileClick(Sender: TObject);
     procedure btnNewReportClick(Sender: TObject);
+    procedure btnPropertiesClick(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -275,11 +276,25 @@ begin
     MessageDlg('Rapport CertWood existerar', mtInformation, [mbOK], 0)
   else
     MessageDlg('Rapport CertWood existerar  I N T E !!!!', mtInformation, [mbOK], 0);
+  dmFR.addReport(105, FReportData);
 end;
 
 procedure TfrmMain.btnPrintClick(Sender: TObject);
 begin
   reportController.RunReport(prepareForOutput, FParams, frPrint);
+end;
+
+procedure TfrmMain.btnPropertiesClick(Sender: TObject);
+var
+  node: TTreeNode;
+  subItem: TTreeNode;
+begin
+  FReportData := frmReportSettings.execute(reportController);
+  if FReportData <> nil then begin
+    if dmFR.upDateReport(FReportData.ReportNo, FReportData) then begin
+      buildTree;
+    end;
+     end;
 end;
 
 procedure TfrmMain.btnFileClick(Sender: TObject);
@@ -288,11 +303,16 @@ begin
 end;
 
 procedure TfrmMain.btnNewReportClick(Sender: TObject);
+var
+  node: TTreeNode;
+  subItem: TTreeNode;
 begin
   FReportData := frmReportSettings.execute(reportController);
   if FReportData <> nil then
   begin
-    updateReportDB(FReportData);
+    if dmFR.addReport(FReportData.ReportNo, FReportData) then begin
+      BuildTree;
+    end;
   end;
 end;
 
