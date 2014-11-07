@@ -30,6 +30,7 @@ type
     procedure bbnCrtMainClick(Sender: TObject);
     procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
+    procedure sbtnRemoveSRClick(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -155,7 +156,7 @@ begin
 
     // Report now updated - add subreports and move on
     begin
-      if Assigned(srl) then
+      if lbxSubReports.Items.Count > 0 then
       begin
         srl := TCMSReportsData.Create;
         for i := 0 to lbxSubReports.Items.Count - 1 do
@@ -169,9 +170,9 @@ begin
     else
       Result := nil;
   finally
-    FreeAndNil(srl);
-    for i := 0 to lbxSubReports.Items.Count - 1 do
-      TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
+//    FreeAndNil(srl);
+//    for i := 0 to lbxSubReports.Items.Count - 1 do
+//      TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
     lbxSubReports.Items.Clear;
   end;
 end;
@@ -182,6 +183,11 @@ var
 begin
   srd := frmSubReportSettings.Execute(FReportController, FReportData.ReportNo);
   lbxSubReports.Items.AddObject(srd.name, srd);
+end;
+
+procedure TfrmReportSettings.sbtnRemoveSRClick(Sender: TObject);
+begin
+  lbxSubReports.Items.Delete(lbxSubReports.ItemIndex);
 end;
 
 end.
