@@ -170,9 +170,6 @@ begin
     else
       Result := nil;
   finally
-//    FreeAndNil(srl);
-//    for i := 0 to lbxSubReports.Items.Count - 1 do
-//      TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
     lbxSubReports.Items.Clear;
   end;
 end;
