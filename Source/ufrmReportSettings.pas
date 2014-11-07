@@ -28,6 +28,7 @@ type
     lblDescription: TLabel;
     bbnCrtMain: TBitBtn;
     procedure bbnCrtMainClick(Sender: TObject);
+    procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
   private
     { Private declarations }
@@ -75,22 +76,24 @@ var
 begin
   frmReportSettings.Caption := 'Report settings  -- Create New Report';
   bbnCrtMain.Caption := 'Create Main';
+  bbnCrtMain.OnClick := bbnCrtMainClick;
   FReportController := TCMC;
   bbnApply.Enabled := false;
   sbtnAddSR.Enabled := false;
   sbtnRemoveSR.Enabled := false;
   if (ShowModal = mrOK) then
   begin
-  Result := FReportData;
-  if lbxSubReports.Items.Count > 0 then begin
-
-    srl := TCMSReportsData.Create;
-    for i := 0 to lbxSubReports.Items.Count - 1 do
+    Result := FReportData;
+    if lbxSubReports.Items.Count > 0 then
     begin
-      srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
-    end;
-    FReportData.subReportsData := srl;
-    FreeAndNil(srl);
+
+      srl := TCMSReportsData.Create;
+      for i := 0 to lbxSubReports.Items.Count - 1 do
+      begin
+        srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
+      end;
+      FReportData.subReportsData := srl;
+      FreeAndNil(srl);
       for i := 0 to lbxSubReports.Items.Count - 1 do
         TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
       lbxSubReports.Items.Clear;
@@ -98,6 +101,22 @@ begin
   end
   else
     Result := nil;
+end;
+
+procedure TfrmReportSettings.bbnUpdMainClick(Sender: TObject);
+var
+  RepNo: integer;
+begin
+  RepNo := FReportData.ReportNo;
+  FreeAndNil(FReportData);
+  FReportData := FReportController.UpdateReport(RepNo, edTemplate.Text, edDoctype.Text,
+    edStoredProc.Text, edDataset.Text, edDescription.Text);
+  if FReportData <> nil then
+  begin
+    bbnApply.Enabled := true;
+    sbtnAddSR.Enabled := true;
+    sbtnRemoveSR.Enabled := true;
+  end;
 end;
 
 function TfrmReportSettings.Execute(TCMC: TCMReportController;
@@ -110,7 +129,9 @@ var
 begin
   try
     FReportData := aRepData;
+    bbnApply.Enabled := false;
     bbnCrtMain.Caption := 'Update Main';
+    bbnCrtMain.OnClick := bbnUpdMainClick;
     frmReportSettings.Caption := 'Report settings  -- Update Report';
     FReportController := TCMC;
 
@@ -122,22 +143,25 @@ begin
     edDataset.Text := FReportData.datasetUserName;
     edDescription.Text := FReportData.description;
 
-
     // Fill listbox with existing subReports
     srl := FReportData.subReportsData;
-    for sr in srl do
-    begin
-      lbxSubReports.Items.AddObject(sr.name, sr);
-    end;
+    if Assigned(srl) then
+      for sr in srl do
+      begin
+        lbxSubReports.Items.AddObject(sr.name, sr);
+      end;
 
     if (ShowModal = mrOK) then
 
     // Report now updated - add subreports and move on
     begin
-      srl := TCMSReportsData.Create;
-      for i := 0 to lbxSubReports.Items.Count - 1 do
+      if Assigned(srl) then
       begin
-        srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
+        srl := TCMSReportsData.Create;
+        for i := 0 to lbxSubReports.Items.Count - 1 do
+        begin
+          srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
+        end;
       end;
       FReportData.subReportsData := srl;
       Result := FReportData;

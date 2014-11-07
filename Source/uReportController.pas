@@ -42,6 +42,7 @@ type
     FStoredProc: TFDStoredProc;
     FDataset: TfrxDBDataset;
 
+    procedure cleanUpFromDB_components;
     function setUpFastReport: TfrxReport;
     procedure addParams(var aSP: TFDStoredProc; aParams: TCMParams);
     function RemoveDBObject(proc: String): string;
@@ -73,12 +74,18 @@ type
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
       aMedia: TCMMediaType)overload;
 
+    procedure DesignReport(aReportNo: integer);
+
     function NewReport(aTemplate: string; aDocType: string;
       aStoredProcName: string; aDatasetName: string; aDescription: string)
       : TCMMReportData;
 
-    function NewSubReport(aRepNo: integer; aName: string; aStoredProcName: string;
-      aDatasetName: string): TCMSReportData;
+    function UpdateReport(aRepNo: integer; aTemplate: string; aDocType: string;
+      aStoredProcName: string; aDatasetName: string; aDescription: string)
+      : TCMMReportData;
+
+    function NewSubReport(aRepNo: integer; aName: string;
+      aStoredProcName: string; aDatasetName: string): TCMSReportData;
 
     function DeleteReport(aReportNo: integer): boolean;
 
@@ -183,7 +190,7 @@ var
       try
         if isSubreport then
         begin
-          if not Assigned(SubRepDataList)  then
+          if not Assigned(SubRepDataList) then
             SubRepDataList := TList<TCMSReportData>.create;
 
           if (qry['SubReportName'] <> null) then
@@ -206,6 +213,7 @@ var
             getReportDataFromDB(true);
 
             ReportData.subReportsData := SubRepDataList;
+            SubRepDataList := nil; // Clean before next report
             ReportDataList.Add(ReportData);
           end;
 
@@ -221,7 +229,7 @@ var
   end;
 
 begin
-  subRepDataList := nil;
+  SubRepDataList := nil;
   Result := getReportDataFromDB(false);
 end;
 
@@ -250,16 +258,64 @@ begin
   Result := srs;
 end;
 
+function TCMReportController.UpdateReport(aRepNo: integer; aTemplate, aDocType, aStoredProcName,
+  aDatasetName, aDescription: string): TCMMReportData;
+var
+  docType: integer;
+  RepData: TCMMReportData;
+  parInf: TCMParamsInfo;
+begin
+  try
+    Result := nil;
+    docType := strToInt(aDocType);
+    RepData := TCMMReportData.create(aRepNo, aDatasetName, aStoredProcName,
+      aDescription, aTemplate, docType, parInf);
+    Result := RepData;
+  except
+    on E: EConvertError do
+      MessageDlg('Datatype is not numeric!', mtError, [mbOK], 0);
+    on E: Exception do
+      MessageDlg('Could not create report!  --- Cause:' + sLineBreak +
+        E.Message, mtError, [mbOK], 0);
+  end;
+end;
+
 function TCMReportController.DeleteReport(aReportNo: integer): boolean;
 begin
   Result := false;
-   try
-     dmFR.deleteReport(aReportNo);
-     dmFR.deleteAllSubReports(aReportNo);
-     Result := true;
-   finally
+  try
+    dmFR.DeleteReport(aReportNo);
+    dmFR.deleteAllSubReports(aReportNo);
+    Result := true;
+  finally
 
-   end;
+  end;
+end;
+
+procedure TCMReportController.DesignReport(aReportNo: integer);
+begin
+  try
+    if (aReportNo > -1) then
+    begin
+      FReportData := FetchReportData(aReportNo);
+      if FReportData <> nil then
+      begin
+        with FReportData do
+        begin
+          createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
+            DatasetUserName, nil);
+        end;
+        FSubReports := setUpSubReports(FReportData, nil);
+        frxReport := setUpFastReport;
+        frxReport.DesignReport;
+      end
+      else
+        raise ETCMReportNotFound.create('Requested report number: ' +
+          intToStr(aReportNo) + ' was not found in the database!');
+    end;
+  finally
+    cleanUpFromDB_components;
+  end;
 end;
 
 function TCMReportController.FetchReportData(aRepNo: integer): TCMMReportData;
@@ -406,24 +462,10 @@ end;
 function TCMReportController.NewReport(aTemplate: string; aDocType: string;
   aStoredProcName, aDatasetName: string; aDescription: string): TCMMReportData;
 var
-  docType, RepNo: integer;
-  RepData: TCMMReportData;
-  parInf: TCMParamsInfo;
+  RepNo: integer;
 begin
-  try
-    Result := nil;
-    docType := strToInt(aDocType);
     RepNo := dmFR.getNextAvalableReportNumber;
-    RepData := TCMMReportData.create(RepNo, aDatasetName, aStoredProcName,
-      aDescription, aTemplate, docType, parInf);
-    Result := RepData;
-  except
-    on E: EConvertError do
-      MessageDlg('Datatype is not numeric!', mtError, [mbOK], 0);
-    on E: Exception do
-      MessageDlg('Could not create report!  --- Cause:' + sLineBreak +
-        E.Message, mtError, [mbOK], 0);
-  end;
+    Result := UpdateReport(RepNo,aTemplate,aDocType,aStoredProcName,aDatasetName, aDescription);
 end;
 
 function TCMReportController.NewSubReport(aRepNo: integer; aName: string;
@@ -431,7 +473,7 @@ function TCMReportController.NewSubReport(aRepNo: integer; aName: string;
 var
   parInf: TCMParamsInfo;
 begin
-  Result := TCMSReportData.create(aRepNo, aDatasetName, aStoredProcName,'',
+  Result := TCMSReportData.create(aRepNo, aDatasetName, aStoredProcName, '',
     aName, parInf);
 end;
 
@@ -454,8 +496,12 @@ end;
 procedure TCMReportController.RunReport(aReportData: TCMMReportData;
   aMedia: TCMMediaType);
 begin
-  frxReport := setUpFastReport;
-  frxReport.showReport;
+  try
+    frxReport := setUpFastReport;
+    frxReport.showReport;
+  finally
+    cleanUpFromDB_components;
+  end;
 end;
 
 procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
@@ -487,9 +533,7 @@ begin
           intToStr(aReportNo) + ' was not found in the database!');
     end;
   finally
-    FreeAndNil(FReportData);
-    FreeAndNil(FStoredProc);
-    FreeAndNil(FDataset);
+    cleanUpFromDB_components;
   end;
 end;
 
@@ -513,6 +557,20 @@ begin
   FSubReports := setUpSubReports(aReportData, aParams);
 end;
 
+procedure TCMReportController.cleanUpFromDB_components;
+var
+  sr: TCMSubReport;
+begin
+  FreeAndNil(FReportData);
+  FreeAndNil(FStoredProc);
+  FreeAndNil(FDataset);
+  for sr in FSubReports.Values do
+  begin
+    FreeAndNil(sr.FStoredProc);
+    FreeAndNil(sr.FDataset);
+  end;
+end;
+
 constructor TCMReportController.create;
 begin
   initController;
@@ -530,7 +588,8 @@ begin
   aSP.Active := false;
   aSP.StoredProcName := aSp_Name;
   aSP.Prepare;
-  addParams(aSP, aParams);
+  if assigned(aParams) then
+    addParams(aSP, aParams);
   aSP.Active := true;
 
   // Create and prepare the TfrxDBDataset component

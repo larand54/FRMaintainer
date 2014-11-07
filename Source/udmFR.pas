@@ -243,6 +243,7 @@ begin
     qryUpdateFastReport.ParamByName('DATASET').AsString :=
       aReportData.datasetUserName;
     qryUpdateFastReport.ExecSQL;
+    Result := true;
   except
     ON E: EDatabaseError do
       MessageDlg('Could not update report to database!  --- Cause:' + sLineBreak
@@ -250,11 +251,12 @@ begin
   end;
 
   deleteAllSubReports(aRepNo);
-  for subRepData in aReportData.subReportsData do
-  begin
-    srName := subRepData.name;
-    addSubReport(aRepNo, subRepData);
-  end;
+  if assigned(aReportData.subReportsData) then
+    for subRepData in aReportData.subReportsData do
+    begin
+      srName := subRepData.name;
+      addSubReport(aRepNo, subRepData);
+    end;
 end;
 
 function TdmFR.upDateSubReport(aRepNo: integer; aName: string;

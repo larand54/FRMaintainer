@@ -101,10 +101,18 @@ begin
   report := ReportTree.Selected.Data;
   if report <> nil then
   begin
-    templateFile := FReportPath + '\' + report.Template;
-    frxReport1.DataSet := frxDataset;
-    frxReport1.LoadFromFile(templateFile);
-    frxReport1.DesignReport;
+    reportController.DesignReport(report.ReportNo);
+  end
+  else
+  begin
+    // Create new template without any report connected
+    if MessageDlg
+      ('You are going to create a new template without any specified report',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      frxReport1.DataSet := nil;
+      frxReport1.DesignReport;
+    end;
   end;
 end;
 
@@ -195,6 +203,7 @@ var
   Reportdata: TCMMReportData;
 
 begin
+ReportTree.Items.Clear;
   node := ReportTree.Items.Add(nil, 'Avalable Reports...');
   node.ImageIndex := 0;
   try
@@ -281,8 +290,9 @@ var
   node: TTreeNode;
   subItem: TTreeNode;
 begin
-  if not assigned(FReportData) then begin
-    MessageDlg('Please select a report!', mtInformation, [mbOk],0);
+  if not assigned(FReportData) then
+  begin
+    MessageDlg('Please select a report!', mtInformation, [mbOK], 0);
     exit;
   end;
 
