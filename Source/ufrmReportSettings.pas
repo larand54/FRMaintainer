@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  uReport, uReportController, ufrmSubReportSettings;
+  uReport, uReportController, ufrmSubReportSettings, siComp, siLngLnk;
 
 type
   TfrmReportSettings = class(TForm)
@@ -27,6 +27,7 @@ type
     edDescription: TEdit;
     lblDescription: TLabel;
     bbnCrtMain: TBitBtn;
+    siLangLinked_frmReportSettings: TsiLangLinked;
     procedure bbnCrtMainClick(Sender: TObject);
     procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
@@ -75,8 +76,8 @@ var
   srl: TCMSReportsData;
   i: integer;
 begin
-  frmReportSettings.Caption := 'Report settings  -- Create New Report';
-  bbnCrtMain.Caption := 'Create Main';
+  frmReportSettings.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_0' (* 'Report settings  -- Create New Report' *) );
+  bbnCrtMain.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_1' (* 'Create Main' *) );
   bbnCrtMain.OnClick := bbnCrtMainClick;
   FReportController := TCMC;
   bbnApply.Enabled := false;
@@ -131,9 +132,9 @@ begin
   try
     FReportData := aRepData;
     bbnApply.Enabled := false;
-    bbnCrtMain.Caption := 'Update Main';
+    bbnCrtMain.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_2' (* 'Update Main' *) );
     bbnCrtMain.OnClick := bbnUpdMainClick;
-    frmReportSettings.Caption := 'Report settings  -- Update Report';
+    frmReportSettings.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_3' (* 'Report settings  -- Update Report' *) );
     FReportController := TCMC;
 
     // Fill form with data

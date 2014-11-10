@@ -1,0 +1,21 @@
+
+[Captions]
+TfrmReportSettings.bbnApply=Apply~!@#$Tillämpa~!@#$
+TfrmReportSettings.bbnCancel=Cancel~!@#$Avbryt~!@#$
+TfrmReportSettings.bbnCrtMain=Create Main~!@#$Skapa huvuvdrapport~!@#$
+TfrmReportSettings.lblDescription=Description~!@#$Beskrivning~!@#$
+TfrmReportSettings.lblDocType=Doctype:~!@#$Dokumenttyp~!@#$
+TfrmReportSettings.lblDS_Name=Dataset:~!@#$~!@#$
+TfrmReportSettings.lblSP_Name=Stored procedure:~!@#$~!@#$
+TfrmReportSettings.lblSubreports=Subreports:~!@#$Underrapporter~!@#$
+TfrmReportSettings.lblTemplate_Name=Template name:~!@#$Rapport mall~!@#$
+TfrmReportSettings.TfrmReportSettings=Report settings  -- Create New Report~!@#$Inställningar -- Skapa ny rapport databas~!@#$
+
+[Language names - for internal use only!]
+Language_1=English
+Language_2=Swedish
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+

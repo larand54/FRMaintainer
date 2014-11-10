@@ -1,0 +1,35 @@
+
+[Captions]
+TfrmMain.BitBtn1=&Close~!@#$Stäng~!@#$
+TfrmMain.btnDesignReport=Design~!@#$~!@#$
+TfrmMain.btnFile=PDF~!@#$~!@#$
+TfrmMain.btnNewReport=New~!@#$ Ny  ~!@#$
+TfrmMain.btnPrint=Print~!@#$Skriv ut~!@#$
+TfrmMain.btnProperties=Properties~!@#$Egenskaper~!@#$
+TfrmMain.btnRemoveReport=Remove~!@#$Ta bort~!@#$
+TfrmMain.Button1=Button1~!@#$~!@#$
+TfrmMain.GroupBox1=Report operations~!@#$~!@#$
+TfrmMain.Label1=List of available reports~!@#$Befintliga rapporter~!@#$
+TfrmMain.Label2=Description~!@#$Beskrivning~!@#$
+TfrmMain.Panel1=Panel1~!@#$~!@#$
+TfrmMain.Panel2=Panel2~!@#$~!@#$
+TfrmMain.ptnPreview=Preview~!@#$~!@#$
+TfrmMain.TfrmMain=Fast Report Mainteenance~!@#$Fast Report Underhåll~!@#$
+
+[Hints]
+TfrmMain.btnProperties=Show/Edit Template name, Dataset, Stored procedure, Parameters etc~!@#$Visa/Uppdatera Rapportmall, Dataset. Lagrade procdurer etc.~!@#$
+
+[Language names - for internal use only!]
+Language_1=English
+Language_2=Swedish
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+
+[Strings]
+TfrmMain.IDS_0=You are going to create a new template without any specified report~!@#$Du håller på att skapa en ny rapportmall utan given rapport~!@#$
+TfrmMain.IDS_2=Avalable Reports...~!@#$Befintliga rapporter~!@#$
+TfrmMain.IDS_25=Please select a report!~!@#$Välj rapport först!~!@#$
+TfrmMain.IDS_26=You are going to remove the report: ~!@#$Då håller på att ta bort vald rapport!~!@#$
+

@@ -273,9 +273,9 @@ begin
     Result := RepData;
   except
     on E: EConvertError do
-      MessageDlg('Datatype is not numeric!', mtError, [mbOK], 0);
+      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_0' (* 'Datatype is not numeric!' *) ), mtError, [mbOK], 0);
     on E: Exception do
-      MessageDlg('Could not create report!  --- Cause:' + sLineBreak +
+      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_1' (* 'Could not create report!  --- Cause:' *) ) + sLineBreak +
         E.Message, mtError, [mbOK], 0);
   end;
 end;
@@ -310,8 +310,8 @@ begin
         frxReport.DesignReport;
       end
       else
-        raise ETCMReportNotFound.create('Requested report number: ' +
-          intToStr(aReportNo) + ' was not found in the database!');
+        raise ETCMReportNotFound.create(dmFR.siLang1.GetTextOrDefault('IDS_2' (* 'Requested report number: ' *) ) +
+          intToStr(aReportNo) + dmFR.siLang1.GetTextOrDefault('IDS_3' (* ' was not found in the database!' *) ));
     end;
   finally
     cleanUpFromDB_components;
@@ -529,8 +529,8 @@ begin
         end;
       end
       else
-        raise ETCMReportNotFound.create('Requested report number: ' +
-          intToStr(aReportNo) + ' was not found in the database!');
+        raise ETCMReportNotFound.create(dmFR.siLang1.GetTextOrDefault('IDS_2' (* 'Requested report number: ' *) ) +
+          intToStr(aReportNo) + dmFR.siLang1.GetTextOrDefault('IDS_3' (* ' was not found in the database!' *) ));
     end;
   finally
     cleanUpFromDB_components;

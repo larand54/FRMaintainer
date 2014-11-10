@@ -8,7 +8,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL,
   Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, frxClass, frxExportPDF,
-  uReport;
+  uReport, siComp;
 
 type
   TdmFR = class(TDataModule)
@@ -42,8 +42,12 @@ type
     qryDeleteReport: TFDQuery;
     qryDeleteSubreport: TFDQuery;
     qryDeleteSubreports: TFDQuery;
+    siLang1: TsiLang;
+    siLangDispatcher1: TsiLangDispatcher;
+    tblDBPropsLangPath: TStringField;
   private
     { Private declarations }
+    FLangPath: string;
   public
     { Public declarations }
     function updateRecord(aTable: string; aRepNo: integer;
@@ -63,6 +67,7 @@ type
       aSubReportData: TCMSReportData): boolean;
     function addallSubReports(aRepNo: integer;
       aSubReportsData: TCMSReportsData): boolean;
+    function getLangPath: string;
   end;
 
 var
@@ -105,7 +110,7 @@ begin
     qryInsertFastReport.ExecSQL;
   except
     ON E: EDatabaseError do
-      MessageDlg('Could not add report to database!  --- Cause:' + sLineBreak +
+      MessageDlg(siLang1.GetTextOrDefault('IDS_0' (* 'Could not add report to database!  --- Cause:' *) ) + sLineBreak +
         E.Message, mtError, [mbOK], 0);
   end;
   if assigned(aReportData.subReportsData) then
@@ -134,7 +139,7 @@ begin
     ON E: EDatabaseError do
     begin
       result := false;
-      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+      MessageDlg(siLang1.GetTextOrDefault('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) + sLineBreak
         + E.Message, mtError, [mbOK], 0);
     end;
 
@@ -165,6 +170,29 @@ begin
   qryDeleteSubreport.ParamByName('REPNO').AsInteger := aRepNo;
   qryDeleteSubreport.ParamByName('SRNAME').AsString := aName;
   qryDeleteSubreport.ExecSQL;
+end;
+
+function TdmFR.getLangPath: string;
+begin
+{  Try
+    if FLangPath = '' then
+    begin
+      tblDBProps.Open;
+      if not tblDBProps.Eof then
+      Begin
+        FLangPath := tblDBPropsLangPath.AsString;
+      End
+      else
+        result := '';
+    end;
+  Finally
+    tblDBProps.Close;
+    result := FLangPath;
+  end;}
+  if FLangPath = '' then
+    FlangPath := ExtractFilePath(ParamStr(0))+'\';
+
+  result := FLangPath;
 end;
 
 function TdmFR.getNextAvalableReportNumber: integer;
@@ -243,10 +271,10 @@ begin
     qryUpdateFastReport.ParamByName('DATASET').AsString :=
       aReportData.datasetUserName;
     qryUpdateFastReport.ExecSQL;
-    Result := true;
+    result := true;
   except
     ON E: EDatabaseError do
-      MessageDlg('Could not update report to database!  --- Cause:' + sLineBreak
+      MessageDlg(siLang1.GetTextOrDefault('IDS_2' (* 'Could not update report to database!  --- Cause:' *) ) + sLineBreak
         + E.Message, mtError, [mbOK], 0);
   end;
 
@@ -280,7 +308,7 @@ begin
     ON E: EDatabaseError do
     begin
       result := false;
-      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+      MessageDlg(siLang1.GetTextOrDefault('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) + sLineBreak
         + E.Message, mtError, [mbOK], 0);
     end;
 

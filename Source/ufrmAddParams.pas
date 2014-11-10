@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  uReport;
+  uReport, siComp, siLngLnk;
 
 
 type
@@ -20,6 +20,7 @@ type
     BitBtn4: TBitBtn;
     lvParameters: TListView;
     bbnClear: TBitBtn;
+    siLangLinked_frmAddParams: TsiLangLinked;
     procedure bbnAddClick(Sender: TObject);
     procedure bbnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

@@ -1,0 +1,17 @@
+
+[Captions]
+TfrmSubReportSettings.BitBtn1=Apply~!@#$Tillämpa~!@#$
+TfrmSubReportSettings.BitBtn2=Cancel~!@#$Avbryt~!@#$
+TfrmSubReportSettings.lblDS_Name=Dataset:~!@#$~!@#$
+TfrmSubReportSettings.lblSP_Name=Stored procedure:~!@#$~!@#$
+TfrmSubReportSettings.lblTemplate_Name=Subreport name:~!@#$Underrapport namn~!@#$
+TfrmSubReportSettings.TfrmSubReportSettings=SubReportSettings~!@#$Inställningar Underrapport~!@#$
+
+[Language names - for internal use only!]
+Language_1=English
+Language_2=Swedish
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+

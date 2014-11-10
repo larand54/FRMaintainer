@@ -8,7 +8,10 @@ uses
   uReportController in 'uReportController.pas',
   ufrmAddParams in 'ufrmAddParams.pas' {frmAddParams},
   ufrmSubReportSettings in 'ufrmSubReportSettings.pas' {frmSubReportSettings},
-  ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings};
+  ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings},
+  udmLanguage in 'udmLanguage.pas' {dmLanguage: TDataModule},
+  ufrmChangeLanguage in '..\..\CommonUnits\ufrmChangeLanguage.pas' {frmChangeLanguage},
+  UnitAboutBox in '..\..\CommonUnits\UnitAboutBox.pas' {AboutBox};
 
 {$R *.res}
 
@@ -20,5 +23,7 @@ begin
   Application.CreateForm(TfrmAddParams, frmAddParams);
   Application.CreateForm(TfrmSubReportSettings, frmSubReportSettings);
   Application.CreateForm(TfrmReportSettings, frmReportSettings);
+  Application.CreateForm(TdmLanguage, dmLanguage);
+  Application.CreateForm(TfrmChangeLanguage, frmChangeLanguage);
   Application.Run;
 end.

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  uReportController, uReport;
+  uReportController, uReport, siComp, siLngLnk;
 
 type
   TfrmSubReportSettings = class(TForm)
@@ -17,6 +17,7 @@ type
     edDataset: TEdit;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    siLangLinked_frmSubReportSettings: TsiLangLinked;
   private
     { Private declarations }
   public

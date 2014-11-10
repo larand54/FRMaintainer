@@ -1,0 +1,15 @@
+
+[Captions]
+TfrmChangeLanguage.bbtnCancel=Avbryt~!@#$Cancel~!@#$
+TfrmChangeLanguage.bbtnOk=OK~!@#$OK~!@#$
+TfrmChangeLanguage.lblcboLang=Välj Språk~!@#$Select Language~!@#$
+TfrmChangeLanguage.TfrmChangeLanguage=Välj språk~!@#$Select language~!@#$
+
+[Language names - for internal use only!]
+Language_1=Swedish
+Language_2=English
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+

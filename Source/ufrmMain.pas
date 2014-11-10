@@ -14,7 +14,7 @@ uses
   FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ComCtrls, frxClass, frxExportRTF,
   frxRich, Vcl.ImgList, Vcl.Buttons, frxDBSet,
   uReport, Vcl.ButtonGroup, Vcl.ExtCtrls,
-  uReportController;
+  uReportController, siComp, siLngLnk;
 
 type
   TfrmMain = class(TForm)
@@ -39,6 +39,9 @@ type
     Button1: TButton;
     btnPrint: TButton;
     btnFile: TButton;
+    siLangLinked_frmMain: TsiLangLinked;
+    btnLanguage: TButton;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnDesignReportClick(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
@@ -50,6 +53,7 @@ type
     procedure btnNewReportClick(Sender: TObject);
     procedure btnPropertiesClick(Sender: TObject);
     procedure btnRemoveReportClick(Sender: TObject);
+    procedure btnLanguageClick(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -107,7 +111,7 @@ begin
   begin
     // Create new template without any report connected
     if MessageDlg
-      ('You are going to create a new template without any specified report',
+      (siLangLinked_frmMain.GetTextOrDefault('IDS_0' (* 'You are going to create a new template without any specified report' *) ),
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       frxReport1.DataSet := nil;
@@ -204,7 +208,7 @@ var
 
 begin
 ReportTree.Items.Clear;
-  node := ReportTree.Items.Add(nil, 'Avalable Reports...');
+  node := ReportTree.Items.Add(nil, siLangLinked_frmMain.GetTextOrDefault('IDS_2' (* 'Avalable Reports...' *) ));
   node.ImageIndex := 0;
   try
     Reportsdata := reportController.AllReports;
@@ -280,6 +284,18 @@ begin
   dmFR.addReport(105, FReportData);
 end;
 
+procedure TfrmMain.btnLanguageClick(Sender: TObject);
+var
+  nol: integer;
+begin
+  nol := dmFR.siLang1.NumOfLanguages;
+  if dmFR.siLang1.ActiveLanguage = nol - 1 then
+    dmFR.siLang1.ActiveLanguage := 1
+  else
+    dmFR.siLang1.ActiveLanguage := dmFR.siLang1.ActiveLanguage + 1;
+  btnLanguage.Caption := dmFR.siLang1.Language;
+end;
+
 procedure TfrmMain.btnPrintClick(Sender: TObject);
 begin
   reportController.RunReport(prepareForOutput, FParams, frPrint);
@@ -292,7 +308,7 @@ var
 begin
   if not assigned(FReportData) then
   begin
-    MessageDlg('Please select a report!', mtInformation, [mbOK], 0);
+    MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_25' (* 'Please select a report!' *) ), mtInformation, [mbOK], 0);
     exit;
   end;
 
@@ -316,7 +332,7 @@ begin
   report := ReportTree.Selected.Data;
   if report <> nil then
   begin
-    if MessageDlg('You are going to remove the report: ' + report.Template,
+    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_26' (* 'You are going to remove the report: ' *) ) + report.Template,
       mtWarning, [mbOK, mbCancel], 0) = mrOK then
     begin
       if reportController.DeleteReport(report.ReportNo) then

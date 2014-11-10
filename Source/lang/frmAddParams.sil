@@ -1,0 +1,13 @@
+
+[Collections]
+TfrmAddParams.lvParameters.Columns-0+.Caption=Parameter Name~!@#$Namn~!@#$
+TfrmAddParams.lvParameters.Columns-1+.Caption=Parameter Value~!@#$Värde~!@#$
+
+[Language names - for internal use only!]
+Language_1=English
+Language_2=Swedish
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+
