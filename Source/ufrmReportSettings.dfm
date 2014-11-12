@@ -51,7 +51,7 @@ object frmReportSettings: TfrmReportSettings
   object sbtnAddSR: TSpeedButton
     Left = 288
     Top = 208
-    Width = 23
+    Width = 17
     Height = 22
     Hint = 'Add new subreport'
     Glyph.Data = {
@@ -89,12 +89,14 @@ object frmReportSettings: TfrmReportSettings
       FEFFFEFEFEFFFEFEFDFFD7AE9EFF00000009000000000000000000000003A386
       7AC0DBB5A5FFDAB5A4FFDAB5A4FFDAB4A4FFD9B3A3FFD9B3A3FFD9B3A2FFD9B2
       A2FFD8B2A2FFD8B1A1FFA08277C2000000060000000000000000}
+    ParentShowHint = False
+    ShowHint = True
     OnClick = sbtnAddSRClick
   end
   object sbtnRemoveSR: TSpeedButton
     Left = 288
     Top = 232
-    Width = 23
+    Width = 17
     Height = 22
     Hint = 'Remove selected subreport'
     Glyph.Data = {
@@ -132,6 +134,8 @@ object frmReportSettings: TfrmReportSettings
       FEFFFEFEFEFFFEFEFDFFD7AE9EFF00000009000000000000000000000003A386
       7AC0DBB5A5FFDAB5A4FFDAB5A4FFDAB4A4FFD9B3A3FFD9B3A3FFD9B3A2FFD9B2
       A2FFD8B2A2FFD8B1A1FFA08277C2000000060000000000000000}
+    ParentShowHint = False
+    ShowHint = True
     OnClick = sbtnRemoveSRClick
   end
   object lblDescription: TLabel
@@ -175,7 +179,7 @@ object frmReportSettings: TfrmReportSettings
     Width = 161
     Height = 97
     ItemHeight = 13
-    TabOrder = 4
+    TabOrder = 5
   end
   object bbnApply: TBitBtn
     Left = 342
@@ -185,7 +189,7 @@ object frmReportSettings: TfrmReportSettings
     Caption = 'Apply'
     Kind = bkOK
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 7
   end
   object bbnCancel: TBitBtn
     Left = 32
@@ -194,22 +198,22 @@ object frmReportSettings: TfrmReportSettings
     Height = 25
     Kind = bkCancel
     NumGlyphs = 2
-    TabOrder = 6
+    TabOrder = 8
   end
   object edDescription: TEdit
     Left = 128
     Top = 157
     Width = 300
     Height = 21
-    TabOrder = 7
+    TabOrder = 4
   end
   object bbnCrtMain: TBitBtn
-    Left = 256
+    Left = 200
     Top = 327
-    Width = 75
+    Width = 131
     Height = 25
     Caption = 'Create Main'
-    TabOrder = 8
+    TabOrder = 6
     OnClick = bbnCrtMainClick
   end
   object siLangLinked_frmReportSettings: TsiLangLinked
@@ -257,8 +261,8 @@ object frmReportSettings: TfrmReportSettings
       'DataField'
       'KeyField'
       'ListField')
-    Left = 216
-    Top = 192
+    Left = 312
+    Top = 32
     TranslationData = {
       73007400430061007000740069006F006E0073005F0055006E00690063006F00
       640065000D000A005400660072006D005200650070006F007200740053006500

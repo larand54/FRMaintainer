@@ -61,7 +61,8 @@ type
       of the mainreport and its subreports used by the frxReport object.
       It also add parameters to the stored procedures.
     }
-    procedure setupReport(var aReportData: TCMMReportData; aParams: TCMParams);
+    function setupReport(var aReportData: TCMMReportData;
+      aParams: TCMParams): boolean;
 
     function setUpSubReports(var aReportData: TCMMReportData;
       aParams: TCMParams): TCMSubReports;
@@ -90,8 +91,8 @@ type
     function DeleteReport(aReportNo: integer): boolean;
 
     function AllReports: TList<TCMMReportData>;
-    procedure prepareReport(var aReportData: TCMMReportData;
-      aParams: TCMParams);
+    function prepareReport(var aReportData: TCMMReportData;
+      aParams: TCMParams): boolean;
     procedure initController;
 
     property ReportData: TCMMReportData read FReportData;
@@ -241,25 +242,42 @@ var
   srd: TCMSReportData;
   sp: TFDStoredProc;
   sd: TfrxDBDataset;
-  spName, dsName: string;
+  srName, spName, dsName: string;
 
 begin
   srs := TCMSubReports.create;
   with aReportData do
   begin
-    for srd in subReportsData do
-    begin
-      spName := srd.StoredProcName;
-      dsName := srd.DatasetUserName;
-      createDBComponents(sp, sd, name, spName, dsName, aParams);
-      srs.Add(srd.name, TCMSubReport.create(sp, sd));
+    try
+      for srd in subReportsData do
+      begin
+        spName := srd.StoredProcName;
+        dsName := srd.DatasetUserName;
+        srName := srd.name;
+        createDBComponents(sp, sd, srName, spName, dsName, aParams);
+        srs.Add(srd.name, TCMSubReport.create(sp, sd));
+      end;
+    except
+      on E: EFDException do
+      begin
+        for sr in srs.values do
+        begin
+          sr.Free;
+        end;
+        FreeAndNil(srs);
+        MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_100' (* 'Given stored procedure "' *) ) + spName +
+          dmFR.siLang1.GetTextOrDefault('IDS_101' (* '", for the subreport "' *) ) + name +
+          dmFR.siLang1.GetTextOrDefault('IDS_102' (* '", does not exist in the database - please change the name or create a new Stored procedure in the database.' *) )
+          + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
+      end;
     end;
   end;
   Result := srs;
 end;
 
-function TCMReportController.UpdateReport(aRepNo: integer; aTemplate, aDocType, aStoredProcName,
-  aDatasetName, aDescription: string): TCMMReportData;
+function TCMReportController.UpdateReport(aRepNo: integer;
+  aTemplate, aDocType, aStoredProcName, aDatasetName, aDescription: string)
+  : TCMMReportData;
 var
   docType: integer;
   RepData: TCMMReportData;
@@ -273,9 +291,11 @@ begin
     Result := RepData;
   except
     on E: EConvertError do
-      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_0' (* 'Datatype is not numeric!' *) ), mtError, [mbOK], 0);
+      MessageDlg(dmFR.siLang1.GetTextOrDefault
+        ('IDS_0' (* 'Datatype is not numeric!' *) ), mtError, [mbOK], 0);
     on E: Exception do
-      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_1' (* 'Could not create report!  --- Cause:' *) ) + sLineBreak +
+      MessageDlg(dmFR.siLang1.GetTextOrDefault
+        ('IDS_1' (* 'Could not create report!  --- Cause:' *) ) + sLineBreak +
         E.Message, mtError, [mbOK], 0);
   end;
 end;
@@ -300,18 +320,18 @@ begin
       FReportData := FetchReportData(aReportNo);
       if FReportData <> nil then
       begin
-        with FReportData do
+        if prepareReport(FReportData, nil) then
         begin
-          createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
-            DatasetUserName, nil);
+          frxReport := setUpFastReport;
+          frxReport.DesignReport;
         end;
-        FSubReports := setUpSubReports(FReportData, nil);
-        frxReport := setUpFastReport;
-        frxReport.DesignReport;
       end
       else
-        raise ETCMReportNotFound.create(dmFR.siLang1.GetTextOrDefault('IDS_2' (* 'Requested report number: ' *) ) +
-          intToStr(aReportNo) + dmFR.siLang1.GetTextOrDefault('IDS_3' (* ' was not found in the database!' *) ));
+        raise ETCMReportNotFound.create
+          (dmFR.siLang1.GetTextOrDefault
+          ('IDS_2' (* 'Requested report number: ' *) ) + intToStr(aReportNo) +
+          dmFR.siLang1.GetTextOrDefault
+          ('IDS_3' (* ' was not found in the database!' *) ));
     end;
   finally
     cleanUpFromDB_components;
@@ -464,8 +484,9 @@ function TCMReportController.NewReport(aTemplate: string; aDocType: string;
 var
   RepNo: integer;
 begin
-    RepNo := dmFR.getNextAvalableReportNumber;
-    Result := UpdateReport(RepNo,aTemplate,aDocType,aStoredProcName,aDatasetName, aDescription);
+  RepNo := dmFR.getNextAvalableReportNumber;
+  Result := UpdateReport(RepNo, aTemplate, aDocType, aStoredProcName,
+    aDatasetName, aDescription);
 end;
 
 function TCMReportController.NewSubReport(aRepNo: integer; aName: string;
@@ -477,12 +498,12 @@ begin
     aName, parInf);
 end;
 
-procedure TCMReportController.prepareReport(var aReportData: TCMMReportData;
-  aParams: TCMParams);
+function TCMReportController.prepareReport(var aReportData: TCMMReportData;
+  aParams: TCMParams): boolean;
 begin
   FreeAndNil(FStoredProc);
   FreeAndNil(FDataset);
-  setupReport(aReportData, aParams);
+  Result := setupReport(aReportData, aParams);
 end;
 
 function TCMReportController.RemoveDBObject(proc: String): string;
@@ -513,24 +534,29 @@ begin
       FReportData := FetchReportData(aReportNo);
       if FReportData <> nil then
       begin
-        prepareReport(FReportData, aParams);
-        frxReport := setUpFastReport;
-        if aMedia = frPrint then
+        if prepareReport(FReportData, aParams) then
         begin
-          frxReport.prepareReport;
-          frxReport.Print
-        end
-        else if aMedia = frPreview then
-          frxReport.showReport
-        else if aMedia = frFile then
-        begin
-          frxReport.prepareReport;
-          frxReport.Export(dmFR.frxPDFExport1);
+          frxReport := setUpFastReport;
+          if aMedia = frPrint then
+          begin
+            frxReport.prepareReport;
+            frxReport.Print
+          end
+          else if aMedia = frPreview then
+            frxReport.showReport
+          else if aMedia = frFile then
+          begin
+            frxReport.prepareReport;
+            frxReport.Export(dmFR.frxPDFExport1);
+          end;
         end;
       end
       else
-        raise ETCMReportNotFound.create(dmFR.siLang1.GetTextOrDefault('IDS_2' (* 'Requested report number: ' *) ) +
-          intToStr(aReportNo) + dmFR.siLang1.GetTextOrDefault('IDS_3' (* ' was not found in the database!' *) ));
+        raise ETCMReportNotFound.create
+          (dmFR.siLang1.GetTextOrDefault
+          ('IDS_2' (* 'Requested report number: ' *) ) + intToStr(aReportNo) +
+          dmFR.siLang1.GetTextOrDefault
+          ('IDS_3' (* ' was not found in the database!' *) ));
     end;
   finally
     cleanUpFromDB_components;
@@ -546,15 +572,32 @@ begin
   Result := frxReport;
 end;
 
-procedure TCMReportController.setupReport(var aReportData: TCMMReportData;
-  aParams: TCMParams);
+function TCMReportController.setupReport(var aReportData: TCMMReportData;
+  aParams: TCMParams): boolean;
 begin
-  with aReportData do
-  begin
-    createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
-      DatasetUserName, aParams);
+  Result := false;
+  try
+    with aReportData do
+    begin
+      createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
+        DatasetUserName, aParams);
+      Result := true;
+    end;
+  except
+    on E: EFDException do
+    begin
+      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_103' (* 'Given store procedure "' *) ) + aReportData.StoredProcName +
+        dmFR.siLang1.GetTextOrDefault('IDS_104' (* '" does not exist in the database - please change the name or create a new Stored procedure in the database.' *) )
+        + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
+    end;
   end;
-  FSubReports := setUpSubReports(aReportData, aParams);
+  if Result then
+  begin
+    if Assigned(aReportData.subReportsData) then
+      FSubReports := setUpSubReports(aReportData, aParams);
+    if not Assigned(FSubReports) then
+      Result := false;
+  end;
 end;
 
 procedure TCMReportController.cleanUpFromDB_components;
@@ -564,11 +607,12 @@ begin
   FreeAndNil(FReportData);
   FreeAndNil(FStoredProc);
   FreeAndNil(FDataset);
-  for sr in FSubReports.Values do
-  begin
-    FreeAndNil(sr.FStoredProc);
-    FreeAndNil(sr.FDataset);
-  end;
+  if Assigned(FSubReports) then
+    for sr in FSubReports.values do
+    begin
+      FreeAndNil(sr.FStoredProc);
+      FreeAndNil(sr.FDataset);
+    end;
 end;
 
 constructor TCMReportController.create;
@@ -588,7 +632,7 @@ begin
   aSP.Active := false;
   aSP.StoredProcName := aSp_Name;
   aSP.Prepare;
-  if assigned(aParams) then
+  if Assigned(aParams) then
     addParams(aSP, aParams);
   aSP.Active := true;
 

@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <docs path="file://c:\program files (x86)\embarcadero\studio\14.0\ObjRepos\EN\QA" />
+  <project path="D:\git\delphi\FRMaintainer\Source\" language="delphi" />
+  <header title="Metric results of FRMaintainer." name="Name">
+    <column metric-id="A" name="Abstractness" locale="" />
+    <column metric-id="AC" name="Attribute Complexity" locale="" />
+    <column metric-id="AHF" name="Attribute Hiding Factor" locale="" />
+    <column metric-id="AID" name="Access of Import Data" locale="" />
+    <column metric-id="AIF" name="Attribute Inheritance Factor" locale="" />
+    <column metric-id="AIUR" name="Average Inheritance Usage Ratio" locale="" />
+    <column metric-id="ALD" name="Access of Local Data" locale="" />
+    <column metric-id="AOFD" name="Access Of Foreign Data" locale="" />
+    <column metric-id="AUF" name="Average Use of Interface" locale="" />
+    <column metric-id="CA" name="Afferent Coupling" locale="" />
+    <column metric-id="CBO" name="Coupling Between Objects" locale="" />
+    <column metric-id="CC" name="Cyclomatic Complexity" locale="" />
+    <column metric-id="CE" name="Efferent Coupling" locale="" />
+    <column metric-id="CF" name="Coupling Factor" locale="" />
+    <column metric-id="ChC" name="Changing Classes" locale="" />
+    <column metric-id="CIW" name="Class Interface Width" locale="" />
+    <column metric-id="CM" name="Changing Methods" locale="" />
+    <column metric-id="COC" name="Clients Of Class" locale="" />
+    <column metric-id="CR" name="Comment Ratio" locale="" />
+    <column metric-id="DAC" name="Data Abstraction Coupling" locale="" />
+    <column metric-id="DD" name="Dependency Dispersion" locale="" />
+    <column metric-id="DOIH" name="Depth Of Inheritance Hierarchy" locale="" />
+    <column metric-id="EC" name="Essential Complexity" locale="" />
+    <column metric-id="FO" name="FanOut" locale="" />
+    <column metric-id="HDiff" name="Halstead Difficulty" locale="" />
+    <column metric-id="HEff" name="Halstead Effort" locale="" />
+    <column metric-id="HPLen" name="Halstead Program Length" locale="" />
+    <column metric-id="I" name="Instability" locale="" />
+    <column metric-id="IUR" name="Inheritance Usage Ratio" locale="" />
+    <column metric-id="LCOM3" name="Lack of Cohesion Of Methods 3" locale="" />
+    <column metric-id="LOC" name="Lines Of Code" locale="" />
+    <column metric-id="MDC" name="Module Design Complexity" locale="" />
+    <column metric-id="MHF" name="Method Hiding Factor" locale="" />
+    <column metric-id="MIC" name="Method Invocation Coupling" locale="" />
+    <column metric-id="MIF" name="Method Inheritance Factor" locale="" />
+    <column metric-id="MNOB" name="Maximum Number Of Branches" locale="" />
+    <column metric-id="MNOL" name="Maximum Number Of Levels" locale="" />
+    <column metric-id="MPC" name="Message Passing Coupling" locale="" />
+    <column metric-id="MSOO" name="Maximum Size Of Operation" locale="" />
+    <column metric-id="NAM" name="Number of Accessor Methods" locale="" />
+    <column metric-id="NCC" name="Number of Client Classes" locale="" />
+    <column metric-id="NIC" name="Number of Import Classes" locale="" />
+    <column metric-id="NOA" name="Number Of Attributes" locale="" />
+    <column metric-id="NOAM" name="Number Of Added Methods" locale="" />
+    <column metric-id="NOC" name="Number Of Classes" locale="" />
+    <column metric-id="NOCC" name="Number Of Child Classes" locale="" />
+    <column metric-id="NOCP" name="Number Of Client Packages" locale="" />
+    <column metric-id="NOED" name="Number Of External Dependencies" locale="" />
+    <column metric-id="NOIS" name="Number Of Import Statements" locale="" />
+    <column metric-id="NOLV" name="Number Of Local Variables" locale="" />
+    <column metric-id="NOM" name="Number Of Members" locale="" />
+    <column metric-id="NOO" name="Number Of Operations" locale="" />
+    <column metric-id="NOOM" name="Number Of Overridden Methods" locale="" />
+    <column metric-id="NOP" name="Number Of Parameters" locale="" />
+    <column metric-id="NOPA" name="Number Of Public Attributes" locale="" />
+    <column metric-id="NORM" name="Number Of Remote Methods" locale="" />
+    <column metric-id="PC" name="Package Cohesion" locale="" />
+    <column metric-id="PF" name="Polymorphism Factor" locale="" />
+    <column metric-id="PIS" name="Package Interface Size" locale="" />
+    <column metric-id="PS" name="Package Size" locale="" />
+    <column metric-id="PUR" name="Package Usage Ratio" locale="" />
+    <column metric-id="RFC" name="Response For a Class" locale="" />
+    <column metric-id="RMD" name="Normalized Distance" locale="" />
+    <column metric-id="TCC" name="Tight Class Cohesion" locale="" />
+    <column metric-id="WCM" name="Weighted Changing Methods" locale="" />
+    <column metric-id="WMPC1" name="Weighted Methods Per Class 1" locale="" />
+    <column metric-id="WOC" name="Weight Of Class" locale="" />
+  </header>
+  <subject name="ufrmMain" fullName="ufrmMain">
+    <metric metric-id="A" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AC" value="368" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AHF" value="" />
+    <metric metric-id="AID" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AIF" value="" />
+    <metric metric-id="AIUR" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="ALD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AOFD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AUF" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CA" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CBO" value="61" lowerLimit="0" upperLimit="30" />
+    <metric metric-id="CC" value="52" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CE" value="63" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CF" value="" />
+    <metric metric-id="ChC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CIW" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="COC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CR" value="0" lowerLimit="5" upperLimit="101" />
+    <metric metric-id="DAC" value="22" lowerLimit="0" upperLimit="5" />
+    <metric metric-id="DD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="DOIH" value="8" lowerLimit="0" upperLimit="5" />
+    <metric metric-id="EC" value="48" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="FO" value="32" lowerLimit="0" upperLimit="15" />
+    <metric metric-id="HDiff" value="29" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="HEff" value="105928" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="HPLen" value="885" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="I" value="100" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="IUR" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="LCOM3" value="88" lowerLimit="30" upperLimit="101" />
+    <metric metric-id="LOC" value="381" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MDC" value="41" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MHF" value="" />
+    <metric metric-id="MIC" value="300" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MIF" value="" />
+    <metric metric-id="MNOB" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MNOL" value="24" lowerLimit="0" upperLimit="7" />
+    <metric metric-id="MPC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MSOO" value="5" lowerLimit="0" upperLimit="10" />
+    <metric metric-id="NAM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NCC" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NIC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOA" value="35" lowerLimit="0" upperLimit="30" />
+    <metric metric-id="NOAM" value="20" lowerLimit="0" upperLimit="50" />
+    <metric metric-id="NOC" value="3" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOCC" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOCP" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOED" value="63" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOIS" value="43" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOLV" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOM" value="61" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOO" value="20" lowerLimit="0" upperLimit="50" />
+    <metric metric-id="NOOM" value="0" lowerLimit="0" upperLimit="10" />
+    <metric metric-id="NOP" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOPA" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NORM" value="28" lowerLimit="0" upperLimit="30" />
+    <metric metric-id="PC" value="67" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PF" value="" />
+    <metric metric-id="PIS" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PS" value="3" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PUR" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="RFC" value="48" lowerLimit="0" upperLimit="50" />
+    <metric metric-id="RMD" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="TCC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="WCM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="WMPC1" value="52" lowerLimit="0" upperLimit="30" />
+    <metric metric-id="WOC" value="-1" lowerLimit="0" upperLimit="0" />
+  </subject>
+  <subject name="" fullName="&lt;project&gt;">
+    <metric metric-id="A" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AC" value="368" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AHF" value="13" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AID" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AIF" value="10" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AIUR" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="ALD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AOFD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="AUF" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CA" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CBO" value="61" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CC" value="52" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CE" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CF" value="1050" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="ChC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CIW" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="COC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="CR" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="DAC" value="22" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="DD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="DOIH" value="8" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="EC" value="48" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="FO" value="32" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="HDiff" value="29" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="HEff" value="105928" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="HPLen" value="885" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="I" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="IUR" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="LCOM3" value="88" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="LOC" value="381" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MDC" value="41" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MHF" value="20" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MIC" value="300" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MIF" value="95" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MNOB" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MNOL" value="24" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MPC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="MSOO" value="5" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NAM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NCC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NIC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOA" value="35" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOAM" value="20" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOC" value="3" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOCC" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOCP" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOED" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOIS" value="43" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOLV" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOM" value="61" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOO" value="20" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOOM" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOP" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NOPA" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="NORM" value="28" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PF" value="0" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PIS" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PS" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="PUR" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="RFC" value="48" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="RMD" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="TCC" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="WCM" value="-1" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="WMPC1" value="52" lowerLimit="0" upperLimit="0" />
+    <metric metric-id="WOC" value="-1" lowerLimit="0" upperLimit="0" />
+  </subject>
+</root>

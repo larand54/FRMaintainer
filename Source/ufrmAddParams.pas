@@ -25,6 +25,7 @@ type
     procedure bbnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bbnRemoveClick(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     { Private declarations }
     FParams : TCMParams;
@@ -61,6 +62,11 @@ begin
   for i  := lvParameters.Items.Count-1 downto 0 do begin
     if lvParameters.Items[i].Checked then lvParameters.Items[i].Delete;
   end;
+end;
+
+procedure TfrmAddParams.BitBtn4Click(Sender: TObject);
+begin
+  FreeAndNil(FParams);
 end;
 
 procedure TfrmAddParams.CreateParams;

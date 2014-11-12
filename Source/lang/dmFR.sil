@@ -1,0 +1,9 @@
+
+[Language names - for internal use only!]
+Language_1=English
+Language_2=Swedish
+
+[OPTIONS]
+DELIMITER=~!@#$
+IsUTF8File=0
+

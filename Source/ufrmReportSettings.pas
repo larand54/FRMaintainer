@@ -95,9 +95,9 @@ begin
         srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
       end;
       FReportData.subReportsData := srl;
-      FreeAndNil(srl);
-      for i := 0 to lbxSubReports.Items.Count - 1 do
-        TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
+//      FreeAndNil(srl);
+//      for i := 0 to lbxSubReports.Items.Count - 1 do
+//        TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
       lbxSubReports.Items.Clear;
     end;
   end

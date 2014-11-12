@@ -28,8 +28,8 @@ DELIMITER=~!@#$
 IsUTF8File=0
 
 [Strings]
-TfrmMain.IDS_0=You are going to create a new template without any specified report~!@#$Du håller på att skapa en ny rapportmall utan given rapport~!@#$
-TfrmMain.IDS_2=Avalable Reports...~!@#$Befintliga rapporter~!@#$
-TfrmMain.IDS_25=Please select a report!~!@#$Välj rapport först!~!@#$
-TfrmMain.IDS_26=You are going to remove the report: ~!@#$Då håller på att ta bort vald rapport!~!@#$
+TfrmMain.IDS_0=You are going to create a new template without any specified report~!@#$~!@#$
+TfrmMain.IDS_2=Available Reports...~!@#$~!@#$
+TfrmMain.IDS_25=Please select a report!~!@#$~!@#$
+TfrmMain.IDS_26=You are going to remove the report: ~!@#$~!@#$
 

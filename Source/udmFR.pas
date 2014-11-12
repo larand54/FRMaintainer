@@ -95,27 +95,37 @@ var
   i: integer;
 begin
   try
-    qryInsertFastReport.Active := false;
-    qryInsertFastReport.Prepare;
-    qryInsertFastReport.ParamByName('REPNO').AsInteger := aRepNo;
-    qryInsertFastReport.ParamByName('DOCTYPE').AsInteger := aReportData.docType;
-    qryInsertFastReport.ParamByName('DESCR').AsString :=
-      aReportData.description;
-    qryInsertFastReport.ParamByName('TEMPLATE').AsString :=
-      aReportData.Template;
-    qryInsertFastReport.ParamByName('STPROC').AsString :=
-      aReportData.storedProcName;
-    qryInsertFastReport.ParamByName('DATASET').AsString :=
-      aReportData.datasetUserName;
-    qryInsertFastReport.ExecSQL;
-  except
-    ON E: EDatabaseError do
-      MessageDlg(siLang1.GetTextOrDefault('IDS_0' (* 'Could not add report to database!  --- Cause:' *) ) + sLineBreak +
-        E.Message, mtError, [mbOK], 0);
+    try
+      qryInsertFastReport.Active := false;
+      qryInsertFastReport.Prepare;
+      qryInsertFastReport.ParamByName('REPNO').AsInteger := aRepNo;
+      qryInsertFastReport.ParamByName('DOCTYPE').AsInteger :=
+        aReportData.docType;
+      qryInsertFastReport.ParamByName('DESCR').AsString :=
+        aReportData.description;
+      qryInsertFastReport.ParamByName('TEMPLATE').AsString :=
+        aReportData.Template;
+      qryInsertFastReport.ParamByName('STPROC').AsString :=
+        aReportData.storedProcName;
+      qryInsertFastReport.ParamByName('DATASET').AsString :=
+        aReportData.datasetUserName;
+      qryInsertFastReport.ExecSQL;
+    except
+      ON E: EDatabaseError do
+      begin
+        MessageDlg(siLang1.GetTextOrDefault
+          ('IDS_0' (* 'Could not add report to database!  --- Cause:' *) ) +
+          sLineBreak + E.Message, mtError, [mbOK], 0);
+        Result := false;
+      end;
+    end;
+
+    if assigned(aReportData.subReportsData) then
+      for subRepData in aReportData.subReportsData do
+        addSubReport(aRepNo, subRepData);
+  finally
+    Result := true;
   end;
-  if assigned(aReportData.subReportsData) then
-    for subRepData in aReportData.subReportsData do
-      addSubReport(aRepNo, subRepData);
 end;
 
 function TdmFR.addSubReport(aRepNo: integer;
@@ -133,14 +143,15 @@ begin
     qryInsertSubReport.ParamByName('DATASET').AsString :=
       aSubReportData.datasetUserName;
     qryInsertSubReport.ExecSQL;
-    result := true;
+    Result := true;
 
   except
     ON E: EDatabaseError do
     begin
-      result := false;
-      MessageDlg(siLang1.GetTextOrDefault('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) + sLineBreak
-        + E.Message, mtError, [mbOK], 0);
+      Result := false;
+      MessageDlg(siLang1.GetTextOrDefault
+        ('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) +
+        sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
 
   end;
@@ -174,25 +185,25 @@ end;
 
 function TdmFR.getLangPath: string;
 begin
-{  Try
+  { Try
     if FLangPath = '' then
     begin
-      tblDBProps.Open;
-      if not tblDBProps.Eof then
-      Begin
-        FLangPath := tblDBPropsLangPath.AsString;
-      End
-      else
-        result := '';
+    tblDBProps.Open;
+    if not tblDBProps.Eof then
+    Begin
+    FLangPath := tblDBPropsLangPath.AsString;
+    End
+    else
+    result := '';
     end;
-  Finally
+    Finally
     tblDBProps.Close;
     result := FLangPath;
-  end;}
+    end; }
   if FLangPath = '' then
-    FlangPath := ExtractFilePath(ParamStr(0))+'\';
+    FLangPath := ExtractFilePath(ParamStr(0)) + '\';
 
-  result := FLangPath;
+  Result := FLangPath;
 end;
 
 function TdmFR.getNextAvalableReportNumber: integer;
@@ -204,9 +215,9 @@ begin
     spGetNextReportNumber.ExecProc;
     Error := spGetNextReportNumber.Params[0].AsInteger;
     if Error <> 0 then
-      result := -1
+      Result := -1
     else
-      result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
+      Result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
   finally
     spGetNextReportNumber.Active := false;
   end;
@@ -220,7 +231,7 @@ begin
     qryFastReport.ParamByName('REPNO').AsInteger := aRepNo;
     qryFastReport.Active := true;
   finally
-    result := (qryFastReport.RecordCount > 0);
+    Result := (qryFastReport.RecordCount > 0);
     qryFastReport.Active := false;
   end;
 end;
@@ -234,7 +245,7 @@ begin
     qrySubReport.ParamByName('NAME').AsString := aName;
     qrySubReport.Active := true;
   finally
-    result := (qrySubReport.RecordCount > 0);
+    Result := (qrySubReport.RecordCount > 0);
     qrySubReport.Active := false;
   end;
 end;
@@ -271,11 +282,12 @@ begin
     qryUpdateFastReport.ParamByName('DATASET').AsString :=
       aReportData.datasetUserName;
     qryUpdateFastReport.ExecSQL;
-    result := true;
+    Result := true;
   except
     ON E: EDatabaseError do
-      MessageDlg(siLang1.GetTextOrDefault('IDS_2' (* 'Could not update report to database!  --- Cause:' *) ) + sLineBreak
-        + E.Message, mtError, [mbOK], 0);
+      MessageDlg(siLang1.GetTextOrDefault
+        ('IDS_2' (* 'Could not update report to database!  --- Cause:' *) ) +
+        sLineBreak + E.Message, mtError, [mbOK], 0);
   end;
 
   deleteAllSubReports(aRepNo);
@@ -302,14 +314,15 @@ begin
     qryUpdateSubReport.ParamByName('DATASET').AsString :=
       aSubReportData.datasetUserName;
     qryUpdateSubReport.ExecSQL;
-    result := true;
+    Result := true;
 
   except
     ON E: EDatabaseError do
     begin
-      result := false;
-      MessageDlg(siLang1.GetTextOrDefault('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) + sLineBreak
-        + E.Message, mtError, [mbOK], 0);
+      Result := false;
+      MessageDlg(siLang1.GetTextOrDefault
+        ('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) +
+        sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
 
   end;

@@ -111,19 +111,6 @@
             <Form>frmReportSettings</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="udmLanguage.pas">
-            <Form>dmLanguage</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\..\CommonUnits\ufrmChangeLanguage.pas">
-            <Form>frmChangeLanguage</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\..\CommonUnits\UnitAboutBox.pas">
-            <Form>AboutBox</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <None Include="ModelSupport_FRMaintainer\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\ufrmAddParams\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\FRMaintainer\default.txvpck"/>

@@ -151,6 +151,7 @@ object frmAddParams: TfrmAddParams
     Kind = bkCancel
     NumGlyphs = 2
     TabOrder = 5
+    OnClick = BitBtn4Click
   end
   object lvParameters: TListView
     Left = 32
@@ -161,9 +162,11 @@ object frmAddParams: TfrmAddParams
     Columns = <
       item
         Caption = 'Parameter Name'
+        Width = 200
       end
       item
         Caption = 'Parameter Value'
+        Width = 157
       end>
     Items.ItemData = {
       05640000000200000000000000FFFFFFFFFFFFFFFF01000000FFFFFFFF000000
