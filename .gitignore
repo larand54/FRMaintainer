@@ -2,7 +2,7 @@
 modelsupport_tFastReport/
 out/
 fr3/
-!fr3/*.fr3
+!Source/fr3/*.fr3
 /FRReporting
 Source/Win64
 Source/Win32
