@@ -104,13 +104,13 @@
             <Form>frmReportSettings</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\CommonUnits\fastreport\udmFR.pas">
+        <DCCReference Include="udmFR.pas">
             <Form>dmFR</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\..\CommonUnits\fastreport\uReport.pas"/>
-        <DCCReference Include="..\..\CommonUnits\fastreport\uReportController.pas"/>
+        <DCCReference Include="uReport.pas"/>
+        <DCCReference Include="uReportController.pas"/>
         <None Include="ModelSupport_FRMaintainer\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\ufrmAddParams\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\FRMaintainer\default.txvpck"/>

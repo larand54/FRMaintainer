@@ -6,9 +6,9 @@ uses
   ufrmAddParams in 'ufrmAddParams.pas' {frmAddParams},
   ufrmSubReportSettings in 'ufrmSubReportSettings.pas' {frmSubReportSettings},
   ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings},
-  udmFR in '..\..\CommonUnits\fastreport\udmFR.pas' {dmFR: TDataModule},
-  uReport in '..\..\CommonUnits\fastreport\uReport.pas',
-  uReportController in '..\..\CommonUnits\fastreport\uReportController.pas';
+  udmFR in 'udmFR.pas' {dmFR: TDataModule},
+  uReport in 'uReport.pas',
+  uReportController in 'uReportController.pas';
 
 {$R *.res}
 
