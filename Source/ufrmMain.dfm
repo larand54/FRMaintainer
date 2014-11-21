@@ -90,7 +90,7 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
   end
-  object BitBtn1: TBitBtn
+  object bbnClose: TBitBtn
     Left = 457
     Top = 538
     Width = 75
