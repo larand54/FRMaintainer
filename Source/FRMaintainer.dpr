@@ -2,13 +2,13 @@ program FRMaintainer;
 
 uses
   Vcl.Forms,
-  udmFR in 'udmFR.pas' {dmFR: TDataModule},
-  uReport in 'uReport.pas',
   ufrmMain in 'ufrmMain.pas' {frmMain},
-  uReportController in 'uReportController.pas',
   ufrmAddParams in 'ufrmAddParams.pas' {frmAddParams},
   ufrmSubReportSettings in 'ufrmSubReportSettings.pas' {frmSubReportSettings},
-  ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings};
+  ufrmReportSettings in 'ufrmReportSettings.pas' {frmReportSettings},
+  udmFR in '..\..\CommonUnits\fastreport\udmFR.pas' {dmFR: TDataModule},
+  uReport in '..\..\CommonUnits\fastreport\uReport.pas',
+  uReportController in '..\..\CommonUnits\fastreport\uReportController.pas';
 
 {$R *.res}
 

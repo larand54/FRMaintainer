@@ -88,17 +88,10 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="udmFR.pas">
-            <Form>dmFR</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="uReport.pas"/>
         <DCCReference Include="ufrmMain.pas">
             <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uReportController.pas"/>
         <DCCReference Include="ufrmAddParams.pas">
             <Form>frmAddParams</Form>
             <FormType>dfm</FormType>
@@ -111,6 +104,13 @@
             <Form>frmReportSettings</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\..\CommonUnits\fastreport\udmFR.pas">
+            <Form>dmFR</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\..\CommonUnits\fastreport\uReport.pas"/>
+        <DCCReference Include="..\..\CommonUnits\fastreport\uReportController.pas"/>
         <None Include="ModelSupport_FRMaintainer\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\ufrmAddParams\default.txvpck"/>
         <None Include="ModelSupport_FRMaintainer\FRMaintainer\default.txvpck"/>

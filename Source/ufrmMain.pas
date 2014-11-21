@@ -14,7 +14,7 @@ uses
   FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ComCtrls, frxClass, frxExportRTF,
   frxRich, Vcl.ImgList, Vcl.Buttons, frxDBSet,
   uReport, Vcl.ButtonGroup, Vcl.ExtCtrls,
-  uReportController, siComp, siLngLnk;
+  uReportController, siComp, siLngLnk, System.Actions, Vcl.ActnList;
 
 type
   TErrorCode = class
@@ -36,7 +36,7 @@ type
     ReportTree: TTreeView;
     Panel2: TPanel;
     Memo1: TMemo;
-    BitBtn1: TBitBtn;
+    bbnClose: TBitBtn;
     GroupBox1: TGroupBox;
     btnRemoveReport: TButton;
     btnPreview: TButton;
@@ -44,26 +44,34 @@ type
     btnNewReport: TButton;
     btnProperties: TButton;
     Label2: TLabel;
-    Button1: TButton;
     btnPrint: TButton;
     btnFile: TButton;
     siLangLinked_frmMain: TsiLangLinked;
     btnLanguage: TButton;
     Label3: TLabel;
+    ActionList1: TActionList;
+    acnNew: TAction;
+    acnClose: TAction;
+    acnEdit: TAction;
+    acnDesign: TAction;
+    acnPreview: TAction;
+    acnPrint: TAction;
+    acnPDF: TAction;
+    acnRemove: TAction;
+    acnChgLanguage: TAction;
     procedure FormCreate(Sender: TObject);
-    procedure btnDesignReportClick(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
-    procedure btnPreviewClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure btnPrintClick(Sender: TObject);
-    procedure btnFileClick(Sender: TObject);
-    procedure btnNewReportClick(Sender: TObject);
-    procedure btnPropertiesClick(Sender: TObject);
-    procedure btnRemoveReportClick(Sender: TObject);
-    procedure btnLanguageClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
       var Hint: string);
+    procedure acnCloseExecute(Sender: TObject);
+    procedure acnChgLanguageExecute(Sender: TObject);
+    procedure acnRemoveExecute(Sender: TObject);
+    procedure acnPDFExecute(Sender: TObject);
+    procedure acnPrintExecute(Sender: TObject);
+    procedure acnPreviewExecute(Sender: TObject);
+    procedure acnDesignExecute(Sender: TObject);
+    procedure acnEditExecute(Sender: TObject);
+    procedure acnNewExecute(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -235,12 +243,27 @@ begin
   DefReportTreeWndProc(Message);
 end;
 
-procedure TfrmMain.BitBtn1Click(Sender: TObject);
+procedure TfrmMain.acnChgLanguageExecute(Sender: TObject);
+var
+  nol: integer;
+begin
+  nol := dmFR.siLangDispatcher1.NumOfLanguages;
+  if dmFR.siLangDispatcher1.ActiveLanguage = nol then
+    dmFR.siLangDispatcher1.ActiveLanguage := 1
+  else
+    dmFR.siLangDispatcher1.ActiveLanguage :=
+      dmFR.siLangDispatcher1.ActiveLanguage + 1;
+  if Sender is TAction then
+     TAction(sender).Caption := dmFR.siLangDispatcher1.Language;
+  BuildTree;
+end;
+
+procedure TfrmMain.acnCloseExecute(Sender: TObject);
 begin
   close;
 end;
 
-procedure TfrmMain.btnDesignReportClick(Sender: TObject);
+procedure TfrmMain.acnDesignExecute(Sender: TObject);
 var
   report: TCMMReportData;
   Node: TTreeNode;
@@ -254,8 +277,8 @@ begin
   else
   begin
     // Create new template without any report connected
-    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault
-      ('IDS_0' (* 'You are going to create a new template without any specified report' *) ),
+    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault(
+       siLangLinked_frmMain.GetTextOrDefault('IDS_0' (* 'You are going to create a new template without any specified report' *) ) ),
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       frxReport1.DataSet := nil;
@@ -264,9 +287,76 @@ begin
   end;
 end;
 
-procedure TfrmMain.btnPreviewClick(Sender: TObject);
+procedure TfrmMain.acnEditExecute(Sender: TObject);
+var
+  Node: TTreeNode;
+  subItem: TTreeNode;
+begin
+  if not Assigned(FReportData) then
+  begin
+    MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_4' (* 'Please select a report!' *) ), mtInformation, [mbOK], 0);
+    exit;
+  end;
+
+  FReportData := frmReportSettings.execute(reportController, FReportData);
+  if FReportData <> nil then
+  begin
+    if dmFR.upDateReport(FReportData.ReportNo, FReportData) then
+    begin
+      BuildTree;
+      ReportTree.Refresh;
+    end;
+  end;
+end;
+
+procedure TfrmMain.acnNewExecute(Sender: TObject);
+var
+  Node: TTreeNode;
+  subItem: TTreeNode;
+begin
+  FReportData := frmReportSettings.execute(reportController);
+  if FReportData <> nil then
+  begin
+    if dmFR.addReport(FReportData.ReportNo, FReportData) then
+    begin
+      BuildTree;
+      ReportTree.Refresh
+    end;
+  end;
+end;
+
+procedure TfrmMain.acnPDFExecute(Sender: TObject);
+begin
+  reportController.RunReport(prepareForOutput, FParams, frFile);
+end;
+
+procedure TfrmMain.acnPreviewExecute(Sender: TObject);
 begin
   reportController.RunReport(prepareForOutput, FParams, frPreview);
+end;
+
+procedure TfrmMain.acnPrintExecute(Sender: TObject);
+begin
+  reportController.RunReport(prepareForOutput, FParams, frPrint);
+end;
+
+procedure TfrmMain.acnRemoveExecute(Sender: TObject);
+var
+  report: TCMMReportData;
+  Node: TTreeNode;
+  templateFile: string;
+begin
+  report := ReportTree.Selected.Data;
+  if report <> nil then
+  begin
+    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_5' (* 'You are going to remove the report: ' *) ) +
+      report.Template, mtWarning, [mbOK, mbCancel], 0) = mrOK then
+    begin
+      if reportController.DeleteReport(report.ReportNo) then
+        ReportTree.Selected.Delete;
+      ReportTree.Refresh;
+    end;
+  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -279,6 +369,7 @@ begin
   Memo1.Clear;
   FReportData := nil;
   FErrors := TStringList.create;
+  acnChgLanguage.Caption := dmFR.siLangDispatcher1.Language;
   try
     FReportController := TCMReportController.create;
     FReportPath := FReportController.TemplatePath;
@@ -365,9 +456,9 @@ function TfrmMain.validateReportData(aReportData: TCMMReportData;
   errors: TStringList): boolean;
 begin
   if aReportData.datasetUserName = '' then
-    errors.AddObject('Dataset is missing', TErrorCode.create(1));
+    errors.AddObject(siLangLinked_frmMain.GetTextOrDefault('IDS_1' (* 'Dataset is missing' *) ), TErrorCode.create(1));
   if aReportData.storedProcName = '' then
-    errors.AddObject('Stored proedure is missing', TErrorCode.create(2));
+    errors.AddObject(siLangLinked_frmMain.GetTextOrDefault('IDS_2' (* 'Stored procedure is missing' *) ), TErrorCode.create(2));
   Result := (errors.Count > 0);
 end;
 
@@ -389,8 +480,8 @@ var
 
 begin
   ReportTree.Items.Clear;
-  Node := ReportTree.Items.Add(nil, siLangLinked_frmMain.GetTextOrDefault
-    ('IDS_2' (* 'Available Reports...' *) ));
+  Node := ReportTree.Items.Add(nil,
+    siLangLinked_frmMain.GetTextOrDefault('IDS_3' (* 'Available Reports...' *) ) );
   Node.ImageIndex := 0;
   try
     Reportsdata := reportController.AllReports;
@@ -425,134 +516,6 @@ begin
   Node.Free;
 end;
 
-procedure TfrmMain.Button1Click(Sender: TObject);
-var
-  dic: TDictionary<String, string>;
-  lb: TListbox;
-  key: string;
-begin
-  Button1.Hint := 'First line'+sLineBreak+'SecondLine'+ sLineBreak;
-  // Test something -- TDictionary for instance
-  dic := TDictionary<String, string>.create;
-  try
-    dic.Add('ABC', '123');
-    dic.Add('DEF', '456');
-    dic.Add('GHI', '789');
-    dic.Add('JKL', '012');
-    dic.Add('ABC', '776');
-    dic.Add('MNO', '888');
-  except
-    on E: EListError do
-  end;
-  lb := TListbox.create(self);
-  lb.parent := frmMain;
-  for key in dic.Keys do
-
-    lb.Items.Add(key + ':  ' + dic.Items[key]);
-  if dmFR.reportExist(105) then
-    MessageDlg('Rapport 105 existerar', mtInformation, [mbOK], 0)
-  else
-    MessageDlg('Rapport 105 existerar  I N T E !!!!', mtInformation, [mbOK], 0);
-  if dmFR.reportExist(405) then
-    MessageDlg('Rapport 405 existerar', mtInformation, [mbOK], 0)
-  else
-    MessageDlg('Rapport 405 existerar  I N T E !!!!', mtInformation, [mbOK], 0);
-
-  if dmFR.subReportExist(105, 'CertWoodInv') then
-    MessageDlg('Rapport CertWoodInv existerar', mtInformation, [mbOK], 0)
-  else
-    MessageDlg('Rapport CertWoodInv existerar  I N T E !!!!', mtInformation,
-      [mbOK], 0);
-
-  if dmFR.subReportExist(105, 'CertWood') then
-    MessageDlg('Rapport CertWood existerar', mtInformation, [mbOK], 0)
-  else
-    MessageDlg('Rapport CertWood existerar  I N T E !!!!', mtInformation,
-      [mbOK], 0);
-  dmFR.addReport(105, FReportData);
-end;
-
-procedure TfrmMain.btnLanguageClick(Sender: TObject);
-var
-  nol: integer;
-begin
-  nol := dmFR.siLangDispatcher1.NumOfLanguages;
-  if dmFR.siLangDispatcher1.ActiveLanguage = nol then
-    dmFR.siLang1.ActiveLanguage := 1
-  else
-    dmFR.siLangDispatcher1.ActiveLanguage :=
-      dmFR.siLangDispatcher1.ActiveLanguage + 1;
-  btnLanguage.Caption := dmFR.siLangDispatcher1.Language;
-end;
-
-procedure TfrmMain.btnPrintClick(Sender: TObject);
-begin
-  reportController.RunReport(prepareForOutput, FParams, frPrint);
-end;
-
-procedure TfrmMain.btnPropertiesClick(Sender: TObject);
-var
-  Node: TTreeNode;
-  subItem: TTreeNode;
-begin
-  if not Assigned(FReportData) then
-  begin
-    MessageDlg(siLangLinked_frmMain.GetTextOrDefault
-      ('IDS_25' (* 'Please select a report!' *) ), mtInformation, [mbOK], 0);
-    exit;
-  end;
-
-  FReportData := frmReportSettings.execute(reportController, FReportData);
-  if FReportData <> nil then
-  begin
-    if dmFR.upDateReport(FReportData.ReportNo, FReportData) then
-    begin
-      BuildTree;
-      ReportTree.Refresh;
-    end;
-  end;
-end;
-
-procedure TfrmMain.btnRemoveReportClick(Sender: TObject);
-var
-  report: TCMMReportData;
-  Node: TTreeNode;
-  templateFile: string;
-begin
-  report := ReportTree.Selected.Data;
-  if report <> nil then
-  begin
-    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault
-      ('IDS_26' (* 'You are going to remove the report: ' *) ) +
-      report.Template, mtWarning, [mbOK, mbCancel], 0) = mrOK then
-    begin
-      if reportController.DeleteReport(report.ReportNo) then
-        ReportTree.Selected.Delete;
-      ReportTree.Refresh;
-    end;
-  end;
-end;
-
-procedure TfrmMain.btnFileClick(Sender: TObject);
-begin
-  reportController.RunReport(prepareForOutput, FParams, frFile);
-end;
-
-procedure TfrmMain.btnNewReportClick(Sender: TObject);
-var
-  Node: TTreeNode;
-  subItem: TTreeNode;
-begin
-  FReportData := frmReportSettings.execute(reportController);
-  if FReportData <> nil then
-  begin
-    if dmFR.addReport(FReportData.ReportNo, FReportData) then
-    begin
-      BuildTree;
-      ReportTree.Refresh
-    end;
-  end;
-end;
 
 { TErrorCode }
 
