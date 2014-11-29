@@ -180,6 +180,7 @@ object frmReportSettings: TfrmReportSettings
     Height = 97
     ItemHeight = 13
     TabOrder = 5
+    OnDblClick = lbxSubReportsDblClick
   end
   object bbnApply: TBitBtn
     Left = 342

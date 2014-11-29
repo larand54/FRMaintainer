@@ -22,7 +22,8 @@ type
     { Private declarations }
   public
     { Public declarations }
-    function execute(TCMC: TCMReportController; aRepno: integer): TCMSReportData;
+    function execute(TCMC: TCMReportController; aRepno: integer): TCMSReportData; overload;
+    function execute(TCMC: TCMReportController; sr: TCMSReportData; aRepno: integer): TCMSReportData; overload;
   end;
 
 var
@@ -31,6 +32,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses udmFR;
 
 { TfrmSubReportSettings }
 
@@ -42,6 +45,20 @@ begin
   end
   else
     Result := nil;
+end;
+
+function TfrmSubReportSettings.execute(TCMC: TCMReportController;
+  sr: TCMSReportData; aRepno: integer): TCMSReportData;
+begin
+  edStoredProc.Text := sr.storedProcName;
+  edDataset.Text := sr.datasetUserName;
+  edName.Text := sr.name;
+  if ShowModal = mrOK then begin
+    sr.storedProcName := edStoredProc.Text;
+    sr.datasetUserName := edDataset.Text;
+    sr.name :=edName.Text;
+  end;
+  result := sr;
 end;
 
 end.

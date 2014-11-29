@@ -32,6 +32,7 @@ type
     procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
     procedure sbtnRemoveSRClick(Sender: TObject);
+    procedure lbxSubReportsDblClick(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -173,6 +174,19 @@ begin
   finally
     lbxSubReports.Items.Clear;
   end;
+end;
+
+procedure TfrmReportSettings.lbxSubReportsDblClick(Sender: TObject);
+var
+  ix: integer;
+  sr: TCMSReportData;
+begin
+ if (lbxSubReports.Items.Count > 0) then begin
+   ix := lbxSubReports.ItemIndex;
+   sr := TCMSReportData(lbxSubReports.Items.Objects[ix]);
+   sr := frmSubReportSettings.Execute(FReportController, sr, FReportData.ReportNo);
+ end;
+
 end;
 
 procedure TfrmReportSettings.sbtnAddSRClick(Sender: TObject);
