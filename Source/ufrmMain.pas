@@ -478,6 +478,7 @@ var
   subItmIndx: integer;
   Reportsdata: TCMMReportsdata;
   Reportdata: TCMMReportData;
+  docCategory: string;
 
 begin
   ReportTree.Items.Clear;
@@ -497,11 +498,12 @@ begin
     else
       subItmIndx := 1;
     docType := Reportdata.docType;
+    docCategory := dmFR.getDocCategoryName(docType);
     Template := Reportdata.Template;
     if LastDocType <> docType then
     begin
-      Node := ReportTree.Items.AddChildObject(ReportTree.Selected,
-        intToStr(docType), nil);
+      Node := ReportTree.Items.AddChildObject(ReportTree.Selected, docCategory, nil);
+//        intToStr(docType), nil);
       LastDocType := docType;
     end;
     subItem := ReportTree.Items.AddChildObject(Node, Template, Reportdata);

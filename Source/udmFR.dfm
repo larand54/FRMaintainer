@@ -1,5 +1,6 @@
 object dmFR: TdmFR
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
   Height = 283
   Width = 623
   object tblDBProps: TFDTable
@@ -43,9 +44,12 @@ object dmFR: TdmFR
       '      ,[ReportName]'
       '      ,[Description]'
       '      ,[StoredProcName]'
-      '      ,[DatasetUserName]'
-      '  FROM [vis_vida].[dbo].[FastReportNames]'
-      '  ORDER BY [DocType]')
+      '      ,[DatasetUserName],'
+      'dc.DocCategoryName'
+      
+        '  FROM [vis_vida].[dbo].[FastReportNames] frn join [vis_vida].[d' +
+        'bo].[DocCategory] dc on dc.DocCategoryNo = frn.DocType '
+      'Order By dc.DocCategoryName')
     Left = 200
     Top = 8
     object qryFastReportsReportNo: TIntegerField
@@ -76,6 +80,11 @@ object dmFR: TdmFR
     object qryFastReportsDatasetUserName: TStringField
       FieldName = 'DatasetUserName'
       Origin = 'DatasetUserName'
+      Size = 50
+    end
+    object qryFastReportsDocCategoryName: TStringField
+      FieldName = 'DocCategoryName'
+      Origin = 'DocCategoryName'
       Size = 50
     end
   end
@@ -780,5 +789,46 @@ object dmFR: TdmFR
     FileName = 'D:\git\delphi\FRMaintainer\Source\Win64\Debug\FRMaintainer.sib'
     Left = 464
     Top = 88
+  end
+  object qryDocCategory: TFDQuery
+    Active = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT [DocCategoryNo],[DocCategoryName]'
+      ' FROM [vis_vida].[dbo].[DocCategory]'
+      'order by DocCategoryName')
+    Left = 312
+    Top = 128
+    object qryDocCategoryDocCategoryNo: TIntegerField
+      FieldName = 'DocCategoryNo'
+      Origin = 'DocCategoryNo'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qryDocCategoryDocCategoryName: TStringField
+      FieldName = 'DocCategoryName'
+      Origin = 'DocCategoryName'
+      Size = 50
+    end
+  end
+  object tblDocCategory: TFDTable
+    IndexFieldNames = 'DocCategoryNo'
+    ConstraintsEnabled = True
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'DocCategory'
+    TableName = 'DocCategory'
+    Left = 456
+    Top = 384
+    object tblDocCategoryDocCategoryNo: TIntegerField
+      FieldName = 'DocCategoryNo'
+      Origin = 'DocCategoryNo'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object tblDocCategoryDocCategoryName: TStringField
+      FieldName = 'DocCategoryName'
+      Origin = 'DocCategoryName'
+      Size = 50
+    end
   end
 end

@@ -59,6 +59,7 @@ type
   private
     FTemplate: string;
     FdocType: integer;
+    FdocCategoryName: string;
   public
     constructor Create(aReportNo: integer; aDatasetName: string;
       aStoredProcName: string; aDescription: string; aTemplate: string;
@@ -66,6 +67,7 @@ type
     function getAllParameters: TCMParamsInfo;
     property Template: string read FTemplate write FTemplate;
     property docType: integer read FdocType write FdocType;
+    property docCategoryName: string read FdocCategoryName write FdocCategoryName;
   end;
 
 implementation

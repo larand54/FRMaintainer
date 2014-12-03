@@ -155,7 +155,7 @@ object frmReportSettings: TfrmReportSettings
   object edDoctype: TEdit
     Left = 128
     Top = 61
-    Width = 161
+    Width = 57
     Height = 21
     TabOrder = 1
   end
@@ -217,6 +217,15 @@ object frmReportSettings: TfrmReportSettings
     TabOrder = 6
     OnClick = bbnCrtMainClick
   end
+  object cboDocType: TComboBox
+    Left = 191
+    Top = 61
+    Width = 145
+    Height = 21
+    TabOrder = 9
+    Text = 'cboDocType'
+    OnChange = cboDocTypeChange
+  end
   object siLangLinked_frmReportSettings: TsiLangLinked
     Version = '7.2'
     StringsTypes.Strings = (
@@ -263,7 +272,6 @@ object frmReportSettings: TfrmReportSettings
       'KeyField'
       'ListField')
     Left = 312
-    Top = 32
     TranslationData = {
       73007400430061007000740069006F006E0073005F0055006E00690063006F00
       640065000D000A005400660072006D005200650070006F007200740053006500
@@ -315,5 +323,17 @@ object frmReportSettings: TfrmReportSettings
       6E00690063006F00640065000D000A005400660072006D005200650070006F00
       72007400530065007400740069006E0067007300010044004500460041005500
       4C0054005F004300480041005200530045005400010001000D000A00}
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = dmFR.tblDocCategory
+    ScopeMappings = <>
+    Left = 1392
+    Top = 592
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 20
+    Top = 5
   end
 end

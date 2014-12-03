@@ -6,7 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  uReport, uReportController, ufrmSubReportSettings, siComp, siLngLnk;
+  uReport, uReportController, ufrmSubReportSettings, siComp, siLngLnk,
+  Vcl.DBCtrls, System.Rtti, System.Bindings.Outputs, Vcl.Bind.Editors,
+  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope;
 
 type
   TfrmReportSettings = class(TForm)
@@ -28,16 +30,21 @@ type
     lblDescription: TLabel;
     bbnCrtMain: TBitBtn;
     siLangLinked_frmReportSettings: TsiLangLinked;
+    BindSourceDB1: TBindSourceDB;
+    BindingsList1: TBindingsList;
+    cboDocType: TComboBox;
     procedure bbnCrtMainClick(Sender: TObject);
     procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
     procedure sbtnRemoveSRClick(Sender: TObject);
     procedure lbxSubReportsDblClick(Sender: TObject);
+    procedure cboDocTypeChange(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
     FReportData: TCMMReportData;
     FReportController: TCMReportController;
+    procedure FillDocTypeData(aDocType: integer);
   public
     { Public declarations }
     property RepNo: integer read FRepNo;
@@ -84,21 +91,18 @@ begin
   bbnApply.Enabled := false;
   sbtnAddSR.Enabled := false;
   sbtnRemoveSR.Enabled := false;
+  FillDocTypeData(-1);
   if (ShowModal = mrOK) then
   begin
     Result := FReportData;
     if lbxSubReports.Items.Count > 0 then
     begin
-
       srl := TCMSReportsData.Create;
       for i := 0 to lbxSubReports.Items.Count - 1 do
       begin
         srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
       end;
       FReportData.subReportsData := srl;
-//      FreeAndNil(srl);
-//      for i := 0 to lbxSubReports.Items.Count - 1 do
-//        TCMSubReport(lbxSubReports.Items.Objects[i]).Free;
       lbxSubReports.Items.Clear;
     end;
   end
@@ -122,6 +126,11 @@ begin
   end;
 end;
 
+procedure TfrmReportSettings.cboDocTypeChange(Sender: TObject);
+begin
+  edDoctype.Text := intToStr(integer(cboDocType.items.Objects[cboDocType.ItemIndex]));
+end;
+
 function TfrmReportSettings.Execute(TCMC: TCMReportController;
   aRepData: TCMMReportData): TCMMReportData;
 var
@@ -139,6 +148,7 @@ begin
     FReportController := TCMC;
 
     // Fill form with data
+    FillDocTypeData(FReportData.docType);
     FRepNo := FReportData.ReportNo;
     edTemplate.Text := FReportData.Template;
     edDoctype.Text := intToStr(FReportData.docType);
@@ -173,6 +183,22 @@ begin
       Result := nil;
   finally
     lbxSubReports.Items.Clear;
+  end;
+end;
+
+procedure TfrmReportSettings.FillDocTypeData(aDocType: integer);
+var
+  iDocType: integer;
+  sDocType: string;
+  docType: TCMDocCategory;
+begin
+  docType := dmFR.DocCategory;
+  for idocType in docType.keys do begin
+    sDocType := docType[iDocType];
+    cboDocType.Items.AddObject(sDocType, TObject(iDocType));
+  end;
+  if aDocType > 0 then begin
+    cboDocType.Text := dmFR.DocCategory.Items[aDocType];
   end;
 end;
 

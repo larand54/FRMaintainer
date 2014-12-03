@@ -3,6 +3,7 @@ unit udmFR;
 interface
 
 uses
+  System.Generics.Collections,
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
@@ -11,6 +12,8 @@ uses
   uReport, siComp;
 
 type
+  TCMDocCategory = TDictionary<integer, string>;
+
   TdmFR = class(TDataModule)
     tblDBProps: TFDTable;
     FDConnection1: TFDConnection;
@@ -45,11 +48,21 @@ type
     siLang1: TsiLang;
     siLangDispatcher1: TsiLangDispatcher;
     tblDBPropsLangPath: TStringField;
+    qryFastReportsDocCategoryName: TStringField;
+    qryDocCategory: TFDQuery;
+    tblDocCategory: TFDTable;
+    tblDocCategoryDocCategoryNo: TIntegerField;
+    tblDocCategoryDocCategoryName: TStringField;
+    qryDocCategoryDocCategoryNo: TIntegerField;
+    qryDocCategoryDocCategoryName: TStringField;
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
     FLangPath: string;
+    FDocCategory: TCMDocCategory;
   public
     { Public declarations }
+    property DocCategory: TCMDocCategory read FDocCategory;
     function updateRecord(aTable: string; aRepNo: integer;
       name: string): boolean;
     function getNextAvalableReportNumber: integer;
@@ -68,6 +81,7 @@ type
     function addallSubReports(aRepNo: integer;
       aSubReportsData: TCMSReportsData): boolean;
     function getLangPath: string;
+    function getDocCategoryName(aDocType: integer): string;
   end;
 
 var
@@ -158,6 +172,27 @@ begin
 
 end;
 
+procedure TdmFR.DataModuleCreate(Sender: TObject);
+var
+  k1: integer;
+  s1: string;
+begin
+  try
+    FDocCategory := TCMDocCategory.Create();
+    qryDocCategory.Active := true;
+    qryDocCategory.First;
+    while not qryDocCategory.Eof do begin
+      k1 := qryDocCategory['DocCategoryNo'];
+      s1 := qryDocCategory['DocCategoryName'];
+      FDocCategory.Add(qryDocCategory['DocCategoryNo'],
+        qryDocCategory['DocCategoryName']);
+      qryDocCategory.Next;
+    end;
+  finally
+    qryDocCategory.Close
+  end;
+end;
+
 function TdmFR.deleteAllSubReports(aRepNo: integer): boolean;
 begin
   qryDeleteSubreports.Active := false;
@@ -181,6 +216,14 @@ begin
   qryDeleteSubreport.ParamByName('REPNO').AsInteger := aRepNo;
   qryDeleteSubreport.ParamByName('SRNAME').AsString := aName;
   qryDeleteSubreport.ExecSQL;
+end;
+
+function TdmFR.getDocCategoryName(aDocType: integer): string;
+begin
+  if FDocCategory.ContainsKey(aDocType) then
+    Result := FDocCategory.Items[aDocType]
+  else
+    Result := intToStr(aDocType);
 end;
 
 function TdmFR.getLangPath: string;
