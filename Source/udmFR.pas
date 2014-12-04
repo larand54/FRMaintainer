@@ -63,8 +63,6 @@ type
   public
     { Public declarations }
     property DocCategory: TCMDocCategory read FDocCategory;
-    function updateRecord(aTable: string; aRepNo: integer;
-      name: string): boolean;
     function getNextAvalableReportNumber: integer;
     function reportExist(aRepNo: integer): boolean;
     function subReportExist(aRepNo: integer; aName: string): boolean;
@@ -293,17 +291,6 @@ begin
   end;
 end;
 
-function TdmFR.updateRecord(aTable: string; aRepNo: integer;
-  name: string): boolean;
-begin
-  { SqlConnection conn = new SqlConnection("...");
-    SqlCommand cmd = new SqlCommand(@"IF EXISTS(SELECT 0 FROM SomeTable
-    WHERE ID = 0) BEGIN UPDATE SomeTable SET ID = ID + 1 END
-    ELSE BEGIN INSERT INTO SomeTable(ID) VALUES(0) END", conn);
-    conn.Open();
-    cmd.ExecuteNonQuery();
-    conn.Close(); }
-end;
 
 function TdmFR.upDateReport(aRepNo: integer;
   aReportData: TCMMReportData): boolean;
