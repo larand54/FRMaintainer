@@ -49,20 +49,20 @@ type
     siLangDispatcher1: TsiLangDispatcher;
     tblDBPropsLangPath: TStringField;
     qryFastReportsDocCategoryName: TStringField;
-    qryDocCategory: TFDQuery;
+    qryDocType: TFDQuery;
     tblDocCategory: TFDTable;
     tblDocCategoryDocCategoryNo: TIntegerField;
     tblDocCategoryDocCategoryName: TStringField;
-    qryDocCategoryDocCategoryNo: TIntegerField;
-    qryDocCategoryDocCategoryName: TStringField;
+    qryDocTypeid: TIntegerField;
+    qryDocTypeName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
     FLangPath: string;
-    FDocCategory: TCMDocCategory;
+    FDocType: TCMDocCategory;
   public
     { Public declarations }
-    property DocCategory: TCMDocCategory read FDocCategory;
+    property DocCategory: TCMDocCategory read FDocType;
     function getNextAvalableReportNumber: integer;
     function reportExist(aRepNo: integer): boolean;
     function subReportExist(aRepNo: integer; aName: string): boolean;
@@ -176,18 +176,18 @@ var
   s1: string;
 begin
   try
-    FDocCategory := TCMDocCategory.Create();
-    qryDocCategory.Active := true;
-    qryDocCategory.First;
-    while not qryDocCategory.Eof do begin
-      k1 := qryDocCategory['DocCategoryNo'];
-      s1 := qryDocCategory['DocCategoryName'];
-      FDocCategory.Add(qryDocCategory['DocCategoryNo'],
-        qryDocCategory['DocCategoryName']);
-      qryDocCategory.Next;
+    FDocType := TCMDocCategory.Create();
+    qryDocType.Active := true;
+    qryDocType.First;
+    while not qryDocType.Eof do begin
+      k1 := qryDocType['Id'];
+      s1 := qryDocType['Name'];
+      FDocType.Add(qryDocType['Id'],
+        qryDocType['Name']);
+      qryDocType.Next;
     end;
   finally
-    qryDocCategory.Close
+    qryDocType.Close
   end;
 end;
 
@@ -218,8 +218,8 @@ end;
 
 function TdmFR.getDocCategoryName(aDocType: integer): string;
 begin
-  if FDocCategory.ContainsKey(aDocType) then
-    Result := FDocCategory.Items[aDocType]
+  if FDocType.ContainsKey(aDocType) then
+    Result := FDocType.Items[aDocType]
   else
     Result := intToStr(aDocType);
 end;

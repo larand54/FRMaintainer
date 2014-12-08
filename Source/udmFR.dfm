@@ -790,25 +790,22 @@ object dmFR: TdmFR
     Left = 464
     Top = 88
   end
-  object qryDocCategory: TFDQuery
-    Active = True
+  object qryDocType: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
-      'SELECT [DocCategoryNo],[DocCategoryName]'
-      ' FROM [vis_vida].[dbo].[DocCategory]'
-      'order by DocCategoryName')
+      'SELECT [id],[Name]'
+      ' FROM [vis_vida].[dbo].[DocType]'
+      'order by Name')
     Left = 312
     Top = 128
-    object qryDocCategoryDocCategoryNo: TIntegerField
-      FieldName = 'DocCategoryNo'
-      Origin = 'DocCategoryNo'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    object qryDocTypeid: TIntegerField
+      FieldName = 'id'
+      Origin = 'id'
       Required = True
     end
-    object qryDocCategoryDocCategoryName: TStringField
-      FieldName = 'DocCategoryName'
-      Origin = 'DocCategoryName'
-      Size = 50
+    object qryDocTypeName: TStringField
+      FieldName = 'Name'
+      Origin = 'Name'
     end
   end
   object tblDocCategory: TFDTable
@@ -818,7 +815,7 @@ object dmFR: TdmFR
     UpdateOptions.UpdateTableName = 'DocCategory'
     TableName = 'DocCategory'
     Left = 456
-    Top = 384
+    Top = 147
     object tblDocCategoryDocCategoryNo: TIntegerField
       FieldName = 'DocCategoryNo'
       Origin = 'DocCategoryNo'
