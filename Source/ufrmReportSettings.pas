@@ -190,7 +190,7 @@ procedure TfrmReportSettings.FillDocTypeData(aDocType: integer);
 var
   iDocType: integer;
   sDocType: string;
-  docType: TCMDocCategory;
+  docType: TCMDocType;
 begin
   docType := dmFR.DocCategory;
   for idocType in docType.keys do begin

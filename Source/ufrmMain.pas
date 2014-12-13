@@ -498,7 +498,7 @@ begin
     else
       subItmIndx := 1;
     docType := Reportdata.docType;
-    docCategory := dmFR.getDocCategoryName(docType);
+    docCategory := dmFR.getDocTypeName(docType);
     Template := Reportdata.Template;
     if LastDocType <> docType then
     begin

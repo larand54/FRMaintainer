@@ -808,24 +808,4 @@ object dmFR: TdmFR
       Origin = 'Name'
     end
   end
-  object tblDocCategory: TFDTable
-    IndexFieldNames = 'DocCategoryNo'
-    ConstraintsEnabled = True
-    Connection = FDConnection1
-    UpdateOptions.UpdateTableName = 'DocCategory'
-    TableName = 'DocCategory'
-    Left = 456
-    Top = 147
-    object tblDocCategoryDocCategoryNo: TIntegerField
-      FieldName = 'DocCategoryNo'
-      Origin = 'DocCategoryNo'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object tblDocCategoryDocCategoryName: TStringField
-      FieldName = 'DocCategoryName'
-      Origin = 'DocCategoryName'
-      Size = 50
-    end
-  end
 end

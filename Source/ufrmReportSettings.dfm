@@ -325,7 +325,6 @@ object frmReportSettings: TfrmReportSettings
       4C0054005F004300480041005200530045005400010001000D000A00}
   end
   object BindSourceDB1: TBindSourceDB
-    DataSet = dmFR.tblDocCategory
     ScopeMappings = <>
     Left = 1392
     Top = 592

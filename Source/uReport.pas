@@ -72,8 +72,6 @@ type
 
 implementation
 
-uses udmFR;
-
 function TCMMReportData.getAllParameters: TCMParamsInfo;
 var
   allPar, MainPar: TCMParamsInfo;

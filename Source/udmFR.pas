@@ -12,7 +12,7 @@ uses
   uReport, siComp;
 
 type
-  TCMDocCategory = TDictionary<integer, string>;
+  TCMDocType = TDictionary<integer, string>;
 
   TdmFR = class(TDataModule)
     tblDBProps: TFDTable;
@@ -50,19 +50,16 @@ type
     tblDBPropsLangPath: TStringField;
     qryFastReportsDocCategoryName: TStringField;
     qryDocType: TFDQuery;
-    tblDocCategory: TFDTable;
-    tblDocCategoryDocCategoryNo: TIntegerField;
-    tblDocCategoryDocCategoryName: TStringField;
     qryDocTypeid: TIntegerField;
     qryDocTypeName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
     FLangPath: string;
-    FDocType: TCMDocCategory;
+    FDocType: TCMDocType;
   public
     { Public declarations }
-    property DocCategory: TCMDocCategory read FDocType;
+    property DocCategory: TCMDocType read FDocType;
     function getNextAvalableReportNumber: integer;
     function reportExist(aRepNo: integer): boolean;
     function subReportExist(aRepNo: integer; aName: string): boolean;
@@ -79,7 +76,7 @@ type
     function addallSubReports(aRepNo: integer;
       aSubReportsData: TCMSReportsData): boolean;
     function getLangPath: string;
-    function getDocCategoryName(aDocType: integer): string;
+    function getDocTypeName(aDocType: integer): string;
   end;
 
 var
@@ -176,7 +173,7 @@ var
   s1: string;
 begin
   try
-    FDocType := TCMDocCategory.Create();
+    FDocType := TCMDocType.Create();
     qryDocType.Active := true;
     qryDocType.First;
     while not qryDocType.Eof do begin
@@ -216,7 +213,7 @@ begin
   qryDeleteSubreport.ExecSQL;
 end;
 
-function TdmFR.getDocCategoryName(aDocType: integer): string;
+function TdmFR.getDocTypeName(aDocType: integer): string;
 begin
   if FDocType.ContainsKey(aDocType) then
     Result := FDocType.Items[aDocType]
