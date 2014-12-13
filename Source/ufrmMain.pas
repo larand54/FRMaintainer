@@ -1,4 +1,4 @@
-unit ufrmMain;
+﻿unit ufrmMain;
 
 interface
 
@@ -493,6 +493,7 @@ begin
   LastDocType := -1; // To identify First record in the loop
   for Reportdata in Reportsdata do
   begin
+
     if Reportdata.storedProcName = '' then
       subItmIndx := 2
     else
