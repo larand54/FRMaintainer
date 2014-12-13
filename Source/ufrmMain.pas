@@ -1,4 +1,4 @@
-﻿unit ufrmMain;
+unit ufrmMain;
 
 interface
 
@@ -478,7 +478,7 @@ var
   subItmIndx: integer;
   Reportsdata: TCMMReportsdata;
   Reportdata: TCMMReportData;
-  docCategory: string;
+  docTypeName: string;
 
 begin
   ReportTree.Items.Clear;
@@ -499,11 +499,11 @@ begin
     else
       subItmIndx := 1;
     docType := Reportdata.docType;
-    docCategory := dmFR.getDocTypeName(docType);
+    docTypeName := dmFR.getDocTypeName(docType);
     Template := Reportdata.Template;
     if LastDocType <> docType then
     begin
-      Node := ReportTree.Items.AddChildObject(ReportTree.Selected, docCategory, nil);
+      Node := ReportTree.Items.AddChildObject(ReportTree.Selected, docTypeName, nil);
 //        intToStr(docType), nil);
       LastDocType := docType;
     end;
