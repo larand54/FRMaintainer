@@ -105,7 +105,7 @@ implementation
 
 { TCMReportController }
 
-uses Vcl.dialogs, ufrmMain;
+uses Vcl.dialogs;
 
 procedure TCMReportController.addParams(var aSP: TFDStoredProc;
   aParams: TCMParams);
@@ -566,7 +566,7 @@ end;
 function TCMReportController.setUpFastReport: TfrxReport;
 begin
   FreeAndNil(frxReport);
-  frxReport := TfrxReport.create(frmMain);
+  frxReport := TfrxReport.create(dmFR);
   frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
   frxReport.DataSet := nil;
   Result := frxReport;
