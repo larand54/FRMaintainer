@@ -272,7 +272,7 @@ begin
   report := ReportTree.Selected.Data;
   if report <> nil then
   begin
-    reportController.DesignReport(report.ReportNo);
+    reportController.DesignReport(prepareForOutput, FParams);
   end
   else
   begin

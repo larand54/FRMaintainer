@@ -75,7 +75,7 @@ type
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
       aMedia: TCMMediaType)overload;
 
-    procedure DesignReport(aReportNo: integer);
+    procedure DesignReport(aReportNo: integer; aParams: TCMParams);
 
     function NewReport(aTemplate: string; aDocType: string;
       aStoredProcName: string; aDatasetName: string; aDescription: string)
@@ -312,7 +312,7 @@ begin
   end;
 end;
 
-procedure TCMReportController.DesignReport(aReportNo: integer);
+procedure TCMReportController.DesignReport(aReportNo: integer; aParams: TCMParams);
 begin
   try
     if (aReportNo > -1) then
@@ -320,7 +320,7 @@ begin
       FReportData := FetchReportData(aReportNo);
       if FReportData <> nil then
       begin
-        if prepareReport(FReportData, nil) then
+        if prepareReport(FReportData, aParams) then
         begin
           frxReport := setUpFastReport;
           frxReport.DesignReport;
