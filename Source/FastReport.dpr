@@ -1,4 +1,4 @@
-program FRMaintainer;
+program FastReport;
 
 uses
   Vcl.Forms,

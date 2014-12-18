@@ -3,7 +3,7 @@
         <ProjectGuid>{6081B00C-3C41-4836-AE60-EFF6A0C373D9}</ProjectGuid>
         <ProjectVersion>15.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>FRMaintainer.dpr</MainSource>
+        <MainSource>FastReport.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -41,7 +41,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-        <SanitizedProjectName>FRMaintainer</SanitizedProjectName>
+        <SanitizedProjectName>FastReport</SanitizedProjectName>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
@@ -111,14 +111,18 @@
         </DCCReference>
         <DCCReference Include="uReport.pas"/>
         <DCCReference Include="uReportController.pas"/>
-        <None Include="ModelSupport_FRMaintainer\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\ufrmAddParams\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\FRMaintainer\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\uReportController\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\udmFR\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\ufrmMain\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\uReport\default.txvpck"/>
-        <None Include="ModelSupport_FRMaintainer\uReportController\default.txaPackage"/>
+        <None Include="ModelSupport_FastReport\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
+        <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\uReport\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\ufrmMain\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\ufrmAddParams\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\udmFR\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\FRMaintainer\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\ufrmMain\default.txaPackage"/>
+        <None Include="ModelSupport_FastReport\ufrmReportSettings\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\ufrmSubReportSettings\default.txvpck"/>
+        <None Include="ModelSupport_FastReport\FastReport\default.txvpck"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -137,7 +141,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">FRMaintainer.dpr</Source>
+                    <Source Name="MainSource">FastReport.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment/>
