@@ -808,4 +808,26 @@ object dmFR: TdmFR
       Origin = 'Name'
     end
   end
+  object qryFRByName: TFDQuery
+    Active = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT ReportNo '
+      'FROM FastReportNames frn '
+      'WHERE frn.ReportName = :NAME')
+    Left = 288
+    Top = 80
+    ParamData = <
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    object qryFRByNameReportNo: TIntegerField
+      FieldName = 'ReportNo'
+      Origin = 'ReportNo'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+  end
 end

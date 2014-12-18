@@ -74,6 +74,8 @@ type
       aMedia: TCMMediaType)overload;
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
       aMedia: TCMMediaType)overload;
+    procedure RunReport(aReportName: string; aParams: TCMParams;
+      aMedia: TCMMediaType)overload;
 
     procedure DesignReport(aReportNo: integer; aParams: TCMParams);
 
@@ -512,6 +514,12 @@ var
 begin
   i := proc.IndexOf('.');
   Result := proc.Substring(i + 1, proc.Length - i - 1);
+end;
+
+procedure TCMReportController.RunReport(aReportName: string; aParams: TCMParams;
+  aMedia: TCMMediaType);
+begin
+  RunReport(dmFR.reportByName(aReportName),aParams, aMedia);
 end;
 
 procedure TCMReportController.RunReport(aReportData: TCMMReportData;

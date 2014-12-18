@@ -52,6 +52,8 @@ type
     qryDocType: TFDQuery;
     qryDocTypeid: TIntegerField;
     qryDocTypeName: TStringField;
+    qryFRByName: TFDQuery;
+    qryFRByNameReportNo: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -77,6 +79,7 @@ type
       aSubReportsData: TCMSReportsData): boolean;
     function getLangPath: string;
     function getDocTypeName(aDocType: integer): string;
+    function reportByName(aName: string): integer;
   end;
 
 var
@@ -258,6 +261,22 @@ begin
       Result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
   finally
     spGetNextReportNumber.Active := false;
+  end;
+end;
+
+function TdmFR.reportByName(aName: string): integer;
+begin
+  try
+    qryFRByName.Active := false;
+    qryFRByName.Prepare;
+    qryFRByName.ParamByName('NAME').AsString := aName;
+    qryFRByName.Active := true;
+  finally
+    if qryFRByName.RecordCount = 1 then
+      result := qryFRByName['ReportNo']
+    else
+      result := -1;
+    qryFRByName.Active := false;
   end;
 end;
 
