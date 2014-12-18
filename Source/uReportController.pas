@@ -102,6 +102,9 @@ type
     property TemplatePath: string read FTemplatePath;
 
   end;
+ var
+  useFR: boolean; // I ett övergående skede används denna flagga till attskifta mellan CrystalReports och FastReport
+
 
 implementation
 
@@ -660,5 +663,8 @@ begin
   FStoredProc := aSP;
   FDataset := aDS;
 end;
+
+initialization
+  useFR := false; // use Crystalreports from start
 
 end.
