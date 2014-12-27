@@ -46,7 +46,6 @@ type
     qryDeleteSubreport: TFDQuery;
     qryDeleteSubreports: TFDQuery;
     tblDBPropsLangPath: TStringField;
-    qryFastReportsDocCategoryName: TStringField;
     qryDocType: TFDQuery;
     qryDocTypeid: TIntegerField;
     qryDocTypeName: TStringField;
@@ -59,7 +58,7 @@ type
     FDocType: TCMDocType;
   public
     { Public declarations }
-    property DocCategory: TCMDocType read FDocType;
+    property DocType: TCMDocType read FDocType;
     function getNextAvalableReportNumber: integer;
     function reportExist(aRepNo: integer): boolean;
     function subReportExist(aRepNo: integer; aName: string): boolean;
@@ -110,7 +109,7 @@ begin
       qryInsertFastReport.Prepare;
       qryInsertFastReport.ParamByName('REPNO').AsInteger := aRepNo;
       qryInsertFastReport.ParamByName('DOCTYPE').AsInteger :=
-        aReportData.docType;
+        aReportData.DocType;
       qryInsertFastReport.ParamByName('DESCR').AsString :=
         aReportData.description;
       qryInsertFastReport.ParamByName('TEMPLATE').AsString :=
@@ -167,19 +166,14 @@ begin
 end;
 
 procedure TdmFR.DataModuleCreate(Sender: TObject);
-var
-  k1: integer;
-  s1: string;
 begin
   try
     FDocType := TCMDocType.Create();
     qryDocType.Active := true;
     qryDocType.First;
-    while not qryDocType.Eof do begin
-      k1 := qryDocType['Id'];
-      s1 := qryDocType['Name'];
-      FDocType.Add(qryDocType['Id'],
-        qryDocType['Name']);
+    while not qryDocType.Eof do
+    begin
+      FDocType.Add(qryDocType['Id'], qryDocType['Name']);
       qryDocType.Next;
     end;
   finally

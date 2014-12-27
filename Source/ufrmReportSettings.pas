@@ -190,13 +190,13 @@ var
   sDocType: string;
   docType: TCMDocType;
 begin
-  docType := dmFR.DocCategory;
+  docType := dmFR.DocType;
   for idocType in docType.keys do begin
     sDocType := docType[iDocType];
     cboDocType.Items.AddObject(sDocType, TObject(iDocType));
   end;
   if aDocType > 0 then begin
-    cboDocType.Text := dmFR.DocCategory.Items[aDocType];
+    cboDocType.Text := dmFR.DocType.Items[aDocType];
   end;
 end;
 

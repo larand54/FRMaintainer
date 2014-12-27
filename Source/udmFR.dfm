@@ -45,11 +45,11 @@ object dmFR: TdmFR
       '      ,[Description]'
       '      ,[StoredProcName]'
       '      ,[DatasetUserName],'
-      'dc.DocCategoryName'
+      'dt.Name'
       
         '  FROM [vis_vida].[dbo].[FastReportNames] frn join [vis_vida].[d' +
-        'bo].[DocCategory] dc on dc.DocCategoryNo = frn.DocType '
-      'Order By dc.DocCategoryName')
+        'bo].[DocType] dt on dt.id = frn.DocType '
+      'Order By dt.Name')
     Left = 200
     Top = 8
     object qryFastReportsReportNo: TIntegerField
@@ -82,10 +82,10 @@ object dmFR: TdmFR
       Origin = 'DatasetUserName'
       Size = 50
     end
-    object qryFastReportsDocCategoryName: TStringField
-      FieldName = 'DocCategoryName'
-      Origin = 'DocCategoryName'
-      Size = 50
+    object qryFastReportsName: TStringField
+      FieldName = 'Name'
+      Origin = 'Name'
+      Size = 30
     end
   end
   object qrySubreports: TFDQuery
