@@ -102,9 +102,10 @@ type
     property TemplatePath: string read FTemplatePath;
 
   end;
- var
-  useFR: boolean; // I ett övergående skede används denna flagga till attskifta mellan CrystalReports och FastReport
 
+var
+  useFR: boolean;
+  // I ett övergående skede används denna flagga till attskifta mellan CrystalReports och FastReport
 
 implementation
 
@@ -660,6 +661,7 @@ begin
 end;
 
 initialization
-  useFR := false; // use Crystalreports from start
+
+useFR := false; // use Crystalreports from start
 
 end.
