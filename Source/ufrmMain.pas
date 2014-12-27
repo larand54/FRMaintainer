@@ -509,7 +509,7 @@ begin
   rd := TCMMReportData(Node.Data);
   if Assigned(rd) then
   begin
-    hint := 'ReportNo: ' + intToStr(rd.ReportNo);
+    Hint := 'ReportNo: ' + intToStr(rd.ReportNo);
     FErrors.Clear;
     validateReportData(rd, FErrors);
     for errMsg in FErrors do
