@@ -20,7 +20,6 @@ type
     BitBtn4: TBitBtn;
     lvParameters: TListView;
     bbnClear: TBitBtn;
-    siLangLinked_frmAddParams: TsiLangLinked;
     procedure bbnAddClick(Sender: TObject);
     procedure bbnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

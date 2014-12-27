@@ -29,7 +29,6 @@ type
     edDescription: TEdit;
     lblDescription: TLabel;
     bbnCrtMain: TBitBtn;
-    siLangLinked_frmReportSettings: TsiLangLinked;
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     cboDocType: TComboBox;
@@ -75,7 +74,6 @@ begin
     sbtnAddSR.Enabled := true;
     sbtnRemoveSR.Enabled := true;
   end;
-
 end;
 
 function TfrmReportSettings.Execute(TCMC: TCMReportController): TCMMReportData;
@@ -84,8 +82,8 @@ var
   srl: TCMSReportsData;
   i: integer;
 begin
-  frmReportSettings.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_0' (* 'Report settings  -- Create New Report' *) );
-  bbnCrtMain.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_1' (* 'Create Main' *) );
+  frmReportSettings.Caption := 'Report settings  -- Create New Report';
+  bbnCrtMain.Caption :=  'Create Main';
   bbnCrtMain.OnClick := bbnCrtMainClick;
   FReportController := TCMC;
   bbnApply.Enabled := false;
@@ -142,9 +140,9 @@ begin
   try
     FReportData := aRepData;
     bbnApply.Enabled := false;
-    bbnCrtMain.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_2' (* 'Update Main' *) );
+    bbnCrtMain.Caption := 'Update Main' ;
     bbnCrtMain.OnClick := bbnUpdMainClick;
-    frmReportSettings.Caption := siLangLinked_frmReportSettings.GetTextOrDefault('IDS_3' (* 'Report settings  -- Update Report' *) );
+    frmReportSettings.Caption := 'Report settings  -- Update Report' ;
     FReportController := TCMC;
 
     // Fill form with data

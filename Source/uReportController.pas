@@ -270,9 +270,9 @@ begin
           sr.Free;
         end;
         FreeAndNil(srs);
-        MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_100' (* 'Given stored procedure "' *) ) + spName +
-          dmFR.siLang1.GetTextOrDefault('IDS_101' (* '", for the subreport "' *) ) + name +
-          dmFR.siLang1.GetTextOrDefault('IDS_102' (* '", does not exist in the database - please change the name or create a new Stored procedure in the database.' *) )
+        MessageDlg('Given stored procedure "' + spName +
+          '", for the subreport "'  + name +
+          '", does not exist in the database - please change the name or create a new Stored procedure in the database.'
           + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
       end;
     end;
@@ -296,11 +296,9 @@ begin
     Result := RepData;
   except
     on E: EConvertError do
-      MessageDlg(dmFR.siLang1.GetTextOrDefault
-        ('IDS_0' (* 'Datatype is not numeric!' *) ), mtError, [mbOK], 0);
+      MessageDlg('Datatype is not numeric!', mtError, [mbOK], 0);
     on E: Exception do
-      MessageDlg(dmFR.siLang1.GetTextOrDefault
-        ('IDS_1' (* 'Could not create report!  --- Cause:' *) ) + sLineBreak +
+      MessageDlg('Could not create report!  --- Cause:' + sLineBreak +
         E.Message, mtError, [mbOK], 0);
   end;
 end;
@@ -333,10 +331,8 @@ begin
       end
       else
         raise ETCMReportNotFound.create
-          (dmFR.siLang1.GetTextOrDefault
-          ('IDS_2' (* 'Requested report number: ' *) ) + intToStr(aReportNo) +
-          dmFR.siLang1.GetTextOrDefault
-          ('IDS_3' (* ' was not found in the database!' *) ));
+          ('Requested report number: '  + intToStr(aReportNo) +
+          ' was not found in the database!' );
     end;
   finally
     cleanUpFromDB_components;
@@ -511,6 +507,7 @@ begin
   Result := setupReport(aReportData, aParams);
 end;
 
+
 function TCMReportController.RemoveDBObject(proc: String): string;
 var
   i: integer;
@@ -564,10 +561,8 @@ begin
       end
       else
         raise ETCMReportNotFound.create
-          (dmFR.siLang1.GetTextOrDefault
-          ('IDS_2' (* 'Requested report number: ' *) ) + intToStr(aReportNo) +
-          dmFR.siLang1.GetTextOrDefault
-          ('IDS_3' (* ' was not found in the database!' *) ));
+          ('Requested report number: ' + intToStr(aReportNo) +
+          ' was not found in the database!' );
     end;
   finally
     cleanUpFromDB_components;
@@ -597,8 +592,8 @@ begin
   except
     on E: EFDException do
     begin
-      MessageDlg(dmFR.siLang1.GetTextOrDefault('IDS_103' (* 'Given store procedure "' *) ) + aReportData.StoredProcName +
-        dmFR.siLang1.GetTextOrDefault('IDS_104' (* '" does not exist in the database - please change the name or create a new Stored procedure in the database.' *) )
+      MessageDlg('Given store procedure "' +
+        aReportData.StoredProcName + '" does not exist in the database - please change the name or create a new Stored procedure in the database.'
         + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
   end;

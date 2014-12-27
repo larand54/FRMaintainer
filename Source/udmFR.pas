@@ -45,8 +45,6 @@ type
     qryDeleteReport: TFDQuery;
     qryDeleteSubreport: TFDQuery;
     qryDeleteSubreports: TFDQuery;
-    siLang1: TsiLang;
-    siLangDispatcher1: TsiLangDispatcher;
     tblDBPropsLangPath: TStringField;
     qryFastReportsDocCategoryName: TStringField;
     qryDocType: TFDQuery;
@@ -125,8 +123,7 @@ begin
     except
       ON E: EDatabaseError do
       begin
-        MessageDlg(siLang1.GetTextOrDefault
-          ('IDS_0' (* 'Could not add report to database!  --- Cause:' *) ) +
+        MessageDlg('Could not add report to database!  --- Cause:' +
           sLineBreak + E.Message, mtError, [mbOK], 0);
         Result := false;
       end;
@@ -161,8 +158,7 @@ begin
     ON E: EDatabaseError do
     begin
       Result := false;
-      MessageDlg(siLang1.GetTextOrDefault
-        ('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) +
+      MessageDlg('Could not add subreport to database!  --- Cause:'  +
         sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
 
@@ -307,7 +303,6 @@ begin
   end;
 end;
 
-
 function TdmFR.upDateReport(aRepNo: integer;
   aReportData: TCMMReportData): boolean;
 var
@@ -331,8 +326,7 @@ begin
     Result := true;
   except
     ON E: EDatabaseError do
-      MessageDlg(siLang1.GetTextOrDefault
-        ('IDS_2' (* 'Could not update report to database!  --- Cause:' *) ) +
+      MessageDlg('Could not update report to database!  --- Cause:'  +
         sLineBreak + E.Message, mtError, [mbOK], 0);
   end;
 
@@ -366,8 +360,7 @@ begin
     ON E: EDatabaseError do
     begin
       Result := false;
-      MessageDlg(siLang1.GetTextOrDefault
-        ('IDS_1' (* 'Could not add subreport to database!  --- Cause:' *) ) +
+      MessageDlg('Could not add subreport to database!  --- Cause:' +
         sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
 

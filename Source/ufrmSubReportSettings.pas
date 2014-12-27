@@ -17,7 +17,6 @@ type
     edDataset: TEdit;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
-    siLangLinked_frmSubReportSettings: TsiLangLinked;
   private
     { Private declarations }
   public

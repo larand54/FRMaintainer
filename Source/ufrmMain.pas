@@ -14,7 +14,22 @@ uses
   FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ComCtrls, frxClass, frxExportRTF,
   frxRich, Vcl.ImgList, Vcl.Buttons, frxDBSet,
   uReport, Vcl.ButtonGroup, Vcl.ExtCtrls,
-  uReportController, siComp, siLngLnk, System.Actions, Vcl.ActnList;
+  uReportController, siComp, siLngLnk, System.Actions, Vcl.ActnList, Vcl.Menus,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, cxNavigator, cxDBData;
 
 type
   TErrorCode = class
@@ -46,9 +61,6 @@ type
     Label2: TLabel;
     btnPrint: TButton;
     btnFile: TButton;
-    siLangLinked_frmMain: TsiLangLinked;
-    btnLanguage: TButton;
-    Label3: TLabel;
     ActionList1: TActionList;
     acnNew: TAction;
     acnClose: TAction;
@@ -247,15 +259,7 @@ procedure TfrmMain.acnChgLanguageExecute(Sender: TObject);
 var
   nol: integer;
 begin
-  nol := dmFR.siLangDispatcher1.NumOfLanguages;
-  if dmFR.siLangDispatcher1.ActiveLanguage = nol then
-    dmFR.siLangDispatcher1.ActiveLanguage := 1
-  else
-    dmFR.siLangDispatcher1.ActiveLanguage :=
-      dmFR.siLangDispatcher1.ActiveLanguage + 1;
-  if Sender is TAction then
-     TAction(sender).Caption := dmFR.siLangDispatcher1.Language;
-  BuildTree;
+
 end;
 
 procedure TfrmMain.acnCloseExecute(Sender: TObject);
@@ -277,9 +281,8 @@ begin
   else
   begin
     // Create new template without any report connected
-    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault(
-       siLangLinked_frmMain.GetTextOrDefault('IDS_0' (* 'You are going to create a new template without any specified report' *) ) ),
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    if MessageDlg('You are going to create a new template without any specified report'
+     , mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       frxReport1.DataSet := nil;
       frxReport1.DesignReport;
@@ -294,7 +297,7 @@ var
 begin
   if not Assigned(FReportData) then
   begin
-    MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_4' (* 'Please select a report!' *) ), mtInformation, [mbOK], 0);
+    MessageDlg('Please select a report!' , mtInformation, [mbOK], 0);
     exit;
   end;
 
@@ -349,8 +352,8 @@ begin
   report := ReportTree.Selected.Data;
   if report <> nil then
   begin
-    if MessageDlg(siLangLinked_frmMain.GetTextOrDefault('IDS_5' (* 'You are going to remove the report: ' *) ) +
-      report.Template, mtWarning, [mbOK, mbCancel], 0) = mrOK then
+    if MessageDlg('You are going to remove the report: '  + report.Template,
+      mtWarning, [mbOK, mbCancel], 0) = mrOK then
     begin
       if reportController.DeleteReport(report.ReportNo) then
         ReportTree.Selected.Delete;
@@ -369,7 +372,6 @@ begin
   Memo1.Clear;
   FReportData := nil;
   FErrors := TStringList.create;
-  acnChgLanguage.Caption := dmFR.siLangDispatcher1.Language;
   try
     FReportController := TCMReportController.create;
     FReportPath := FReportController.TemplatePath;
@@ -457,9 +459,9 @@ function TfrmMain.validateReportData(aReportData: TCMMReportData;
   errors: TStringList): boolean;
 begin
   if aReportData.datasetUserName = '' then
-    errors.AddObject(siLangLinked_frmMain.GetTextOrDefault('IDS_1' (* 'Dataset is missing' *) ), TErrorCode.create(1));
+    errors.AddObject('Dataset is missing' , TErrorCode.create(1));
   if aReportData.storedProcName = '' then
-    errors.AddObject(siLangLinked_frmMain.GetTextOrDefault('IDS_2' (* 'Stored procedure is missing' *) ), TErrorCode.create(2));
+    errors.AddObject('Stored procedure is missing' , TErrorCode.create(2));
   Result := (errors.Count > 0);
 end;
 
@@ -482,8 +484,7 @@ var
 
 begin
   ReportTree.Items.Clear;
-  Node := ReportTree.Items.Add(nil,
-    siLangLinked_frmMain.GetTextOrDefault('IDS_3' (* 'Available Reports...' *) ) );
+  Node := ReportTree.Items.Add(nil, 'Available Reports...');
   Node.ImageIndex := 0;
   try
     Reportsdata := reportController.AllReports;
