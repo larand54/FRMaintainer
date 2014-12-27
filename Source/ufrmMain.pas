@@ -71,6 +71,16 @@ type
     acnPDF: TAction;
     acnRemove: TAction;
     acnChgLanguage: TAction;
+    pmnuReport: TPopupMenu;
+    Copy1: TMenuItem;
+    New1: TMenuItem;
+    Edit1: TMenuItem;
+    N1: TMenuItem;
+    PreView1: TMenuItem;
+    Print1: TMenuItem;
+    PDF1: TMenuItem;
+    Remove1: TMenuItem;
+    acnCopy: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -84,6 +94,7 @@ type
     procedure acnDesignExecute(Sender: TObject);
     procedure acnEditExecute(Sender: TObject);
     procedure acnNewExecute(Sender: TObject);
+    procedure acnCopyExecute(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -124,120 +135,126 @@ var
 
 implementation
 
-uses udmFR, ufrmAddParams, ufrmReportSettings;
+uses udmFR, ufrmAddParams, ufrmReportSettings, printers;
 {$R *.dfm}
+
 const
-  TTS_ALWAYSTIP           = $01;
-  TTS_NOPREFIX            = $02;
+  TTS_ALWAYSTIP = $01;
+  TTS_NOPREFIX = $02;
   { For IE >= 0x0500 }
-  TTS_NOANIMATE           = $10;
-  TTS_NOFADE              = $20;
-  TTS_BALLOON             = $40;
-  TTS_CLOSE               = $80;
+  TTS_NOANIMATE = $10;
+  TTS_NOFADE = $20;
+  TTS_BALLOON = $40;
+  TTS_CLOSE = $80;
   { For Windows >= Vista }
-  TTS_USEVISUALSTYLE      = $100;  // Use themed hyperlinks
+  TTS_USEVISUALSTYLE = $100; // Use themed hyperlinks
 
-  TTF_IDISHWND            = $0001;
-  TTF_CENTERTIP           = $0002;
-  TTF_RTLREADING          = $0004;
-  TTF_SUBCLASS            = $0010;
-  TTF_TRACK               = $0020;
-  TTF_ABSOLUTE            = $0080;
-  TTF_TRANSPARENT         = $0100;
-  TTF_PARSELINKS          = $1000;  // For IE >= 0x0501
-  TTF_DI_SETITEM          = $8000;  // valid only on the TTN_NEEDTEXT callback
+  TTF_IDISHWND = $0001;
+  TTF_CENTERTIP = $0002;
+  TTF_RTLREADING = $0004;
+  TTF_SUBCLASS = $0010;
+  TTF_TRACK = $0020;
+  TTF_ABSOLUTE = $0080;
+  TTF_TRANSPARENT = $0100;
+  TTF_PARSELINKS = $1000; // For IE >= 0x0501
+  TTF_DI_SETITEM = $8000; // valid only on the TTN_NEEDTEXT callback
 
-  TTDT_AUTOMATIC      = 0;
-  TTDT_RESHOW         = 1;
-  TTDT_AUTOPOP        = 2;
-  TTDT_INITIAL        = 3;
+  TTDT_AUTOMATIC = 0;
+  TTDT_RESHOW = 1;
+  TTDT_AUTOPOP = 2;
+  TTDT_INITIAL = 3;
 
   // ToolTip Icons (Set with TTM_SETTITLE)
-  TTI_NONE            = 0;
-  TTI_INFO            = 1;
-  TTI_WARNING         = 2;
-  TTI_ERROR           = 3;
+  TTI_NONE = 0;
+  TTI_INFO = 1;
+  TTI_WARNING = 2;
+  TTI_ERROR = 3;
   { For Windows >= Vista }
-  TTI_INFO_LARGE      = 4;
-  TTI_WARNING_LARGE   = 5;
-  TTI_ERROR_LARGE     = 6;
+  TTI_INFO_LARGE = 4;
+  TTI_WARNING_LARGE = 5;
+  TTI_ERROR_LARGE = 6;
 
   // Tool Tip Messages
-  TTM_ACTIVATE        = WM_USER + 1;
-  TTM_SETDELAYTIME    = WM_USER + 3;
-  TTM_ADDTOOLA        = WM_USER + 4;
-  TTM_DELTOOLA        = WM_USER + 5;
-  TTM_NEWTOOLRECTA    = WM_USER + 6;
-  TTM_GETTOOLINFOA    = WM_USER + 8;
-  TTM_SETTOOLINFOA    = WM_USER + 9;
-  TTM_HITTESTA        = WM_USER + 10;
-  TTM_GETTEXTA        = WM_USER + 11;
-  TTM_UPDATETIPTEXTA  = WM_USER + 12;
-  TTM_ENUMTOOLSA      = WM_USER + 14;
+  TTM_ACTIVATE = WM_USER + 1;
+  TTM_SETDELAYTIME = WM_USER + 3;
+  TTM_ADDTOOLA = WM_USER + 4;
+  TTM_DELTOOLA = WM_USER + 5;
+  TTM_NEWTOOLRECTA = WM_USER + 6;
+  TTM_GETTOOLINFOA = WM_USER + 8;
+  TTM_SETTOOLINFOA = WM_USER + 9;
+  TTM_HITTESTA = WM_USER + 10;
+  TTM_GETTEXTA = WM_USER + 11;
+  TTM_UPDATETIPTEXTA = WM_USER + 12;
+  TTM_ENUMTOOLSA = WM_USER + 14;
   TTM_GETCURRENTTOOLA = WM_USER + 15;
-  TTM_ADDTOOLW        = WM_USER + 50;
-  TTM_DELTOOLW        = WM_USER + 51;
-  TTM_NEWTOOLRECTW    = WM_USER + 52;
-  TTM_GETTOOLINFOW    = WM_USER + 53;
-  TTM_SETTOOLINFOW    = WM_USER + 54;
-  TTM_HITTESTW        = WM_USER + 55;
-  TTM_GETTEXTW        = WM_USER + 56;
-  TTM_UPDATETIPTEXTW  = WM_USER + 57;
-  TTM_ENUMTOOLSW      = WM_USER + 58;
+  TTM_ADDTOOLW = WM_USER + 50;
+  TTM_DELTOOLW = WM_USER + 51;
+  TTM_NEWTOOLRECTW = WM_USER + 52;
+  TTM_GETTOOLINFOW = WM_USER + 53;
+  TTM_SETTOOLINFOW = WM_USER + 54;
+  TTM_HITTESTW = WM_USER + 55;
+  TTM_GETTEXTW = WM_USER + 56;
+  TTM_UPDATETIPTEXTW = WM_USER + 57;
+  TTM_ENUMTOOLSW = WM_USER + 58;
   TTM_GETCURRENTTOOLW = WM_USER + 59;
   TTM_WINDOWFROMPOINT = WM_USER + 16;
-  TTM_TRACKACTIVATE   = WM_USER + 17;
-  TTM_TRACKPOSITION   = WM_USER + 18;
-  TTM_SETTIPBKCOLOR   = WM_USER + 19;
+  TTM_TRACKACTIVATE = WM_USER + 17;
+  TTM_TRACKPOSITION = WM_USER + 18;
+  TTM_SETTIPBKCOLOR = WM_USER + 19;
   TTM_SETTIPTEXTCOLOR = WM_USER + 20;
-  TTM_GETDELAYTIME    = WM_USER + 21;
-  TTM_GETTIPBKCOLOR   = WM_USER + 22;
+  TTM_GETDELAYTIME = WM_USER + 21;
+  TTM_GETTIPBKCOLOR = WM_USER + 22;
   TTM_GETTIPTEXTCOLOR = WM_USER + 23;
-  TTM_SETMAXTIPWIDTH  = WM_USER + 24;
-  TTM_GETMAXTIPWIDTH  = WM_USER + 25;
-  TTM_SETMARGIN       = WM_USER + 26;
-  TTM_GETMARGIN       = WM_USER + 27;
-  TTM_POP             = WM_USER + 28;
-  TTM_UPDATE          = WM_USER + 29;
+  TTM_SETMAXTIPWIDTH = WM_USER + 24;
+  TTM_GETMAXTIPWIDTH = WM_USER + 25;
+  TTM_SETMARGIN = WM_USER + 26;
+  TTM_GETMARGIN = WM_USER + 27;
+  TTM_POP = WM_USER + 28;
+  TTM_UPDATE = WM_USER + 29;
   { For IE >= 0X0500 }
-  TTM_GETBUBBLESIZE   = WM_USER + 30;
-  TTM_ADJUSTRECT      = WM_USER + 31;
-  TTM_SETTITLEA       = WM_USER + 32;
-  TTM_SETTITLEW       = WM_USER + 33;
+  TTM_GETBUBBLESIZE = WM_USER + 30;
+  TTM_ADJUSTRECT = WM_USER + 31;
+  TTM_SETTITLEA = WM_USER + 32;
+  TTM_SETTITLEW = WM_USER + 33;
   { For Windows >= XP }
-  TTM_POPUP           = WM_USER + 34;
-  TTM_GETTITLE        = WM_USER + 35;
+  TTM_POPUP = WM_USER + 34;
+  TTM_GETTITLE = WM_USER + 35;
 
-  TTM_ADDTOOL        = {$IFDEF UNICODE}TTM_ADDTOOLW{$ELSE}TTM_ADDTOOLA{$ENDIF};
-  TTM_DELTOOL        = {$IFDEF UNICODE}TTM_DELTOOLW{$ELSE}TTM_DELTOOLA{$ENDIF};
-  TTM_NEWTOOLRECT    = {$IFDEF UNICODE}TTM_NEWTOOLRECTW{$ELSE}TTM_NEWTOOLRECTA{$ENDIF};
-  TTM_GETTOOLINFO    = {$IFDEF UNICODE}TTM_GETTOOLINFOW{$ELSE}TTM_GETTOOLINFOA{$ENDIF};
-  TTM_SETTOOLINFO    = {$IFDEF UNICODE}TTM_SETTOOLINFOW{$ELSE}TTM_SETTOOLINFOA{$ENDIF};
-  TTM_HITTEST        = {$IFDEF UNICODE}TTM_HITTESTW{$ELSE}TTM_HITTESTA{$ENDIF};
-  TTM_GETTEXT        = {$IFDEF UNICODE}TTM_GETTEXTW{$ELSE}TTM_GETTEXTA{$ENDIF};
-  TTM_UPDATETIPTEXT  = {$IFDEF UNICODE}TTM_UPDATETIPTEXTW{$ELSE}TTM_UPDATETIPTEXTA{$ENDIF};
-  TTM_ENUMTOOLS      = {$IFDEF UNICODE}TTM_ENUMTOOLSW{$ELSE}TTM_ENUMTOOLSA{$ENDIF};
-  TTM_GETCURRENTTOOL = {$IFDEF UNICODE}TTM_GETCURRENTTOOLW{$ELSE}TTM_GETCURRENTTOOLA{$ENDIF};
+  TTM_ADDTOOL = {$IFDEF UNICODE}TTM_ADDTOOLW{$ELSE}TTM_ADDTOOLA{$ENDIF};
+  TTM_DELTOOL = {$IFDEF UNICODE}TTM_DELTOOLW{$ELSE}TTM_DELTOOLA{$ENDIF};
+  TTM_NEWTOOLRECT =
+{$IFDEF UNICODE}TTM_NEWTOOLRECTW{$ELSE}TTM_NEWTOOLRECTA{$ENDIF};
+  TTM_GETTOOLINFO =
+{$IFDEF UNICODE}TTM_GETTOOLINFOW{$ELSE}TTM_GETTOOLINFOA{$ENDIF};
+  TTM_SETTOOLINFO =
+{$IFDEF UNICODE}TTM_SETTOOLINFOW{$ELSE}TTM_SETTOOLINFOA{$ENDIF};
+  TTM_HITTEST = {$IFDEF UNICODE}TTM_HITTESTW{$ELSE}TTM_HITTESTA{$ENDIF};
+  TTM_GETTEXT = {$IFDEF UNICODE}TTM_GETTEXTW{$ELSE}TTM_GETTEXTA{$ENDIF};
+  TTM_UPDATETIPTEXT =
+{$IFDEF UNICODE}TTM_UPDATETIPTEXTW{$ELSE}TTM_UPDATETIPTEXTA{$ENDIF};
+  TTM_ENUMTOOLS = {$IFDEF UNICODE}TTM_ENUMTOOLSW{$ELSE}TTM_ENUMTOOLSA{$ENDIF};
+  TTM_GETCURRENTTOOL =
+{$IFDEF UNICODE}TTM_GETCURRENTTOOLW{$ELSE}TTM_GETCURRENTTOOLA{$ENDIF};
   { For IE >= 0X0500 }
-  TTM_SETTITLE       = TTM_SETTITLEW;
+  TTM_SETTITLE = TTM_SETTITLEW;
   { For Windows >= XP }
-//  TTM_SETWINDOWTHEME = CCM_SETWINDOWTHEME;
-  TTM_RELAYEVENT     = WM_USER + 7;
-  TTM_GETTOOLCOUNT   = WM_USER + 13;
+  // TTM_SETWINDOWTHEME = CCM_SETWINDOWTHEME;
+  TTM_RELAYEVENT = WM_USER + 7;
+  TTM_GETTOOLCOUNT = WM_USER + 13;
 
   TTN_FIRST = 0 - 520;
-  TTN_LAST  = 0 - 549;
+  TTN_LAST = 0 - 549;
 
   TTN_NEEDTEXTA = TTN_FIRST - 0;
   TTN_NEEDTEXTW = TTN_FIRST - 10;
-  TTN_NEEDTEXT  = {$IFDEF UNICODE}TTN_NEEDTEXTW{$ELSE}TTN_NEEDTEXTA{$ENDIF};
-  TTN_SHOW      = TTN_FIRST - 1;
-  TTN_POP       = TTN_FIRST - 2;
+  TTN_NEEDTEXT = {$IFDEF UNICODE}TTN_NEEDTEXTW{$ELSE}TTN_NEEDTEXTA{$ENDIF};
+  TTN_SHOW = TTN_FIRST - 1;
+  TTN_POP = TTN_FIRST - 2;
   TTN_LINKCLICK = TTN_FIRST - 3;
 
 procedure TfrmMain.ReportTreeWndProc(var Message: TMessage);
 var
-  MaxWidth: Integer;
+  MaxWidth: integer;
 begin
   if Message.Msg = WM_NOTIFY then
   begin
@@ -265,6 +282,51 @@ end;
 procedure TfrmMain.acnCloseExecute(Sender: TObject);
 begin
   close;
+end;
+
+procedure TfrmMain.acnCopyExecute(Sender: TObject);
+var
+  reportCopy, org: TCMMReportData;
+  srcopy, srOrg: TCMSReportData;
+  node: TTreeNode;
+  nodeIndex: integer;
+begin
+  try
+    Node := ReportTree.Selected;
+    NodeIndex := Node.Index;
+    org := Node.Data;
+    reportCopy := FReportController.NewReport('COPY' + org.Template,
+      intToStr(org.docType), org.storedProcName, org.datasetUserName,
+      org.description);
+    if reportCopy <> nil then
+    begin
+      srOrg := nil;
+      srCopy := nil;
+      if org.subReportsData <> nil then
+        for srOrg in org.subReportsData do
+        begin
+          srcopy := FReportController.NewSubReport(reportCopy.ReportNo,
+            srOrg.name, srOrg.storedProcName, srOrg.datasetUserName);
+          if srcopy <> nil then
+          begin
+            if reportCopy.subReportsData = nil then
+              reportCopy.subReportsData := TCMSReportsData.create;
+            reportCopy.subReportsData.Add(srcopy);
+          end;
+        end;
+      if dmFR.addReport(reportCopy.ReportNo, reportCopy) then
+      begin
+        BuildTree;
+        ReportTree.Refresh;
+        ReportTree.Selected := ReportTree.Items[nodeIndex];
+      end;
+    end
+  finally
+    freeAndNil(org);
+    freeAndNil(reportCopy);
+    freeAndNil(srOrg);
+    freeAndNil(srcopy);
+  end;
 end;
 
 procedure TfrmMain.acnDesignExecute(Sender: TObject);
@@ -330,17 +392,17 @@ end;
 
 procedure TfrmMain.acnPDFExecute(Sender: TObject);
 begin
-  reportController.RunReport(prepareForOutput, FParams, frFile);
+  reportController.RunReport(prepareForOutput, FParams, frFile, 0);
 end;
 
 procedure TfrmMain.acnPreviewExecute(Sender: TObject);
 begin
-  reportController.RunReport(prepareForOutput, FParams, frPreview);
+  reportController.RunReport(prepareForOutput, FParams, frPreview, 0);
 end;
 
 procedure TfrmMain.acnPrintExecute(Sender: TObject);
 begin
-  reportController.RunReport(prepareForOutput, FParams, frPrint);
+  reportController.RunReport(prepareForOutput, FParams, frPrint, 1);
 end;
 
 procedure TfrmMain.acnRemoveExecute(Sender: TObject);
@@ -504,8 +566,9 @@ begin
     Template := Reportdata.Template;
     if LastDocType <> docType then
     begin
-      Node := ReportTree.Items.AddChildObject(ReportTree.Selected, docTypeName, nil);
-//        intToStr(docType), nil);
+      Node := ReportTree.Items.AddChildObject(ReportTree.Selected,
+        docTypeName, nil);
+      // intToStr(docType), nil);
       LastDocType := docType;
     end;
     subItem := ReportTree.Items.AddChildObject(Node, Template, Reportdata);

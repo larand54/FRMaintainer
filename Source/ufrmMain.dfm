@@ -51,6 +51,7 @@ object frmMain: TfrmMain
       Images = ImageList1
       Indent = 19
       ParentShowHint = False
+      PopupMenu = pmnuReport
       ShowHint = True
       TabOrder = 0
       OnClick = ReportTreeClick
@@ -219,7 +220,7 @@ object frmMain: TfrmMain
     Left = 174
     Top = 228
     Bitmap = {
-      494C010103000400580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000500040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -405,6 +406,39 @@ object frmMain: TfrmMain
       Category = 'Application'
       Caption = 'Change Language'
       OnExecute = acnChgLanguageExecute
+    end
+    object acnCopy: TAction
+      Category = 'Report'
+      Caption = '&Copy'
+      OnExecute = acnCopyExecute
+    end
+  end
+  object pmnuReport: TPopupMenu
+    Left = 96
+    Top = 336
+    object Copy1: TMenuItem
+      Action = acnCopy
+    end
+    object New1: TMenuItem
+      Action = acnNew
+    end
+    object Edit1: TMenuItem
+      Action = acnEdit
+    end
+    object N1: TMenuItem
+      Action = acnDesign
+    end
+    object PreView1: TMenuItem
+      Action = acnPreview
+    end
+    object Print1: TMenuItem
+      Action = acnPrint
+    end
+    object PDF1: TMenuItem
+      Action = acnPDF
+    end
+    object Remove1: TMenuItem
+      Action = acnRemove
     end
   end
 end
