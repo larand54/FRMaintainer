@@ -21,21 +21,6 @@ object dmFR: TdmFR
       Size = 255
     end
   end
-  object FDConnection1: TFDConnection
-    ConnectionName = 'FastReportConnection'
-    Params.Strings = (
-      'Server=CARMAK-FASTER\SQLEXPRESS'
-      'Database=vis_vida'
-      'OSAuthent=No'
-      'MetaDefCatalog=vis_vida'
-      'MetaDefSchema=dbo'
-      'User_Name=sa'
-      'Password=woods2011'
-      'DriverID=MSSQL')
-    Connected = True
-    Left = 24
-    Top = 8
-  end
   object qryFastReports: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
