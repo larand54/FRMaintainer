@@ -73,9 +73,11 @@ type
     procedure RunReport(aReportData: TCMMReportData;
       aMedia: TCMMediaType)overload;
     procedure RunReport(aReportNo: integer; aParams: TCMParams;
-      aMedia: TCMMediaType)overload;
+      aMedia: TCMMediaType; aPrinterSetup: integer)overload;
     procedure RunReport(aReportName: string; aParams: TCMParams;
-      aMedia: TCMMediaType)overload;
+      aMedia: TCMMediaType; aPrinterSetup: integer)overload;
+    procedure RunReport(const OverrideNoOfCopies, ClientNo, RoleType,
+      DocTyp: integer; aParams: TCMParams; aMedia: TCMMediaType)overload;
 
     procedure DesignReport(aReportNo: integer; aParams: TCMParams);
 
@@ -111,7 +113,9 @@ implementation
 
 { TCMReportController }
 
-uses Vcl.dialogs;
+uses Vcl.dialogs, Vcl.Forms, Vcl.controls,
+  windows, // Printersetup
+  printers;
 
 procedure TCMReportController.addParams(var aSP: TFDStoredProc;
   aParams: TCMParams);
@@ -316,7 +320,8 @@ begin
   end;
 end;
 
-procedure TCMReportController.DesignReport(aReportNo: integer; aParams: TCMParams);
+procedure TCMReportController.DesignReport(aReportNo: integer;
+  aParams: TCMParams);
 begin
   try
     if (aReportNo > -1) then
@@ -518,9 +523,9 @@ begin
 end;
 
 procedure TCMReportController.RunReport(aReportName: string; aParams: TCMParams;
-  aMedia: TCMMediaType);
+  aMedia: TCMMediaType; aPrinterSetup: integer);
 begin
-  RunReport(dmFR.reportByName(aReportName),aParams, aMedia);
+  RunReport(dmFR.reportByName(aReportName), aParams, aMedia, aPrinterSetup);
 end;
 
 procedure TCMReportController.RunReport(aReportData: TCMMReportData;
@@ -534,8 +539,47 @@ begin
   end;
 end;
 
+procedure TCMReportController.RunReport(const OverrideNoOfCopies, ClientNo,
+  RoleType, DocTyp: integer; aParams: TCMParams; aMedia: TCMMediaType);
+var
+  ReportName: string;
+  NoOfCopy: integer;
+  PromptUser: integer;
+  Collated: integer;
+  PrinterSetUp: integer;
+  Save_Cursor: TCursor;
+begin
+  ReportName := '';
+  NoOfCopy := 0;
+
+  dmFR.getClientDocPref(ClientNo, RoleType, DocTyp, ReportName, NoOfCopy,
+    PromptUser, Collated, PrinterSetUp);
+  if (NoOfCopy < 1) or (Length(ReportName) < 4) then
+  begin
+    ShowMessage('Rapporten finns inte upplagd på klienten');
+    exit;
+  end;
+  if OverrideNoOfCopies > 0 then
+    NoOfCopy := OverrideNoOfCopies;
+  Save_Cursor := Screen.Cursor;
+  if aMedia = frPrint then
+  begin
+    frxReport.PrintOptions.Copies := NoOfCopy;
+    if collated = 1 then
+      frxReport.PrintOptions.Collate := true
+    else
+      frxReport.PrintOptions.Collate := false;
+  end;
+
+  Screen.Cursor := crSQLWait;
+  try
+  finally
+    Screen.Cursor := Save_Cursor;
+  end;
+end;
+
 procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
-  aMedia: TCMMediaType);
+  aMedia: TCMMediaType; aPrinterSetup: integer);
 begin
   try
     if (aReportNo > -1) then
@@ -549,7 +593,8 @@ begin
           if aMedia = frPrint then
           begin
             frxReport.prepareReport;
-            frxReport.Print
+            if aPrinterSetup = 1 then
+              frxReport.PrintOptions.ShowDialog := false;
           end
           else if aMedia = frPreview then
             frxReport.showReport

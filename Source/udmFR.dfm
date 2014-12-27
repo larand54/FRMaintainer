@@ -550,4 +550,67 @@ object dmFR: TdmFR
       Required = True
     end
   end
+  object sqGetDocs: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    FetchOptions.AssignedValues = [evCache]
+    SQL.Strings = (
+      'Select * from dbo.ClientPrefDocFR cpd'
+      'Inner Join dbo.FastReportNames rn on rn.ReportNo = cpd.ReportNo'
+      'WHERE cpd.ClientNo = :ClientNo'
+      'AND cpd.RoleType = :RoleType'
+      'AND cpd.DocType = :DocType')
+    Left = 496
+    Top = 152
+    ParamData = <
+      item
+        Name = 'CLIENTNO'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ROLETYPE'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'DOCTYPE'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object sqGetDocsNoOfCopy: TIntegerField
+      FieldName = 'NoOfCopy'
+      Origin = 'NoOfCopy'
+    end
+    object sqGetDocspromptUser: TIntegerField
+      FieldName = 'promptUser'
+      Origin = 'promptUser'
+    end
+    object sqGetDocscollated: TIntegerField
+      FieldName = 'collated'
+      Origin = 'collated'
+    end
+    object sqGetDocsPrinterSetup: TIntegerField
+      FieldName = 'PrinterSetup'
+      Origin = 'PrinterSetup'
+    end
+    object sqGetDocsReportName: TStringField
+      FieldName = 'ReportName'
+      Origin = 'ReportName'
+      Size = 100
+    end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'Server=vis.vida.se'
+      'Database=vis_vida'
+      'OSAuthent=No'
+      'MetaDefCatalog=vis_vida'
+      'MetaDefSchema=dbo'
+      'User_Name=Lars'
+      'Password=woods2011'
+      'DriverID=MSSQL')
+    Left = 184
+    Top = 320
+  end
 end

@@ -16,7 +16,6 @@ type
 
   TdmFR = class(TDataModule)
     tblDBProps: TFDTable;
-    FDConnection1: TFDConnection;
     tblDBPropsFastPath: TStringField;
     qryFastReports: TFDQuery;
     qrySubreports: TFDQuery;
@@ -51,6 +50,14 @@ type
     qryDocTypeName: TStringField;
     qryFRByName: TFDQuery;
     qryFRByNameReportNo: TIntegerField;
+    sqGetDocs: TFDQuery;
+    sqGetDocsNoOfCopy: TIntegerField;
+    sqGetDocspromptUser: TIntegerField;
+    sqGetDocscollated: TIntegerField;
+    sqGetDocsPrinterSetup: TIntegerField;
+    sqGetDocsReportName: TStringField;
+    qryFastReportsName: TStringField;
+    FDConnection1: TFDConnection;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -77,6 +84,10 @@ type
     function getLangPath: string;
     function getDocTypeName(aDocType: integer): string;
     function reportByName(aName: string): integer;
+    function getClientDocPref(const ClientNo, RoleType, DocType: integer;
+      var ReportName: string; NoOfCopy, PromptUser, Collated,
+      PrinterSetup: integer): boolean;
+    function GetReportNameByDocTyp(const DocTyp: integer): String;
   end;
 
 var
@@ -206,6 +217,31 @@ begin
   qryDeleteSubreport.ExecSQL;
 end;
 
+function TdmFR.getClientDocPref(const ClientNo, RoleType, DocType: integer;
+  var ReportName: string; NoOfCopy, PromptUser, Collated,
+  PrinterSetup: integer): boolean;
+begin
+  sqGetDocs.ParamByName('ClientNo').AsInteger := ClientNo;
+  sqGetDocs.ParamByName('RoleType').AsInteger := RoleType;
+  sqGetDocs.ParamByName('DocType').AsInteger := DocType;
+
+  sqGetDocs.Open;
+  ReportName := sqGetDocsReportName.AsString;
+  NoOfCopy := sqGetDocsNoOfCopy.AsInteger;
+  PromptUser := sqGetDocspromptUser.AsInteger;
+  Collated := sqGetDocscollated.AsInteger;
+  PrinterSetup := sqGetDocsPrinterSetup.AsInteger;
+  sqGetDocs.Close;
+end;
+
+function TdmFR.GetReportNameByDocTyp(const DocTyp: integer): String;
+Begin
+  Case DocTyp of
+    100:
+      Result := 'LASTORDER_VERK_NOTE_ver3.fr3';
+  End;
+End;
+
 function TdmFR.getDocTypeName(aDocType: integer): string;
 begin
   if FDocType.ContainsKey(aDocType) then
@@ -263,9 +299,9 @@ begin
     qryFRByName.Active := true;
   finally
     if qryFRByName.RecordCount = 1 then
-      result := qryFRByName['ReportNo']
+      Result := qryFRByName['ReportNo']
     else
-      result := -1;
+      Result := -1;
     qryFRByName.Active := false;
   end;
 end;
@@ -307,7 +343,7 @@ begin
     qryUpdateFastReport.Active := false;
     qryUpdateFastReport.Prepare;
     qryUpdateFastReport.ParamByName('REPNO').AsInteger := aRepNo;
-    qryUpdateFastReport.ParamByName('DOCTYPE').AsInteger := aReportData.docType;
+    qryUpdateFastReport.ParamByName('DOCTYPE').AsInteger := aReportData.DocType;
     qryUpdateFastReport.ParamByName('DESCR').AsString :=
       aReportData.description;
     qryUpdateFastReport.ParamByName('TEMPLATE').AsString :=
