@@ -132,7 +132,7 @@ object dmFR: TdmFR
         Name = 'SP_NAME'
         DataType = ftString
         ParamType = ptInput
-        Value = 'get_company_names_inline'
+        Value = ''
       end>
     object qryParamInfoPARAMETER_NAME: TWideStringField
       FieldName = 'PARAMETER_NAME'
