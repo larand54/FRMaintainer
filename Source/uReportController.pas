@@ -602,9 +602,12 @@ begin
           frxReport := setUpFastReport;
           if aMedia = frPrint then
           begin
-            frxReport.prepareReport;
             if aPrinterSetup = 1 then
-              frxReport.PrintOptions.ShowDialog := false;
+              frxReport.PrintOptions.ShowDialog := false
+            else
+              frxReport.PrintOptions.ShowDialog := true;
+            frxReport.prepareReport;
+            frxReport.Print;
           end
           else if aMedia = frPreview then
             frxReport.showReport
