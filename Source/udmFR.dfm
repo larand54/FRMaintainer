@@ -514,7 +514,6 @@ object dmFR: TdmFR
     end
   end
   object qryFRByName: TFDQuery
-    Active = True
     Connection = FDConnection1
     SQL.Strings = (
       'SELECT ReportNo '
@@ -587,7 +586,7 @@ object dmFR: TdmFR
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Server=vis.vida.se'
+      'Server=alvesql03'
       'Database=vis_vida'
       'OSAuthent=No'
       'MetaDefCatalog=vis_vida'
