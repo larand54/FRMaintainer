@@ -49,6 +49,7 @@ type
     function getReportNo: integer;
     function GetReportData(ReportNo: integer): TCMMReportData;
     function getParamsInfo(spName: string): TCMParamsInfo;
+
     procedure createDBComponents(var aSP: TFDStoredProc; var aDS: TfrxDBDataset;
       anameSuffix: string; aSp_Name, aDs_Name: string; aParams: TCMParams);
 
@@ -208,6 +209,7 @@ var
             name := qry['SubReportName']
           else
             name := '';
+          paramsInfo := getParamsInfo(sp_name);
           SubReportData := TCMSReportData.create(RepNo, DsU_name, sp_name,
             Descr, name, paramsInfo);
           if SubReportData <> nil then
@@ -217,6 +219,7 @@ var
         begin
           docType := qry['DocType'];
           Template := qry['ReportName'];
+          paramsInfo := getParamsInfo(sp_name);
           ReportData := TCMMReportData.create(RepNo, DsU_name, sp_name, Descr,
             Template, docType, paramsInfo);
           if ReportData <> nil then
