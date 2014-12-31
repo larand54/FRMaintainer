@@ -14,7 +14,7 @@ uses
   FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ComCtrls, frxClass, frxExportRTF,
   frxRich, Vcl.ImgList, Vcl.Buttons, frxDBSet,
   uReport, Vcl.ButtonGroup, Vcl.ExtCtrls,
-  uReportController, siComp, siLngLnk, System.Actions, Vcl.ActnList, Vcl.Menus,
+  uReportController, System.Actions, Vcl.ActnList, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
   dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
@@ -86,7 +86,6 @@ type
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
       var Hint: string);
     procedure acnCloseExecute(Sender: TObject);
-    procedure acnChgLanguageExecute(Sender: TObject);
     procedure acnRemoveExecute(Sender: TObject);
     procedure acnPDFExecute(Sender: TObject);
     procedure acnPrintExecute(Sender: TObject);
@@ -113,7 +112,7 @@ type
     procedure ReportTreeWndProc(var Message: TMessage);
 
     procedure BuildTree;
-    procedure getParameters;
+    procedure getParameters(aReportData: TCMMReportData);
     procedure freeUpDBComponents;
     procedure freeUpReport;
     function prepareForOutput: integer;
@@ -272,12 +271,6 @@ begin
   DefReportTreeWndProc(Message);
 end;
 
-procedure TfrmMain.acnChgLanguageExecute(Sender: TObject);
-var
-  nol: integer;
-begin
-
-end;
 
 procedure TfrmMain.acnCloseExecute(Sender: TObject);
 begin
@@ -402,7 +395,7 @@ end;
 
 procedure TfrmMain.acnPrintExecute(Sender: TObject);
 begin
-  reportController.RunReport(prepareForOutput, FParams, frPrint, 1);
+  reportController.RunReport(prepareForOutput, FParams, frPrint, 0);
 end;
 
 procedure TfrmMain.acnRemoveExecute(Sender: TObject);
@@ -426,6 +419,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  Caption := Caption + '  Server: ' + dmFR.FDConnection1.Params.Values['Server'];
   // Make treeview enable multiple lined hint
   DefReportTreeWndProc := ReportTree.WindowProc;
   ReportTree.WindowProc := ReportTreeWndProc;
@@ -454,9 +448,9 @@ begin
   // FreeAndNil(FReport);
 end;
 
-procedure TfrmMain.getParameters;
+procedure TfrmMain.getParameters(aReportData: TCMMReportData);
 begin
-  FParams := frmAddParams.execute;
+  FParams := frmAddParams.execute(aReportData);
 end;
 
 function TfrmMain.prepareForOutput: integer;
@@ -471,7 +465,7 @@ begin
     RepNo := report.ReportNo;
     if RepNo > 0 then
     begin
-      getParameters;
+      getParameters(report);
       if Assigned(FParams) then
         Result := RepNo
       else
@@ -583,9 +577,6 @@ begin
   end;
   Node.Free;
 end;
-
-
-{ TErrorCode }
 
 constructor TErrorCode.create(aErrorCode: integer);
 begin

@@ -405,7 +405,6 @@ object frmMain: TfrmMain
     object acnChgLanguage: TAction
       Category = 'Application'
       Caption = 'Change Language'
-      OnExecute = acnChgLanguageExecute
     end
     object acnCopy: TAction
       Category = 'Report'
