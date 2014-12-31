@@ -9,7 +9,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL,
   Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, frxClass, frxExportPDF,
-  uReport, siComp;
+  uReport;
 
 type
   TCMDocType = TDictionary<integer, string>;
@@ -252,21 +252,21 @@ end;
 
 function TdmFR.getLangPath: string;
 begin
-  { Try
+  Try
     if FLangPath = '' then
     begin
-    tblDBProps.Open;
-    if not tblDBProps.Eof then
-    Begin
-    FLangPath := tblDBPropsLangPath.AsString;
-    End
-    else
-    result := '';
+      tblDBProps.Open;
+      if not tblDBProps.Eof then
+      Begin
+        FLangPath := tblDBPropsLangPath.AsString;
+      End
+      else
+        Result := '';
     end;
-    Finally
+  Finally
     tblDBProps.Close;
-    result := FLangPath;
-    end; }
+    Result := FLangPath;
+  end;
   if FLangPath = '' then
     FLangPath := ExtractFilePath(ParamStr(0)) + '\';
 
