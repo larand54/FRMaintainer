@@ -24,7 +24,6 @@ type
 
   TCMParamsInfo = TDictionary<string, string>;
 
-
   TCMReportData = class
   private
     FReportNo: integer;
@@ -42,14 +41,14 @@ type
     destructor destroy;
     property ReportNo: integer read FReportNo write FReportNo;
     property datasetUserName: string read FdatasetUserName
-      write FDatasetUserName;
-    property storedProcName: string read FStoredProcName
-      write FStoredProcName;
+      write FdatasetUserName;
+    property storedProcName: string read FstoredProcName write FstoredProcName;
     property name: string read Fname write Fname;
     property description: string read Fdescription write Fdescription;
-    property paramsInfo: TCMParamsInfo read FparamsInfo write FParamsInfo;
-    property params: TCMParams read Fparams write FParams;
-    property subReportsData: TCMSReportsData read FSubreportsData write FSubreportsData;
+    property paramsInfo: TCMParamsInfo read FparamsInfo write FparamsInfo;
+    property params: TCMParams read FParams write FParams;
+    property subReportsData: TCMSReportsData read FSubreportsData
+      write FSubreportsData;
   end;
 
   TCMSReportData = class(TCMReportData)
@@ -81,6 +80,7 @@ begin
   { Gather all parameters from mainreport and all subreports in
     this report }
   allPar := TCMParamsInfo.Create();
+  result := nil;
 
   if FparamsInfo <> nil then
   begin
@@ -89,28 +89,29 @@ begin
       allPar.add(parName, FparamsInfo.Items[parName]);
     end;
   end;
-  if FSubreportsData <> nil then
-  begin
-    for i := 0 to FSubReportsData.Count-1 do
+  try
+    if FSubreportsData <> nil then
     begin
-      with FSubreportsData[i] do
+      for i := 0 to FSubreportsData.Count - 1 do
       begin
-        if FparamsInfo <> nil then
+        with FSubreportsData[i] do
         begin
-          for parName in FparamsInfo.keys do
+          if FparamsInfo <> nil then
           begin
-            allPar.add(parName, FparamsInfo.Items[parName]);
+            for parName in FparamsInfo.keys do
+            begin
+              allPar.add(parName, FparamsInfo.Items[parName]);
+            end;
           end;
         end;
       end;
+
     end;
-
+  except
+    on E: EListError do
   end;
-  result := AllPar;
+  result := allPar;
 end;
-
-
-
 
 constructor TCMReportData.Create(aReportNo: integer;
   aDatasetName, aStoredProcName, aDescription, aname: string;
@@ -124,9 +125,6 @@ begin
   FparamsInfo := aParamsInfo;
 end;
 
-
-
-
 constructor TCMMReportData.Create(aReportNo: integer;
   aDatasetName, aStoredProcName, aDescription, aTemplate: string;
   adocType: integer; aParamsInfo: TCMParamsInfo);
@@ -137,14 +135,14 @@ begin
   FTemplate := aTemplate;
 end;
 
-
 destructor TCMReportData.destroy;
 var
-  SRD :TCMSReportData;
+  SRD: TCMSReportData;
 begin
-  ParamsInfo.Free;
-  Params.Free;
-  for SRD in FSubReportsData do begin
+  paramsInfo.Free;
+  params.Free;
+  for SRD in FSubreportsData do
+  begin
     SRD.destroy;
     SRD.Free;
   end;
