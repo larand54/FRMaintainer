@@ -134,7 +134,7 @@ object frmAddParams: TfrmAddParams
     TabOrder = 3
     OnClick = bbnRemoveClick
   end
-  object BitBtn3: TBitBtn
+  object bbnOk: TBitBtn
     Left = 440
     Top = 200
     Width = 75
@@ -143,7 +143,7 @@ object frmAddParams: TfrmAddParams
     NumGlyphs = 2
     TabOrder = 4
   end
-  object BitBtn4: TBitBtn
+  object bbnCancel: TBitBtn
     Left = 536
     Top = 200
     Width = 75
@@ -151,7 +151,7 @@ object frmAddParams: TfrmAddParams
     Kind = bkCancel
     NumGlyphs = 2
     TabOrder = 5
-    OnClick = BitBtn4Click
+    OnClick = bbnCancelClick
   end
   object lvParameters: TListView
     Left = 32
@@ -173,8 +173,10 @@ object frmAddParams: TfrmAddParams
       00044E0061006D006500043100300030003900A832E52F00000000FFFFFFFFFF
       FFFFFF01000000FFFFFFFF0000000005560061006C0075006500043100300030
       0038001833E52FFFFFFFFF}
+    SortType = stText
     TabOrder = 6
     ViewStyle = vsReport
+    OnClick = lvParametersClick
   end
   object bbnClear: TBitBtn
     Left = 440

@@ -3,10 +3,13 @@ unit ufrmAddParams;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  uReport, siComp, siLngLnk;
+  uReport;
 
+Const
+  USER_EDITLISTVIEW = WM_USER + 666;
 
 type
   TfrmAddParams = class(TForm)
@@ -16,22 +19,32 @@ type
     Label2: TLabel;
     bbnAdd: TBitBtn;
     bbnRemove: TBitBtn;
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
+    bbnOk: TBitBtn;
+    bbnCancel: TBitBtn;
     lvParameters: TListView;
     bbnClear: TBitBtn;
     procedure bbnAddClick(Sender: TObject);
     procedure bbnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bbnRemoveClick(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
+    procedure bbnCancelClick(Sender: TObject);
+    procedure FListViewEditorExit(Sender: TObject);
+    procedure lvParametersClick(Sender: TObject);
   private
     { Private declarations }
-    FParams : TCMParams;
+    FParams: TCMParams;
+    FLastReportNo: integer;
+    FListViewEditor: TEdit;
+    FLItem: TListitem;
     procedure CreateParams;
+    procedure loadParams(aReportData: TCMMReportData);
+
+    procedure UserEditListView(Var Message: TMessage);
+      message USER_EDITLISTVIEW;
+
   public
     { Public declarations }
-    function execute: TCMParams;
+    function execute(aReportData: TCMMReportData): TCMParams;
   end;
 
 var
@@ -41,15 +54,20 @@ implementation
 
 {$R *.dfm}
 
+uses commctrl,
+  uReportController;
+
+const
+  EDIT_COLUMN = 1; // Index of the column to Edit
 
 procedure TfrmAddParams.bbnAddClick(Sender: TObject);
 var
-  listItem : TListItem;
+  listItem: TListitem;
 
 begin
   listItem := lvParameters.Items.Add;
   if edName.Text[1] <> '@' then
-    edName.Text := '@'+edName.Text;
+    edName.Text := '@' + edName.Text;
   listItem.Caption := edName.Text;
   listItem.SubItems.Add(edValue.Text);
 end;
@@ -58,14 +76,16 @@ procedure TfrmAddParams.bbnRemoveClick(Sender: TObject);
 var
   i: integer;
 begin
-  for i  := lvParameters.Items.Count-1 downto 0 do begin
-    if lvParameters.Items[i].Checked then lvParameters.Items[i].Delete;
+  for i := lvParameters.Items.Count - 1 downto 0 do
+  begin
+    if lvParameters.Items[i].Checked then
+      lvParameters.Items[i].Delete;
   end;
 end;
 
-procedure TfrmAddParams.BitBtn4Click(Sender: TObject);
+procedure TfrmAddParams.bbnCancelClick(Sender: TObject);
 begin
-  FreeAndNil(FParams);
+//  FreeAndNil(FParams);
 end;
 
 procedure TfrmAddParams.CreateParams;
@@ -74,19 +94,28 @@ var
   Items: TListItems;
   name, value: string;
 begin
-  FParams := TCMParams.Create();
+  FParams.Clear;
   Items := lvParameters.Items;
-  for I := 0 to Items.Count-1 do begin
+  for i := 0 to Items.Count - 1 do
+  begin
     name := Items[i].Caption;
     value := Items[i].SubItems[0];
-    FParams.add(name,value);
+    FParams.Add(name, value);
   end;
 end;
 
-function TfrmAddParams.execute: TCMParams;
+function TfrmAddParams.execute(aReportData: TCMMReportData): TCMParams;
 begin
-  FreeandNil(FParams);
-  if (ShowModal = mrOK) then begin
+  lvParameters.Clear;
+  if FLastReportNo <> aReportData.ReportNo then
+  begin
+    FParams.Clear;
+    FLastReportNo := aReportData.ReportNo;
+    FListViewEditor.Text := '';
+  end;
+  loadParams(aReportData);
+  if (ShowModal = mrOK) then
+  begin
     CreateParams;
     Result := FParams
   end
@@ -99,11 +128,89 @@ begin
   lvParameters.Clear;
 end;
 
+procedure TfrmAddParams.FListViewEditorExit(Sender: TObject);
+begin
+  If Assigned(FLItem) Then
+  Begin
+    // assign the vslue of the TEdit to the Subitem
+    FLItem.SubItems[EDIT_COLUMN - 1] := FListViewEditor.Text;
+    FLItem := nil;
+    FListViewEditor.Visible := False;
+  End;
+end;
+
 procedure TfrmAddParams.FormCreate(Sender: TObject);
 begin
   edName.Text := '';
   edValue.Text := '';
   lvParameters.Clear;
+  FLastReportNo := -1;
+  FParams := TCMParams.Create();
+  // create the TEdit and assign the OnExit event
+  FListViewEditor := TEdit.Create(Self);
+  FListViewEditor.Parent := lvParameters;
+  FListViewEditor.OnExit := FListViewEditorExit;
+  FListViewEditor.Visible := False;
+end;
+
+procedure TfrmAddParams.loadParams(aReportData: TCMMReportData);
+var
+  params: TCMParamsInfo;
+  listItem: TListitem;
+  parName, keys: string;
+begin
+  for parName in FParams.keys do
+  begin
+    listItem := lvParameters.Items.Add;
+    listItem.Caption := parName;
+    listItem.SubItems.Add(FParams.Items[parName]);
+  end;
+
+  params := aReportData.getAllParameters;
+  for parName in params.keys do
+  begin
+    if (FParams.ContainsKey(parName)) then
+    else
+    begin
+      listItem := lvParameters.Items.Add;
+      listItem.Caption := parName;
+      listItem.SubItems.Add('');
+    end;
+  end;
+end;
+
+procedure TfrmAddParams.lvParametersClick(Sender: TObject);
+var
+  LPoint: TPoint;
+  LVHitTestInfo: TLVHitTestInfo;
+begin
+  LPoint := lvParameters.ScreenToClient(Mouse.CursorPos);
+  ZeroMemory(@LVHitTestInfo, SizeOf(LVHitTestInfo));
+  LVHitTestInfo.pt := LPoint;
+  // Check if the click was made in the column to edit
+  If (lvParameters.perform(LVM_SUBITEMHITTEST, 0, LPARAM(@LVHitTestInfo)) <> -1)
+    and (LVHitTestInfo.iSubItem = EDIT_COLUMN) Then
+    PostMessage(Self.Handle, USER_EDITLISTVIEW, LVHitTestInfo.iItem, 0)
+  else
+    FListViewEditor.Visible := False; // hide the TEdit
+end;
+
+procedure TfrmAddParams.UserEditListView(var Message: TMessage);
+var
+  LRect: TRect;
+begin
+  LRect.Top := EDIT_COLUMN;
+  LRect.Left := LVIR_BOUNDS;
+  lvParameters.perform(LVM_GETSUBITEMRECT, Message.wparam, LPARAM(@LRect));
+  MapWindowPoints(lvParameters.Handle, FListViewEditor.Parent.Handle, LRect, 2);
+  // get the current Item to edit
+  FLItem := lvParameters.Items[Message.wparam];
+  // set the text of the Edit
+  FListViewEditor.Text := FLItem.SubItems[EDIT_COLUMN - 1];
+  // set the bounds of the TEdit
+  FListViewEditor.BoundsRect := LRect;
+  // Show the TEdit
+  FListViewEditor.Visible := True;
 end;
 
 end.
