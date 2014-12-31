@@ -34,6 +34,7 @@ type
   TCMReportController = class
   private
     frxReport: TfrxReport;
+    frxRich:  TfrxRichObject;
     FReportData: TCMMReportData;
     FTemplatePath: string;
     FParams: TCMParams;
@@ -630,7 +631,9 @@ end;
 function TCMReportController.setUpFastReport: TfrxReport;
 begin
   FreeAndNil(frxReport);
+  FreeAndNil(frxRich);
   frxReport := TfrxReport.create(dmFR);
+  frxRich := TfrxRichObject.create(dmFR);
   frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
   frxReport.DataSet := nil;
   Result := frxReport;
