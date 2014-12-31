@@ -218,7 +218,8 @@ var
   srd: TCMSReportData;
 begin
   srd := frmSubReportSettings.Execute(FReportController, FReportData.ReportNo);
-  lbxSubReports.Items.AddObject(srd.name, srd);
+  if (frmSubReportSettings.ModalResult = mrOK) and (srd <> nil) then
+    lbxSubReports.Items.AddObject(srd.name, srd);
 end;
 
 procedure TfrmReportSettings.sbtnRemoveSRClick(Sender: TObject);
