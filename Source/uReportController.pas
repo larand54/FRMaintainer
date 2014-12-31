@@ -279,7 +279,7 @@ begin
         end;
         FreeAndNil(srs);
         MessageDlg('Given stored procedure "' + spName +
-          '", for the subreport "'  + name +
+          '", for the subreport "' + name +
           '", does not exist in the database - please change the name or create a new Stored procedure in the database.'
           + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
       end;
@@ -339,9 +339,8 @@ begin
         end;
       end
       else
-        raise ETCMReportNotFound.create
-          ('Requested report number: '  + intToStr(aReportNo) +
-          ' was not found in the database!' );
+        raise ETCMReportNotFound.create('Requested report number: ' +
+          intToStr(aReportNo) + ' was not found in the database!');
     end;
   finally
     cleanUpFromDB_components;
@@ -450,16 +449,25 @@ var
   qry: TFDQuery;
   Pi: TCMParamsInfo;
 begin
-  qry := dmFR.qryParamInfo;
-  qry.Active := true;
-  qry.First;
-  if Pi = nil then
-    Pi := TCMParamsInfo.create();
-  while not qry.Eof do
-  begin
-    Pi.Add(qry['PARAMETER_NAME'], qry['DATA_TYPE']);
+  try
+    if Pi = nil then
+      Pi := TCMParamsInfo.create();
+    Pi.Clear;
+    qry := dmFR.qryParamInfo;
+    qry.Active := false;
+    qry.Prepare;
+    qry.ParamByName('SP_NAME').AsString := RemoveDBObject(spName);
+    qry.Active := true;
+    qry.First;
+    while not qry.Eof do
+    begin
+      Pi.Add(qry['PARAMETER_NAME'], qry['DATA_TYPE']);
+      qry.next;
+    end;
+  finally
+    qry.close;
+    Result := Pi;
   end;
-  Result := Pi;
 end;
 
 function TCMReportController.GetReportData(ReportNo: integer): TCMMReportData;
@@ -516,7 +524,6 @@ begin
   Result := setupReport(aReportData, aParams);
 end;
 
-
 function TCMReportController.RemoveDBObject(proc: String): string;
 var
   i: integer;
@@ -568,7 +575,7 @@ begin
   if aMedia = frPrint then
   begin
     frxReport.PrintOptions.Copies := NoOfCopy;
-    if collated = 1 then
+    if Collated = 1 then
       frxReport.PrintOptions.Collate := true
     else
       frxReport.PrintOptions.Collate := false;
@@ -609,9 +616,8 @@ begin
         end;
       end
       else
-        raise ETCMReportNotFound.create
-          ('Requested report number: ' + intToStr(aReportNo) +
-          ' was not found in the database!' );
+        raise ETCMReportNotFound.create('Requested report number: ' +
+          intToStr(aReportNo) + ' was not found in the database!');
     end;
   finally
     cleanUpFromDB_components;
@@ -641,8 +647,8 @@ begin
   except
     on E: EFDException do
     begin
-      MessageDlg('Given store procedure "' +
-        aReportData.StoredProcName + '" does not exist in the database - please change the name or create a new Stored procedure in the database.'
+      MessageDlg('Given store procedure "' + aReportData.StoredProcName +
+        '" does not exist in the database - please change the name or create a new Stored procedure in the database.'
         + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
   end;
