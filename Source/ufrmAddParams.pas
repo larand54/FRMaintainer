@@ -174,7 +174,7 @@ begin
     begin
       listItem := lvParameters.Items.Add;
       listItem.Caption := parName;
-      listItem.SubItems.Add('');
+      listItem.SubItems.Add('0');
     end;
   end;
 end;
