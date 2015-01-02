@@ -326,7 +326,11 @@ end;
 
 procedure TCMReportController.DesignReport(aReportNo: integer;
   aParams: TCMParams);
+var
+  Save_Cursor: TCursor;
 begin
+  Save_Cursor := Screen.Cursor;
+  Screen.Cursor := crSQLWait;
   try
     if (aReportNo > -1) then
     begin
@@ -344,6 +348,7 @@ begin
           intToStr(aReportNo) + ' was not found in the database!');
     end;
   finally
+    Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
   end;
 end;
@@ -558,7 +563,6 @@ var
   PromptUser: integer;
   Collated: integer;
   PrinterSetUp: integer;
-  Save_Cursor: TCursor;
 begin
   ReportName := '';
   NoOfCopy := 0;
@@ -572,25 +576,22 @@ begin
   end;
   if OverrideNoOfCopies > 0 then
     NoOfCopy := OverrideNoOfCopies;
-  Save_Cursor := Screen.Cursor;
   if aMedia = frPrint then
   begin
+    frxReport := setUpFastReport;
     frxReport.PrintOptions.Copies := NoOfCopy;
     if Collated = 1 then
       frxReport.PrintOptions.Collate := true
     else
       frxReport.PrintOptions.Collate := false;
   end;
-
-  Screen.Cursor := crSQLWait;
-  try
-  finally
-    Screen.Cursor := Save_Cursor;
-  end;
+  RunReport(ReportName, aParams, aMedia, PrinterSetup);
 end;
 
 procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
   aMedia: TCMMediaType; aPrinterSetup: integer);
+var
+  Save_Cursor: TCursor;
 begin
   try
     if (aReportNo > -1) then
@@ -601,6 +602,8 @@ begin
         if prepareReport(FReportData, aParams) then
         begin
           frxReport := setUpFastReport;
+          Save_Cursor := Screen.Cursor;
+          Screen.Cursor := crSQLWait;
           if aMedia = frPrint then
           begin
             if aPrinterSetup = 1 then
@@ -624,6 +627,7 @@ begin
           intToStr(aReportNo) + ' was not found in the database!');
     end;
   finally
+    Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
   end;
 end;
