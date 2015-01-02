@@ -350,6 +350,8 @@ begin
   finally
     Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
+    freeAndNil(frxReport);
+    freeAndNil(frxRich);
   end;
 end;
 
@@ -629,17 +631,20 @@ begin
   finally
     Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
+    freeAndNil(frxReport);
+    freeAndNil(frxRich);
   end;
 end;
 
 function TCMReportController.setUpFastReport: TfrxReport;
 begin
-  FreeAndNil(frxReport);
-  FreeAndNil(frxRich);
-  frxReport := TfrxReport.create(dmFR);
-  frxRich := TfrxRichObject.create(dmFR);
-  frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
-  frxReport.DataSet := nil;
+  if frxReport = nil then begin
+    frxReport := TfrxReport.create(dmFR);
+    if frxRich = nil then
+      frxRich := TfrxRichObject.create(dmFR);
+    frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
+    frxReport.DataSet := nil;
+  end;
   Result := frxReport;
 end;
 
