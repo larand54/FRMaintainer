@@ -69,6 +69,9 @@ type
     function setUpSubReports(var aReportData: TCMMReportData;
       aParams: TCMParams): TCMSubReports;
 
+    function fixParameters(aParValues: array of variant; aReportName: string)
+      : TCMParams;
+
     { }
   public
     constructor create;
@@ -79,7 +82,8 @@ type
     procedure RunReport(aReportName: string; aParams: TCMParams;
       aMedia: TCMMediaType; aPrinterSetup: integer)overload;
     procedure RunReport(const OverrideNoOfCopies, ClientNo, RoleType,
-      DocTyp: integer; aParams: TCMParams; aMedia: TCMMediaType)overload;
+      DocTyp: integer; aParValues: Array of variant;
+      aMedia: TCMMediaType)overload;
 
     procedure DesignReport(aReportNo: integer; aParams: TCMParams);
 
@@ -452,6 +456,76 @@ begin
   Result := getReportDataFromDB(false);
 end;
 
+function TCMReportController.fixParameters(aParValues: array of variant;
+  aReportName: string): TCMParams;
+var
+  qry: TFDQuery;
+  Descr: string;
+  Params: TCMParams;
+  RepNo: integer;
+  i: integer;
+
+  function addPar(aParams: TCMParams; aValues: array of variant;
+    var index: integer; aQry: TFDQuery): boolean;
+  var
+    sp_name: string;
+    parInf: TCMParamsInfo;
+    parName: string;
+
+  begin
+    Result := false;
+    if (qry['StoredProcName'] <> null) then begin
+      sp_name := qry['StoredProcName'];
+      parInf := getParamsInfo(sp_name);
+      if parInf <> nil then begin
+        for parName in parInf.keys do begin
+        try
+          Params.Add(parName, aParValues[index]);
+          inc(index);
+        except
+          on E: EListError do begin end;
+        end;
+        end;
+      end;
+      freeAndNil(parInf);
+    end;
+  end;
+
+begin
+  Result := nil;
+  RepNo := dmFR.reportByName(aReportName);
+  if RepNo = -1 then
+    ShowMessage('Rapporten finns inte upplagd på klienten')
+  else begin
+  // Main Report
+    qry := dmFR.qryFastReport;
+    qry.Prepare;
+    qry.ParamByName('REPNO').AsInteger := RepNo;
+    qry.Active := true;
+    qry.First;
+    if qry.Eof then begin
+      ShowMessage('Rapport nr:' + intToStr(RepNo) + ' finns ej i databasen!');
+    end else begin
+      Params := TCMParams.create();
+      i := 0;
+      if not addPar(Params, aParValues, i, qry) then begin
+      end;
+  // Subreports
+      qry := dmFR.qrySubreports;
+      qry.Prepare;
+      qry.ParamByName('REPNO').AsInteger := RepNo;
+      qry.Active := true;
+      qry.First;
+      while not qry.Eof do begin
+        if not addPar(Params, aParValues, i, qry) then begin
+        end
+        else
+      end;
+      Result := Params;
+    end;
+  end;
+end;
+
 function TCMReportController.getParamsInfo(spName: string): TCMParamsInfo;
 var
   qry: TFDQuery;
@@ -587,7 +661,7 @@ begin
     else
       frxReport.PrintOptions.Collate := false;
   end;
-  RunReport(ReportName, aParams, aMedia, PrinterSetup);
+  RunReport(ReportName, Params, aMedia, PrinterSetUp);
 end;
 
 procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
