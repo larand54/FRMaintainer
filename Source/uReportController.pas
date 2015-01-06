@@ -616,8 +616,14 @@ end;
 
 procedure TCMReportController.RunReport(aReportName: string; aParams: TCMParams;
   aMedia: TCMMediaType; aPrinterSetup: integer);
+var
+  RepNo: integer;
 begin
-  RunReport(dmFR.reportByName(aReportName), aParams, aMedia, aPrinterSetup);
+  RepNo := dmFR.reportByName(aReportName);
+  if RepNo = -1 then
+    ShowMessage('Rapporten finns inte upplagd på klienten')
+  else
+    RunReport(RepNo, aParams, aMedia, aPrinterSetup);
 end;
 
 procedure TCMReportController.RunReport(aReportData: TCMMReportData;
