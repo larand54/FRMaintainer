@@ -34,7 +34,7 @@ type
   TCMReportController = class
   private
     frxReport: TfrxReport;
-    frxRich:  TfrxRichObject;
+    frxRich: TfrxRichObject;
     FReportData: TCMMReportData;
     FTemplatePath: string;
     FParams: TCMParams;
@@ -132,7 +132,7 @@ var
   offeredParams: TCMParams;
   i: integer;
   key: string;
-  Value: Variant;
+  Value: variant;
 begin
   wantedParams := TCMParamsInfo.create();
   offeredParams := TCMParams.create();
@@ -141,16 +141,13 @@ begin
   qry.ParamByName('SP_NAME').AsString := RemoveDBObject(aSP.StoredProcName);
   qry.Active := true;
   qry.First;
-  while not qry.Eof do
-  begin
+  while not qry.Eof do begin
     wantedParams.Add(qry['PARAMETER_NAME'], qry['DATA_TYPE']);
     qry.Next;
   end;
   qry.close;
-  for key in wantedParams.keys do
-  begin
-    if aParams.ContainsKey(key) then
-    begin
+  for key in wantedParams.keys do begin
+    if aParams.ContainsKey(key) then begin
       aParams.TryGetValue(key, Value);
       aSP.Params.ParamByName(key).Value := Value;
     end;
@@ -176,21 +173,17 @@ var
     Template: string;
     docType: integer;
   begin
-    if isSubreport then
-    begin
+    if isSubreport then begin
       qry := dmFR.qrySubreports;
       qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
-    end
-    else
-    begin
+    end else begin
       qry := dmFR.qryFastReports;
       ReportDataList := TList<TCMMReportData>.create;
     end;
     qry.Active := true;
     qry.First;
-    while not qry.Eof do
-    begin
+    while not qry.Eof do begin
       RepNo := qry['ReportNo'];
       if (qry['DatasetUserName'] <> null) then
         DsU_name := qry['DatasetUserName']
@@ -205,8 +198,7 @@ var
       else
         Descr := '';
       try
-        if isSubreport then
-        begin
+        if isSubreport then begin
           if not Assigned(SubRepDataList) then
             SubRepDataList := TList<TCMSReportData>.create;
 
@@ -219,16 +211,13 @@ var
             Descr, name, paramsInfo);
           if SubReportData <> nil then
             SubRepDataList.Add(SubReportData);
-        end
-        else
-        begin
+        end else begin
           docType := qry['DocType'];
           Template := qry['ReportName'];
           paramsInfo := getParamsInfo(sp_name);
           ReportData := TCMMReportData.create(RepNo, DsU_name, sp_name, Descr,
             Template, docType, paramsInfo);
-          if ReportData <> nil then
-          begin
+          if ReportData <> nil then begin
             getReportDataFromDB(true);
 
             ReportData.subReportsData := SubRepDataList;
@@ -264,11 +253,9 @@ var
 
 begin
   srs := TCMSubReports.create;
-  with aReportData do
-  begin
+  with aReportData do begin
     try
-      for srd in subReportsData do
-      begin
+      for srd in subReportsData do begin
         spName := srd.StoredProcName;
         dsName := srd.DatasetUserName;
         srName := srd.name;
@@ -276,10 +263,8 @@ begin
         srs.Add(srd.name, TCMSubReport.create(sp, sd));
       end;
     except
-      on E: EFDException do
-      begin
-        for sr in srs.values do
-        begin
+      on E: EFDException do begin
+        for sr in srs.values do begin
           sr.Free;
         end;
         FreeAndNil(srs);
@@ -336,13 +321,10 @@ begin
   Save_Cursor := Screen.Cursor;
   Screen.Cursor := crSQLWait;
   try
-    if (aReportNo > -1) then
-    begin
+    if (aReportNo > -1) then begin
       FReportData := FetchReportData(aReportNo);
-      if FReportData <> nil then
-      begin
-        if prepareReport(FReportData, aParams) then
-        begin
+      if FReportData <> nil then begin
+        if prepareReport(FReportData, aParams) then begin
           frxReport := setUpFastReport;
           frxReport.DesignReport;
         end;
@@ -354,8 +336,8 @@ begin
   finally
     Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
-    freeAndNil(frxReport);
-    freeAndNil(frxRich);
+    FreeAndNil(frxReport);
+    FreeAndNil(frxRich);
   end;
 end;
 
@@ -378,23 +360,19 @@ var
     docType: integer;
   begin
     Result := nil;
-    if isSubreport then
-    begin
+    if isSubreport then begin
       qry := dmFR.qrySubreports;
       qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
       SubRepDataList := TList<TCMSReportData>.create;
-    end
-    else
-    begin
+    end else begin
       qry := dmFR.qryFastReport;
       qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
     end;
     qry.Active := true;
     qry.First;
-    while not qry.Eof do
-    begin
+    while not qry.Eof do begin
       if (qry['DatasetUserName'] <> null) then
         DsU_name := qry['DatasetUserName']
       else
@@ -408,8 +386,7 @@ var
         else
         Descr := '';
       }
-      if isSubreport then
-      begin
+      if isSubreport then begin
         if (qry['SubReportName'] <> null) then
           name := qry['SubReportName']
         else
@@ -418,15 +395,12 @@ var
           name, paramsInfo);
         if SubReportData <> nil then
           SubRepDataList.Add(SubReportData);
-      end
-      else
-      begin
+      end else begin
         // docType := qry['DocType'];
         Template := qry['ReportName'];
         RepData := TCMMReportData.create(RepNo, DsU_name, sp_name, Descr,
           Template, 0, paramsInfo);
-        if RepData <> nil then
-        begin
+        if RepData <> nil then begin
           getReportDataFromDB(true);
           if SubRepDataList <> nil then
             RepData.subReportsData := SubRepDataList;
@@ -437,8 +411,7 @@ var
       end;
       if not closeThis then
         qry.Next
-      else
-      begin
+      else begin
         qry.close;
         exit;
       end;
@@ -541,10 +514,9 @@ begin
     qry.ParamByName('SP_NAME').AsString := RemoveDBObject(spName);
     qry.Active := true;
     qry.First;
-    while not qry.Eof do
-    begin
+    while not qry.Eof do begin
       Pi.Add(qry['PARAMETER_NAME'], qry['DATA_TYPE']);
-      qry.next;
+      qry.Next;
     end;
   finally
     qry.close;
@@ -638,28 +610,29 @@ begin
 end;
 
 procedure TCMReportController.RunReport(const OverrideNoOfCopies, ClientNo,
-  RoleType, DocTyp: integer; aParams: TCMParams; aMedia: TCMMediaType);
+  RoleType, DocTyp: integer; aParValues: Array of variant;
+  aMedia: TCMMediaType);
 var
   ReportName: string;
   NoOfCopy: integer;
   PromptUser: integer;
   Collated: integer;
   PrinterSetUp: integer;
+  Params: TCMParams;
 begin
   ReportName := '';
   NoOfCopy := 0;
 
   dmFR.getClientDocPref(ClientNo, RoleType, DocTyp, ReportName, NoOfCopy,
     PromptUser, Collated, PrinterSetUp);
-  if (NoOfCopy < 1) or (Length(ReportName) < 4) then
-  begin
+  if (NoOfCopy < 1) or (Length(ReportName) < 4) then begin
     ShowMessage('Rapporten finns inte upplagd på klienten');
     exit;
   end;
+  Params := fixParameters(aParValues, ReportName);
   if OverrideNoOfCopies > 0 then
     NoOfCopy := OverrideNoOfCopies;
-  if aMedia = frPrint then
-  begin
+  if aMedia = frPrint then begin
     frxReport := setUpFastReport;
     frxReport.PrintOptions.Copies := NoOfCopy;
     if Collated = 1 then
@@ -676,29 +649,23 @@ var
   Save_Cursor: TCursor;
 begin
   try
-    if (aReportNo > -1) then
-    begin
+    if (aReportNo > -1) then begin
       FReportData := FetchReportData(aReportNo);
-      if FReportData <> nil then
-      begin
-        if prepareReport(FReportData, aParams) then
-        begin
+      if FReportData <> nil then begin
+        if prepareReport(FReportData, aParams) then begin
           frxReport := setUpFastReport;
           Save_Cursor := Screen.Cursor;
           Screen.Cursor := crSQLWait;
-          if aMedia = frPrint then
-          begin
+          if aMedia = frPrint then begin
             if aPrinterSetup = 1 then
               frxReport.PrintOptions.ShowDialog := false
             else
               frxReport.PrintOptions.ShowDialog := true;
             frxReport.prepareReport;
             frxReport.Print;
-          end
-          else if aMedia = frPreview then
+          end else if aMedia = frPreview then
             frxReport.showReport
-          else if aMedia = frFile then
-          begin
+          else if aMedia = frFile then begin
             frxReport.prepareReport;
             frxReport.Export(dmFR.frxPDFExport1);
           end;
@@ -711,8 +678,8 @@ begin
   finally
     Screen.Cursor := Save_Cursor;
     cleanUpFromDB_components;
-    freeAndNil(frxReport);
-    freeAndNil(frxRich);
+    FreeAndNil(frxReport);
+    FreeAndNil(frxRich);
   end;
 end;
 
@@ -733,22 +700,19 @@ function TCMReportController.setupReport(var aReportData: TCMMReportData;
 begin
   Result := false;
   try
-    with aReportData do
-    begin
+    with aReportData do begin
       createDBComponents(FStoredProc, FDataset, 'mainRep', StoredProcName,
         DatasetUserName, aParams);
       Result := true;
     end;
   except
-    on E: EFDException do
-    begin
+    on E: EFDException do begin
       MessageDlg('Given store procedure "' + aReportData.StoredProcName +
         '" does not exist in the database - please change the name or create a new Stored procedure in the database.'
         + sLineBreak + sLineBreak + E.Message, mtError, [mbOK], 0);
     end;
   end;
-  if Result then
-  begin
+  if Result then begin
     if Assigned(aReportData.subReportsData) then
       FSubReports := setUpSubReports(aReportData, aParams);
     if not Assigned(FSubReports) then
@@ -764,8 +728,7 @@ begin
   FreeAndNil(FStoredProc);
   FreeAndNil(FDataset);
   if Assigned(FSubReports) then
-    for sr in FSubReports.values do
-    begin
+    for sr in FSubReports.values do begin
       FreeAndNil(sr.FStoredProc);
       FreeAndNil(sr.FDataset);
     end;
