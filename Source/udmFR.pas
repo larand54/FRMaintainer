@@ -3,7 +3,7 @@ unit udmFR;
 interface
 
 uses
-  System.Generics.Collections,
+  System.Generics.Collections, System.Variants,
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
@@ -88,6 +88,9 @@ type
       var ReportName: string; var NoOfCopy, PromptUser, Collated,
       PrinterSetup: integer): boolean;
     function GetReportNameByDocTyp(const DocTyp: integer): String;
+    function getReportDataField(aRepNo: integer; aField: string): string;
+    function getSubReportsDataField(aRepNo: integer; aField: string)
+      : TStringList;
   end;
 
 var
@@ -242,6 +245,30 @@ Begin
   End;
 End;
 
+function TdmFR.getSubReportsDataField(aRepNo: integer; aField: string)
+  : TStringList;
+var
+  sl: TStringList;
+begin
+  sl := TStringList.Create;
+  qrySubreports.Prepare;
+  qrySubreports.ParamByName('REPNO').AsInteger := aRepNo;
+  qrySubreports.Active := true;
+  qrySubreports.First;
+  while not qrySubreports.Eof do begin
+    if (qrySubreports[aField] <> null) then begin
+      sl.Add(qrySubreports[aField]);
+      qrySubreports.Next;
+    end
+
+    else begin
+      ShowMessage('Subrapport för rapport nr:' + intToStr(aRepNo) +
+        ' saknar uppgift om ' + aField + '!');
+      Result := nil;
+    end;
+  end;
+end;
+
 function TdmFR.getDocTypeName(aDocType: integer): string;
 begin
   if FDocType.ContainsKey(aDocType) then
@@ -287,6 +314,23 @@ begin
       Result := spGetNextReportNumber.ParamByName('@MaxNo').AsInteger;
   finally
     spGetNextReportNumber.Active := false;
+  end;
+end;
+
+function TdmFR.getReportDataField(aRepNo: integer; aField: string): string;
+begin
+  qryFastReport.Prepare;
+  qryFastReport.ParamByName('REPNO').AsInteger := aRepNo;
+  qryFastReport.Active := true;
+  qryFastReport.First;
+  if qryFastReport.Eof then
+    ShowMessage('Rapport nr:' + intToStr(aRepNo) + ' finns ej i databasen!')
+  else if (qryFastReport[aField] <> null) then
+    Result := qryFastReport[aField]
+  else begin
+    ShowMessage('Rapport nr:' + intToStr(aRepNo) + ' saknar uppgift om ' +
+      aField + '!');
+    Result := '';
   end;
 end;
 
