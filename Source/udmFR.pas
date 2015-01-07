@@ -134,10 +134,9 @@ begin
         aReportData.datasetUserName;
       qryInsertFastReport.ExecSQL;
     except
-      ON E: EDatabaseError do
-      begin
-        MessageDlg('Could not add report to database!  --- Cause:' +
-          sLineBreak + E.Message, mtError, [mbOK], 0);
+      ON E: EDatabaseError do begin
+        MessageDlg('Could not add report to database!  --- Cause:' + sLineBreak
+          + E.Message, mtError, [mbOK], 0);
         Result := false;
       end;
     end;
@@ -168,11 +167,10 @@ begin
     Result := true;
 
   except
-    ON E: EDatabaseError do
-    begin
+    ON E: EDatabaseError do begin
       Result := false;
-      MessageDlg('Could not add subreport to database!  --- Cause:'  +
-        sLineBreak + E.Message, mtError, [mbOK], 0);
+      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
     end;
 
   end;
@@ -185,8 +183,7 @@ begin
     FDocType := TCMDocType.Create();
     qryDocType.Active := true;
     qryDocType.First;
-    while not qryDocType.Eof do
-    begin
+    while not qryDocType.Eof do begin
       FDocType.Add(qryDocType['Id'], qryDocType['Name']);
       qryDocType.Next;
     end;
@@ -280,11 +277,9 @@ end;
 function TdmFR.getLangPath: string;
 begin
   Try
-    if FLangPath = '' then
-    begin
+    if FLangPath = '' then begin
       tblDBProps.Open;
-      if not tblDBProps.Eof then
-      Begin
+      if not tblDBProps.Eof then Begin
         FLangPath := tblDBPropsLangPath.AsString;
       End
       else
@@ -400,14 +395,13 @@ begin
     Result := true;
   except
     ON E: EDatabaseError do
-      MessageDlg('Could not update report to database!  --- Cause:'  +
-        sLineBreak + E.Message, mtError, [mbOK], 0);
+      MessageDlg('Could not update report to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
   end;
 
   deleteAllSubReports(aRepNo);
   if assigned(aReportData.subReportsData) then
-    for subRepData in aReportData.subReportsData do
-    begin
+    for subRepData in aReportData.subReportsData do begin
       srName := subRepData.name;
       addSubReport(aRepNo, subRepData);
     end;
@@ -431,11 +425,10 @@ begin
     Result := true;
 
   except
-    ON E: EDatabaseError do
-    begin
+    ON E: EDatabaseError do begin
       Result := false;
-      MessageDlg('Could not add subreport to database!  --- Cause:' +
-        sLineBreak + E.Message, mtError, [mbOK], 0);
+      MessageDlg('Could not add subreport to database!  --- Cause:' + sLineBreak
+        + E.Message, mtError, [mbOK], 0);
     end;
 
   end;
