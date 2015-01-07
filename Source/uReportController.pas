@@ -718,15 +718,14 @@ end;
 
 function TCMReportController.setUpFastReport: TfrxReport;
 begin
-  if frxReport = nil then begin
+  if frxReport = nil then
     frxReport := TfrxReport.create(dmFR);
-    if frxRich = nil then
-      frxRich := TfrxRichObject.create(dmFR);
-    if FTemplate = '' then
-       FTemplate := ReportData.Template;
-    frxReport.LoadFromFile(FTemplatePath + FTemplate);
-    frxReport.DataSet := nil;
-  end;
+  if frxRich = nil then
+    frxRich := TfrxRichObject.create(dmFR);
+  if FTemplate = '' then
+    FTemplate := ReportData.Template;
+  frxReport.LoadFromFile(FTemplatePath + FTemplate);
+  frxReport.DataSet := nil;
   Result := frxReport;
 end;
 
