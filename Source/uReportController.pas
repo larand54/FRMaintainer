@@ -46,6 +46,7 @@ type
     frxRich: TfrxRichObject;
     FReportData: TCMMReportData;
     FTemplatePath: string;
+    FTemplate: string;
     FParams: TCMParams;
     FSubReports: TCMSubReports;
 
@@ -660,7 +661,8 @@ begin
     ShowMessage('Rapporten finns inte upplagd på klienten');
     exit;
   end;
-  Params := fixParameters(aParValues, ReportName);
+  FTemplate := ReportName;
+  Params := fixParameters(aParValues, FTemplate);
   if OverrideNoOfCopies > 0 then
     NoOfCopy := OverrideNoOfCopies;
   if aMedia = frPrint then begin
@@ -671,7 +673,7 @@ begin
     else
       frxReport.PrintOptions.Collate := false;
   end;
-  RunReport(ReportName, Params, aMedia, PrinterSetUp);
+  RunReport(FTemplate, Params, aMedia, PrinterSetUp);
 end;
 
 procedure TCMReportController.RunReport(aReportNo: integer; aParams: TCMParams;
@@ -720,7 +722,9 @@ begin
     frxReport := TfrxReport.create(dmFR);
     if frxRich = nil then
       frxRich := TfrxRichObject.create(dmFR);
-    frxReport.LoadFromFile(FTemplatePath + ReportData.Template);
+    if FTemplate = '' then
+       FTemplate := ReportData.Template;
+    frxReport.LoadFromFile(FTemplatePath + FTemplate);
     frxReport.DataSet := nil;
   end;
   Result := frxReport;
