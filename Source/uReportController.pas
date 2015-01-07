@@ -30,13 +30,13 @@ type
   end;
 
   IReportDatabase = interface
-  ['{0988966B-4307-4A3E-AB62-89CF4AC609F0}']
+    ['{0988966B-4307-4A3E-AB62-89CF4AC609F0}']
     function getReportDataField(aRepNo: integer; aField: string): string;
-    function getSubReportsDataField(aRepNo: integer; aField: string): TStringList;
+    function getSubReportsDataField(aRepNo: integer; aField: string)
+      : TStringList;
     function getParamsInfo(spName: string): TCMParamsInfo;
     function getReportByName(aReportName: string): integer;
   end;
-
 
   TCMSubReports = TDictionary<string, TCMSubReport>;
 
@@ -62,7 +62,8 @@ type
 
     function getParamsInfo(spName: string): TCMParamsInfo;
     function getReportDataField(aRepNo: integer; aField: string): string;
-    function getSubReportsDataField(aRepNo: integer; aField: string): TStringList;
+    function getSubReportsDataField(aRepNo: integer; aField: string)
+      : TStringList;
     function getReportByName(aReportName: string): integer;
 
     procedure createDBComponents(var aSP: TFDStoredProc; var aDS: TfrxDBDataset;
@@ -541,7 +542,7 @@ end;
 
 function TCMReportController.getReportByName(aReportName: string): integer;
 begin
-  result := dmFR.reportByName(aReportName);
+  Result := dmFR.reportByName(aReportName);
 end;
 
 function TCMReportController.GetReportData(ReportNo: integer): TCMMReportData;
@@ -555,7 +556,7 @@ end;
 function TCMReportController.getReportDataField(aRepNo: integer;
   aField: string): string;
 begin
-  result := dmFR.getReportDataField(aRepNo, aField);
+  Result := dmFR.getReportDataField(aRepNo, aField);
 end;
 
 function TCMReportController.getReportNo: integer;
@@ -566,7 +567,7 @@ end;
 function TCMReportController.getSubReportsDataField(aRepNo: integer;
   aField: string): TStringList;
 begin
-  result := dmFR.getSubReportsDataField(aRepNo, aField);
+  Result := dmFR.getSubReportsDataField(aRepNo, aField);
 end;
 
 procedure TCMReportController.initController;
