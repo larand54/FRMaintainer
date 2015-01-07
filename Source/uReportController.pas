@@ -452,15 +452,16 @@ var
       parInf := getParamsInfo(sp_name);
       if parInf <> nil then begin
         for parName in parInf.keys do begin
-        try
-          Params.Add(parName, aParValues[index]);
-          inc(index);
-        except
-          on E: EListError do begin end;
-        end;
+          try
+            Params.Add(parName, aParValues[index]);
+            inc(index);
+          except
+            on E: EListError do begin
+            end;
+          end;
         end;
       end;
-      freeAndNil(parInf);
+      FreeAndNil(parInf);
     end;
   end;
 
@@ -470,7 +471,7 @@ begin
   if RepNo = -1 then
     ShowMessage('Rapporten finns inte upplagd på klienten')
   else begin
-  // Main Report
+    // Main Report
     qry := dmFR.qryFastReport;
     qry.Prepare;
     qry.ParamByName('REPNO').AsInteger := RepNo;
@@ -483,7 +484,7 @@ begin
       i := 0;
       if not addPar(Params, aParValues, i, qry) then begin
       end;
-  // Subreports
+      // Subreports
       qry := dmFR.qrySubreports;
       qry.Prepare;
       qry.ParamByName('REPNO').AsInteger := RepNo;
@@ -650,12 +651,12 @@ var
 begin
   try
     if (aReportNo > -1) then begin
+      Save_Cursor := Screen.Cursor;
+      Screen.Cursor := crSQLWait;
       FReportData := FetchReportData(aReportNo);
       if FReportData <> nil then begin
         if prepareReport(FReportData, aParams) then begin
           frxReport := setUpFastReport;
-          Save_Cursor := Screen.Cursor;
-          Screen.Cursor := crSQLWait;
           if aMedia = frPrint then begin
             if aPrinterSetup = 1 then
               frxReport.PrintOptions.ShowDialog := false
