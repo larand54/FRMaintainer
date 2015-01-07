@@ -3,7 +3,7 @@ unit uReportController;
 interface
 
 uses
-  System.Generics.Collections, System.Variants, System.SysUtils,
+  System.Generics.Collections, System.Variants, System.SysUtils, System.Classes,
   FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
@@ -29,9 +29,18 @@ type
     property DataSet: TfrxDBDataset read FDataset;
   end;
 
+  IReportDatabase = interface
+  ['{0988966B-4307-4A3E-AB62-89CF4AC609F0}']
+    function getReportDataField(aRepNo: integer; aField: string): string;
+    function getSubReportsDataField(aRepNo: integer; aField: string): TStringList;
+    function getParamsInfo(spName: string): TCMParamsInfo;
+    function getReportByName(aReportName: string): integer;
+  end;
+
+
   TCMSubReports = TDictionary<string, TCMSubReport>;
 
-  TCMReportController = class
+  TCMReportController = class(TInterfacedObject, IReportDatabase)
   private
     frxReport: TfrxReport;
     frxRich: TfrxRichObject;
@@ -49,7 +58,11 @@ type
     function RemoveDBObject(proc: String): string;
     function getReportNo: integer;
     function GetReportData(ReportNo: integer): TCMMReportData;
+
     function getParamsInfo(spName: string): TCMParamsInfo;
+    function getReportDataField(aRepNo: integer; aField: string): string;
+    function getSubReportsDataField(aRepNo: integer; aField: string): TStringList;
+    function getReportByName(aReportName: string): integer;
 
     procedure createDBComponents(var aSP: TFDStoredProc; var aDS: TfrxDBDataset;
       anameSuffix: string; aSp_Name, aDs_Name: string; aParams: TCMParams);
@@ -525,6 +538,11 @@ begin
   end;
 end;
 
+function TCMReportController.getReportByName(aReportName: string): integer;
+begin
+  result := dmFR.reportByName(aReportName);
+end;
+
 function TCMReportController.GetReportData(ReportNo: integer): TCMMReportData;
 begin
   if (FReportData <> nil) and (FReportData.ReportNo = ReportNo) then
@@ -533,9 +551,21 @@ begin
     Result := FetchReportData(ReportNo);
 end;
 
+function TCMReportController.getReportDataField(aRepNo: integer;
+  aField: string): string;
+begin
+  result := dmFR.getReportDataField(aRepNo, aField);
+end;
+
 function TCMReportController.getReportNo: integer;
 begin
   Result := ReportData.ReportNo
+end;
+
+function TCMReportController.getSubReportsDataField(aRepNo: integer;
+  aField: string): TStringList;
+begin
+  result := dmFR.getSubReportsDataField(aRepNo, aField);
 end;
 
 procedure TCMReportController.initController;
