@@ -85,7 +85,7 @@ type
     function getDocTypeName(aDocType: integer): string;
     function reportByName(aName: string): integer;
     function getClientDocPref(const ClientNo, RoleType, DocType: integer;
-      var ReportName: string; NoOfCopy, PromptUser, Collated,
+      var ReportName: string; var NoOfCopy, PromptUser, Collated,
       PrinterSetup: integer): boolean;
     function GetReportNameByDocTyp(const DocTyp: integer): String;
   end;
@@ -218,7 +218,7 @@ begin
 end;
 
 function TdmFR.getClientDocPref(const ClientNo, RoleType, DocType: integer;
-  var ReportName: string; NoOfCopy, PromptUser, Collated,
+  var ReportName: string; Var NoOfCopy, PromptUser, Collated,
   PrinterSetup: integer): boolean;
 begin
   sqGetDocs.ParamByName('ClientNo').AsInteger := ClientNo;
