@@ -551,10 +551,6 @@ begin
   for Reportdata in Reportsdata do
   begin
 
-    if Reportdata.storedProcName = '' then
-      subItmIndx := 2
-    else
-      subItmIndx := 1;
     docType := Reportdata.docType;
     docTypeName := dmFR.getDocTypeName(docType);
     Template := Reportdata.Template;
@@ -573,7 +569,10 @@ begin
     if validateReportData(Reportdata, FErrors) then
     begin
       subItmIndx := 2;
-    end;
+    end else
+      subItmIndx := 1;
+    subItem.ImageIndex := subItmIndx;
+    subItem.SelectedIndex := subItmIndx;
   end;
   Node.Free;
 end;
