@@ -547,6 +547,7 @@ begin
   except
     on E: ETCMStoredProcNameMissing do
   end;
+  ReportTree.Selected := Node;
   LastDocType := -1; // To identify First record in the loop
   for Reportdata in Reportsdata do
   begin
@@ -574,6 +575,7 @@ begin
     subItem.ImageIndex := subItmIndx;
     subItem.SelectedIndex := subItmIndx;
   end;
+  ReportTree.items[0].expand(false);
   Node.Free;
 end;
 
