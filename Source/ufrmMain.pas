@@ -81,6 +81,8 @@ type
     PDF1: TMenuItem;
     Remove1: TMenuItem;
     acnCopy: TAction;
+    acnRefresh: TAction;
+    acnRefresh1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -94,6 +96,7 @@ type
     procedure acnEditExecute(Sender: TObject);
     procedure acnNewExecute(Sender: TObject);
     procedure acnCopyExecute(Sender: TObject);
+    procedure acnRefreshExecute(Sender: TObject);
   private
     { Private declarations }
     FReportPath: string;
@@ -398,6 +401,11 @@ begin
   reportController.RunReport(prepareForOutput, FParams, frPrint, 0);
 end;
 
+procedure TfrmMain.acnRefreshExecute(Sender: TObject);
+begin
+  BuildTree;
+end;
+
 procedure TfrmMain.acnRemoveExecute(Sender: TObject);
 var
   report: TCMMReportData;
@@ -431,10 +439,8 @@ begin
   try
     FReportController := TCMReportController.create;
     FReportPath := FReportController.TemplatePath;
-    dmFR.qryFastReports.Active;
     BuildTree;
   finally
-    dmFR.qryFastReports.close;
   end;
 end;
 
@@ -543,11 +549,13 @@ begin
   Node := ReportTree.Items.Add(nil, 'Available Reports...');
   Node.ImageIndex := 0;
   try
+  try
+  dmFR.qryFastReports.Active;
     Reportsdata := reportController.AllReports;
   except
     on E: ETCMStoredProcNameMissing do
   end;
-  ReportTree.Selected := Node;
+  ReportTree.Selected := Node; // Make the first node the root of the tree
   LastDocType := -1; // To identify First record in the loop
   for Reportdata in Reportsdata do
   begin
@@ -576,6 +584,9 @@ begin
     subItem.SelectedIndex := subItmIndx;
   end;
   ReportTree.items[0].expand(false);
+  finally
+    dmFR.qryFastReports.close;
+  end;
 end;
 
 constructor TErrorCode.create(aErrorCode: integer);

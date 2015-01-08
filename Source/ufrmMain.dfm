@@ -411,6 +411,11 @@ object frmMain: TfrmMain
       Caption = '&Copy'
       OnExecute = acnCopyExecute
     end
+    object acnRefresh: TAction
+      Category = 'Report'
+      Caption = 'acnRefresh'
+      OnExecute = acnRefreshExecute
+    end
   end
   object pmnuReport: TPopupMenu
     Left = 96
@@ -438,6 +443,10 @@ object frmMain: TfrmMain
     end
     object Remove1: TMenuItem
       Action = acnRemove
+    end
+    object acnRefresh1: TMenuItem
+      Action = acnRefresh
+      Caption = 'Refresh'
     end
   end
 end
