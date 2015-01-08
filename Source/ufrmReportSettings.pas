@@ -38,6 +38,7 @@ type
     procedure sbtnRemoveSRClick(Sender: TObject);
     procedure lbxSubReportsDblClick(Sender: TObject);
     procedure cboDocTypeChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -89,7 +90,6 @@ begin
   bbnApply.Enabled := false;
   sbtnAddSR.Enabled := false;
   sbtnRemoveSR.Enabled := false;
-  FillDocTypeData(-1);
   if (ShowModal = mrOK) then
   begin
     Result := FReportData;
@@ -198,6 +198,11 @@ begin
   if aDocType > 0 then begin
     cboDocType.Text := dmFR.DocType.Items[aDocType];
   end;
+end;
+
+procedure TfrmReportSettings.FormCreate(Sender: TObject);
+begin
+  FillDocTypeData(-1);
 end;
 
 procedure TfrmReportSettings.lbxSubReportsDblClick(Sender: TObject);

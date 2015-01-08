@@ -11,6 +11,7 @@ object frmReportSettings: TfrmReportSettings
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblTemplate_Name: TLabel
