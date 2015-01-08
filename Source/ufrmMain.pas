@@ -576,7 +576,6 @@ begin
     subItem.SelectedIndex := subItmIndx;
   end;
   ReportTree.items[0].expand(false);
-  Node.Free;
 end;
 
 constructor TErrorCode.create(aErrorCode: integer);
