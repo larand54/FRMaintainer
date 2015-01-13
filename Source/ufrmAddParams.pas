@@ -107,12 +107,6 @@ end;
 function TfrmAddParams.execute(aReportData: TCMMReportData): TCMParams;
 begin
   lvParameters.Clear;
-  if FLastReportNo <> aReportData.ReportNo then
-  begin
-    FParams.Clear;
-    FLastReportNo := aReportData.ReportNo;
-    FListViewEditor.Text := '';
-  end;
   loadParams(aReportData);
   if (ShowModal = mrOK) then
   begin
@@ -159,22 +153,22 @@ var
   listItem: TListitem;
   parName, keys: string;
 begin
-  for parName in FParams.keys do
+  if FLastReportNo <> aReportData.ReportNo then
   begin
-    listItem := lvParameters.Items.Add;
-    listItem.Caption := parName;
-    listItem.SubItems.Add(FParams.Items[parName]);
-  end;
-
-  params := aReportData.getAllParameters;
-  for parName in params.keys do
-  begin
-    if (FParams.ContainsKey(parName)) then
-    else
-    begin
-      listItem := lvParameters.Items.Add;
-      listItem.Caption := parName;
-      listItem.SubItems.Add('0');
+    FParams.Clear;
+    FLastReportNo := aReportData.ReportNo;
+    FListViewEditor.Text := '';
+    params := aReportData.getAllParameters;
+    for parName in params.keys do begin
+        listItem := lvParameters.Items.Add;
+        listItem.Caption := parName;
+        listItem.SubItems.Add('0');
+    end;
+  end else begin
+    for parName in FParams.keys do begin
+        listItem := lvParameters.Items.Add;
+        listItem.Caption := parName;
+        listItem.SubItems.Add(FParams.Items[parName]);
     end;
   end;
 end;
