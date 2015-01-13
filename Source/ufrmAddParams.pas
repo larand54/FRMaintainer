@@ -205,6 +205,7 @@ begin
   FListViewEditor.BoundsRect := LRect;
   // Show the TEdit
   FListViewEditor.Visible := True;
+  FListViewEditor.SetFocus;
 end;
 
 end.
