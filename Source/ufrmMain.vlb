@@ -30,7 +30,7 @@ Visible=True
 Coordinates=300,146,69,33
 
 []
-Coordinates=114,10,53,58
+Coordinates=439,141,79,51
 LayerNames=NewLayer0
 
 [Module Settings]
@@ -47,9 +47,6 @@ Coordinates=626,317,126,51
 [btnNewReport]
 Coordinates=439,211,84,51
 
-[btnLanguage]
-Coordinates=439,141,79,51
-
 [btnRemoveReport]
 Coordinates=11,446,103,51
 
@@ -59,17 +56,11 @@ Coordinates=277,218,81,51
 [acnPrint]
 Coordinates=53,106,55,33
 
-[siLangLinked_frmMain]
-Coordinates=815,1,126,33
-
 [acnPDF]
 Coordinates=380,250,52,33
 
 [dmFR.qryUpdateFastReport]
 Coordinates=626,71,151,51
-
-[Label3]
-Coordinates=20,235,46,51
 
 [acnPreview]
 Coordinates=294,71,71,33

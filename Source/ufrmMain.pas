@@ -549,12 +549,13 @@ begin
   Node := ReportTree.Items.Add(nil, 'Available Reports...');
   Node.ImageIndex := 0;
   try
-  try
+//  try
   dmFR.qryFastReports.Active;
     Reportsdata := reportController.AllReports;
-  except
-    on E: ETCMStoredProcNameMissing do
-  end;
+//  except
+//    on E: ETCMStoredProcNameMissing do
+
+//  end;
   ReportTree.Selected := Node; // Make the first node the root of the tree
   LastDocType := -1; // To identify First record in the loop
   for Reportdata in Reportsdata do
