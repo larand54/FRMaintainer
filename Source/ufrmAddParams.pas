@@ -13,20 +13,10 @@ Const
 
 type
   TfrmAddParams = class(TForm)
-    edName: TEdit;
-    edValue: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
-    bbnAdd: TBitBtn;
-    bbnRemove: TBitBtn;
     bbnOk: TBitBtn;
     bbnCancel: TBitBtn;
     lvParameters: TListView;
-    bbnClear: TBitBtn;
-    procedure bbnAddClick(Sender: TObject);
-    procedure bbnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure bbnRemoveClick(Sender: TObject);
     procedure bbnCancelClick(Sender: TObject);
     procedure FListViewEditorExit(Sender: TObject);
     procedure lvParametersClick(Sender: TObject);
@@ -59,29 +49,6 @@ uses commctrl,
 
 const
   EDIT_COLUMN = 1; // Index of the column to Edit
-
-procedure TfrmAddParams.bbnAddClick(Sender: TObject);
-var
-  listItem: TListitem;
-
-begin
-  listItem := lvParameters.Items.Add;
-  if edName.Text[1] <> '@' then
-    edName.Text := '@' + edName.Text;
-  listItem.Caption := edName.Text;
-  listItem.SubItems.Add(edValue.Text);
-end;
-
-procedure TfrmAddParams.bbnRemoveClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := lvParameters.Items.Count - 1 downto 0 do
-  begin
-    if lvParameters.Items[i].Checked then
-      lvParameters.Items[i].Delete;
-  end;
-end;
 
 procedure TfrmAddParams.bbnCancelClick(Sender: TObject);
 begin
@@ -117,11 +84,6 @@ begin
     Result := nil;
 end;
 
-procedure TfrmAddParams.bbnClearClick(Sender: TObject);
-begin
-  lvParameters.Clear;
-end;
-
 procedure TfrmAddParams.FListViewEditorExit(Sender: TObject);
 begin
   If Assigned(FLItem) Then
@@ -135,8 +97,6 @@ end;
 
 procedure TfrmAddParams.FormCreate(Sender: TObject);
 begin
-  edName.Text := '';
-  edValue.Text := '';
   lvParameters.Clear;
   FLastReportNo := -1;
   FParams := TCMParams.Create();
