@@ -97,6 +97,7 @@ type
     procedure acnNewExecute(Sender: TObject);
     procedure acnCopyExecute(Sender: TObject);
     procedure acnRefreshExecute(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     FReportPath: string;
@@ -121,6 +122,7 @@ type
     function prepareForOutput: integer;
     function validateReportData(aReportData: TCMMReportData;
       errors: TStringList): boolean;
+    procedure setCaption;
 
   public
     { Public declarations }
@@ -275,6 +277,11 @@ begin
 end;
 
 
+procedure TfrmMain.setCaption;
+begin
+  Caption := 'FastReport' + '  Server: ' + dmFR.FDConnection1.Params.Values['Server']+' TemplatePath: '+ FReportPath;
+end;
+
 procedure TfrmMain.acnCloseExecute(Sender: TObject);
 begin
   close;
@@ -427,7 +434,6 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  Caption := Caption + '  Server: ' + dmFR.FDConnection1.Params.Values['Server'];
   // Make treeview enable multiple lined hint
   DefReportTreeWndProc := ReportTree.WindowProc;
   ReportTree.WindowProc := ReportTreeWndProc;
@@ -441,7 +447,24 @@ begin
     FReportPath := FReportController.TemplatePath;
     BuildTree;
   finally
+//  Caption := Caption + '  Server: ' + dmFR.FDConnection1.Params.Values['Server']+' using '+ FReportPath+' as template path.';
+    setCaption;
   end;
+end;
+
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (GetKeyState(Ord('L'))<0) and (GetKeyState(Ord('G'))<0) and (GetKeyState(VK_CONTROL)<0) then begin
+      FReportController.SetTemplatePath('D:\git\delphi\FastReportProject\fr3\');
+      FReportPath := FReportController.TemplatePath;
+      setCaption
+    end;
+    If (GetKeyState(Ord('L'))<0) and (GetKeyState(Ord('A'))<0) and (GetKeyState(VK_CONTROL)<0) then begin
+      FReportController.RestoreTemplatePath;
+      FReportPath := FReportController.TemplatePath;
+      setCaption;
+    end;
 end;
 
 procedure TfrmMain.freeUpDBComponents;
