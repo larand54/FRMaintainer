@@ -39,6 +39,7 @@ type
     procedure lbxSubReportsDblClick(Sender: TObject);
     procedure cboDocTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure cboDocTypeExit(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -126,7 +127,26 @@ end;
 
 procedure TfrmReportSettings.cboDocTypeChange(Sender: TObject);
 begin
-  edDoctype.Text := intToStr(integer(cboDocType.items.Objects[cboDocType.ItemIndex]));
+  if cboDocType.ItemIndex = -1 then
+    edDocType.Text := ''
+  else
+    edDoctype.Text := intToStr(integer(cboDocType.items.Objects[cboDocType.ItemIndex]));
+end;
+
+procedure TfrmReportSettings.cboDocTypeExit(Sender: TObject);
+var
+  dt: integer;
+begin
+  if (cboDocType.ItemIndex = -1) and (edDocType.Text = '') then
+    if MessageDlg('Do you want to create a new DocType? -- '+cboDocType.Text+' --', mtConfirmation, [mbYes, mbNo], 0) = mrYes then begin
+      dt := dmFr.addDocType(cboDocType.Text);
+      if dt > 0 then begin
+        FillDocTypeData(-1);
+        edDoctype.Text := intToStr(dt)
+      end
+      else
+        edDocType.Text := '';
+    end;
 end;
 
 function TfrmReportSettings.Execute(TCMC: TCMReportController;

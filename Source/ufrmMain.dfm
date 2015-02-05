@@ -418,6 +418,10 @@ object frmMain: TfrmMain
       Caption = 'acnRefresh'
       OnExecute = acnRefreshExecute
     end
+    object acnNewDocType: TAction
+      Category = 'Report'
+      Caption = 'New DocType'
+    end
   end
   object pmnuReport: TPopupMenu
     Left = 96

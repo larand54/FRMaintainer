@@ -39,7 +39,6 @@ object frmAddParams: TfrmAddParams
     Top = 16
     Width = 361
     Height = 150
-    Checkboxes = True
     Columns = <
       item
         Caption = 'Parameter Name'

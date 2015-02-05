@@ -83,6 +83,7 @@ type
     acnCopy: TAction;
     acnRefresh: TAction;
     acnRefresh1: TMenuItem;
+    acnNewDocType: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -111,6 +112,7 @@ type
     FSReportData: TCMSReportData;
     FParams: TCMParams;
     FErrors: TStringList;
+    FValidKeyCombo: Boolean; //Used for detecting key sequences
     DefReportTreeWndProc: TWndMethod;
 
     procedure ReportTreeWndProc(var Message: TMessage);
@@ -572,17 +574,13 @@ begin
   Node := ReportTree.Items.Add(nil, 'Available Reports...');
   Node.ImageIndex := 0;
   try
-//  try
-  dmFR.qryFastReports.Active;
+    dmFR.RefreshDocType;
+    dmFR.qryFastReports.Active;
     Reportsdata := reportController.AllReports;
-//  except
-//    on E: ETCMStoredProcNameMissing do
-
-//  end;
-  ReportTree.Selected := Node; // Make the first node the root of the tree
-  LastDocType := -1; // To identify First record in the loop
-  for Reportdata in Reportsdata do
-  begin
+    ReportTree.Selected := Node; // Make the first node the root of the tree
+    LastDocType := -1; // To identify First record in the loop
+    for Reportdata in Reportsdata do
+    begin
 
     docType := Reportdata.docType;
     docTypeName := dmFR.getDocTypeName(docType);

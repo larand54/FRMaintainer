@@ -226,6 +226,7 @@ object frmReportSettings: TfrmReportSettings
     TabOrder = 9
     Text = 'cboDocType'
     OnChange = cboDocTypeChange
+    OnExit = cboDocTypeExit
   end
   object BindSourceDB1: TBindSourceDB
     ScopeMappings = <>
