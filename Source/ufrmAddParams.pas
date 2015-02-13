@@ -112,24 +112,38 @@ var
   params: TCMParamsInfo;
   listItem: TListitem;
   parName, keys: string;
-begin
-  if FLastReportNo <> aReportData.ReportNo then
+  procedure reLoad;
+  var
+    pn: string;
   begin
     FParams.Clear;
     FLastReportNo := aReportData.ReportNo;
     FListViewEditor.Text := '';
     params := aReportData.getAllParameters;
-    for parName in params.keys do begin
-        listItem := lvParameters.Items.Add;
-        listItem.Caption := parName;
-        listItem.SubItems.Add('0');
+    for pn in params.keys do begin
+      listItem := lvParameters.Items.Add;
+      listItem.Caption := pn;
+      listItem.SubItems.Add('0');
     end;
-  end else begin
-    for parName in FParams.keys do begin
+  end;
+
+begin
+  if FLastReportNo <> aReportData.ReportNo then begin
+    reLoad;
+  end
+  else begin
+    if FParams.Count = 0 then
+      reLoad
+    else
+      for parName in FParams.keys do begin
+        if parName = '' then begin
+          reLoad;
+          exit;
+        end;
         listItem := lvParameters.Items.Add;
         listItem.Caption := parName;
         listItem.SubItems.Add(FParams.Items[parName]);
-    end;
+      end;
   end;
 end;
 
