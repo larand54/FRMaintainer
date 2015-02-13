@@ -40,6 +40,7 @@ type
     procedure cboDocTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure cboDocTypeExit(Sender: TObject);
+    procedure edStoredProcChange(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -67,6 +68,11 @@ uses udmFR;
 
 procedure TfrmReportSettings.bbnCrtMainClick(Sender: TObject);
 begin
+  if Copy(edStoredProc.Text,0,4) <> 'dbo.' then
+    edStoredProc.Text := 'dbo.' + edStoredProc.Text;
+  if Pos('.fr3',edTemplate.Text) = 0 then
+    edTemplate.Text := edTemplate.Text + '.fr3';
+
   FreeAndNil(FReportData);
   FReportData := FReportController.NewReport(edTemplate.Text, edDoctype.Text,
     edStoredProc.Text, edDataset.Text, edDescription.Text);
@@ -115,6 +121,10 @@ var
 begin
   RepNo := FReportData.ReportNo;
   FreeAndNil(FReportData);
+  if Copy(edStoredProc.Text,0,4) <> 'dbo.' then
+    edStoredProc.Text := 'dbo.' + edStoredProc.Text;
+  if Pos('.fr3',edTemplate.Text) = 0 then
+    edTemplate.Text := edTemplate.Text + '.fr3';
   FReportData := FReportController.UpdateReport(RepNo, edTemplate.Text, edDoctype.Text,
     edStoredProc.Text, edDataset.Text, edDescription.Text);
   if FReportData <> nil then
@@ -147,6 +157,12 @@ begin
       else
         edDocType.Text := '';
     end;
+end;
+
+procedure TfrmReportSettings.edStoredProcChange(Sender: TObject);
+begin
+  if edDataset.Text = '' then
+    edDataset.Text := 'DS_MAIN';
 end;
 
 function TfrmReportSettings.Execute(TCMC: TCMReportController;

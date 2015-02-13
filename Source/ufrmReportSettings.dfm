@@ -166,6 +166,7 @@ object frmReportSettings: TfrmReportSettings
     Width = 161
     Height = 21
     TabOrder = 2
+    OnChange = edStoredProcChange
   end
   object edDataset: TEdit
     Left = 128

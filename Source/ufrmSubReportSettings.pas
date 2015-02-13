@@ -17,6 +17,7 @@ type
     edDataset: TEdit;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    procedure edNameExit(Sender: TObject);
   private
     { Private declarations }
   public
@@ -46,6 +47,11 @@ begin
     Result := nil;
 end;
 
+procedure TfrmSubReportSettings.edNameExit(Sender: TObject);
+begin
+  edDataSet.Text := 'DS_'+edName.Text;
+end;
+
 function TfrmSubReportSettings.execute(TCMC: TCMReportController;
   sr: TCMSReportData; aRepno: integer): TCMSReportData;
 begin
@@ -53,6 +59,8 @@ begin
   edDataset.Text := sr.datasetUserName;
   edName.Text := sr.name;
   if ShowModal = mrOK then begin
+  if Copy(edStoredProc.Text,0,4) <> 'dbo.' then
+    edStoredProc.Text := 'dbo.' + edStoredProc.Text;
     sr.storedProcName := edStoredProc.Text;
     sr.datasetUserName := edDataset.Text;
     sr.name :=edName.Text;

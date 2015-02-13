@@ -40,6 +40,7 @@ object frmSubReportSettings: TfrmSubReportSettings
     Width = 121
     Height = 21
     TabOrder = 0
+    OnExit = edNameExit
   end
   object edStoredProc: TEdit
     Left = 128
