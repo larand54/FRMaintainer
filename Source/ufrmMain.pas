@@ -99,8 +99,12 @@ type
     procedure acnCopyExecute(Sender: TObject);
     procedure acnRefreshExecute(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
   private
     { Private declarations }
+    TreeView1HintText: UnicodeString;
+    TheHint: string;
+
     FReportPath: string;
     FfrxDataSet: TfrxDBDataset;
     FfdStoredProc: TFDStoredProc;
@@ -141,7 +145,7 @@ var
 
 implementation
 
-uses udmFR, ufrmAddParams, ufrmReportSettings, printers;
+uses udmFR, ufrmAddParams, ufrmReportSettings, printers, CommCtrl;
 {$R *.dfm}
 
 const
@@ -270,10 +274,68 @@ begin
       begin
         MaxWidth := SendMessage(hwndFrom, TTM_GETMAXTIPWIDTH, 0, 0);
         if MaxWidth = -1 then
-          SendMessage(hwndFrom, TTM_SETMAXTIPWIDTH, 100, 0);
+          SendMessage(hwndFrom, TTM_SETMAXTIPWIDTH, 400, 0);
       end;
     end;
   end;
+{
+var
+  Pt: TPoint;
+  Node: TTreeNode;
+  LItemRect: TRect;
+  LMaxWidth,i: Integer;
+  s: string;
+begin
+  if Message.Msg = WM_NOTIFY then
+  begin
+    with TWMNotify(Message) do
+    begin
+      if NMHdr^.code = TTN_NEEDTEXTW then
+      begin
+        if (PToolTipTextW(NMHdr)^.uFlags and TTF_IDISHWND) <> 0 then
+        begin
+          GetCursorPos(Pt);
+          Pt := ReportTree.ScreenToClient(Pt);
+          Node := ReportTree.GetNodeAt(Pt.X, Pt.Y);
+          if Node <> nil then
+          begin
+            TreeView1HintText := theHint;
+            if TreeView1HintText <> '' then begin
+
+            with PToolTipTextW(NMHdr)^ do
+            begin
+              lpszText := PWideChar(TreeView1HintText);
+              i := SizeOf(szText);
+              s := szText;
+              ZeroMemory(lpszText, SizeOf(szText));
+              hInst := 0;
+            end;
+
+            LItemRect := Node.DisplayRect(True);
+            if LItemRect.Left < 0 then
+              LItemRect.Left := 0;
+            LItemRect.TopLeft := ReportTree.ClientToScreen(LItemRect.TopLeft);
+
+            LMaxWidth := SendMessage(Nmhdr^.hwndFrom, TTM_GETMAXTIPWIDTH, 0, 0);
+            if LMaxWidth = -1 then
+            begin
+              LMaxWidth := 400; // use whatever you need...
+              SendMessage(Nmhdr^.hwndFrom, TTM_SETMAXTIPWIDTH, LMaxWidth, 0);
+            end;
+
+            SendMessage(Nmhdr^.hwndFrom, TTM_ADJUSTRECT, WPARAM(True), LPARAM(@LItemRect));
+            SetWindowPos(Nmhdr^.hwndFrom, HWND_TOP, LItemRect.Left, LItemRect.Top, 0, 0, SWP_NOACTIVATE or SWP_NOSIZE or SWP_NOOWNERZORDER);
+
+            Message.Result := 1;
+            end;
+          end;
+        end;
+      end;
+
+      Exit;
+    end;
+  end;
+}
 
   DefReportTreeWndProc(Message);
 end;
@@ -529,6 +591,8 @@ procedure TfrmMain.ReportTreeHint(Sender: TObject; const Node: TTreeNode;
 var
   rd: TCMMReportData;
   errMsg: string;
+  params: TCMParamsInfo;
+  param: TCMParamInfo;
 begin
   Hint := '';
   rd := TCMMReportData(Node.Data);
@@ -539,6 +603,14 @@ begin
     validateReportData(rd, FErrors);
     for errMsg in FErrors do
       Hint := Hint + sLineBreak + errMsg;
+
+    Hint := Hint + sLineBreak + 'DocType: ' + intToStr(rd.docType);
+    params := rd.getAllParameters;
+//    Hint := Hint + sLineBreak + 'Parameters:';
+    for param in Params do
+      Hint := Hint + sLineBreak + param.Key+': '+param.Value;
+    TheHint := Hint;
+
   end;
 end;
 
@@ -610,6 +682,7 @@ begin
     dmFR.qryFastReports.close;
   end;
 end;
+
 
 constructor TErrorCode.create(aErrorCode: integer);
 begin

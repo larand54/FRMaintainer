@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Fast Report Mainteenance'
-  ClientHeight = 583
-  ClientWidth = 554
+  ClientHeight = 760
+  ClientWidth = 630
   Color = 9471349
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,7 +24,7 @@ object frmMain: TfrmMain
     Caption = 'List of available reports'
   end
   object Label2: TLabel
-    Left = 349
+    Left = 429
     Top = 17
     Width = 53
     Height = 13
@@ -33,8 +33,8 @@ object frmMain: TfrmMain
   object Panel1: TPanel
     Left = 24
     Top = 32
-    Width = 289
-    Height = 484
+    Width = 385
+    Height = 705
     BevelOuter = bvLowered
     BevelWidth = 2
     Caption = 'Panel1'
@@ -42,8 +42,8 @@ object frmMain: TfrmMain
     object ReportTree: TTreeView
       Left = 2
       Top = 2
-      Width = 285
-      Height = 480
+      Width = 381
+      Height = 701
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -58,10 +58,11 @@ object frmMain: TfrmMain
       TabOrder = 0
       OnClick = ReportTreeClick
       OnHint = ReportTreeHint
+      ExplicitHeight = 480
     end
   end
   object Panel2: TPanel
-    Left = 347
+    Left = 427
     Top = 34
     Width = 185
     Height = 151
@@ -87,8 +88,8 @@ object frmMain: TfrmMain
     end
   end
   object bbnClose: TBitBtn
-    Left = 457
-    Top = 538
+    Left = 535
+    Top = 710
     Width = 75
     Height = 25
     Kind = bkClose
@@ -96,7 +97,7 @@ object frmMain: TfrmMain
     TabOrder = 2
   end
   object GroupBox1: TGroupBox
-    Left = 347
+    Left = 427
     Top = 200
     Width = 183
     Height = 316
