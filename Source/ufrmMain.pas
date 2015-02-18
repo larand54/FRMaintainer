@@ -391,10 +391,8 @@ begin
       end;
     end
   finally
-    freeAndNil(org);
-    freeAndNil(reportCopy);
-    freeAndNil(srOrg);
-    freeAndNil(srcopy);
+    Org.Free;
+    reportCopy.Free;
   end;
 end;
 
