@@ -39,6 +39,10 @@ type
     property ec: integer read FErrorCode;
     constructor create(aErrorCode: integer);
   end;
+  ICMFastReport = Interface
+    ['{A0CA085E-2986-4ACE-BCD4-9F81DD70E274}']
+
+  End;
 
   TfrmMain = class(TForm)
     Label1: TLabel;
