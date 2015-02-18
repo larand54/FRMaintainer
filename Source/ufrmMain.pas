@@ -48,8 +48,6 @@ type
     Label1: TLabel;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     frxDesigner1: TfrxDesigner;
-    frxReport1: TfrxReport;
-    frxRichObject1: TfrxRichObject;
     ImageList1: TImageList;
     Panel1: TPanel;
     ReportTree: TTreeView;

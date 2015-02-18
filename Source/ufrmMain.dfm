@@ -58,7 +58,6 @@ object frmMain: TfrmMain
       TabOrder = 0
       OnClick = ReportTreeClick
       OnHint = ReportTreeHint
-      ExplicitHeight = 480
     end
   end
   object Panel2: TPanel
@@ -193,31 +192,6 @@ object frmMain: TfrmMain
     MemoParentFont = False
     Left = 72
     Top = 104
-  end
-  object frxReport1: TfrxReport
-    Version = '4.15.13'
-    DotMatrixReport = False
-    IniFile = '\Software\Fast Reports'
-    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
-    PreviewOptions.Zoom = 1.000000000000000000
-    PrintOptions.Printer = 'Default'
-    PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 41937.819650486110000000
-    ReportOptions.LastChange = 41937.819650486110000000
-    ScriptLanguage = 'PascalScript'
-    ScriptText.Strings = (
-      'begin'
-      ''
-      'end.')
-    Left = 144
-    Top = 96
-    Datasets = <>
-    Variables = <>
-    Style = <>
-  end
-  object frxRichObject1: TfrxRichObject
-    Left = 136
-    Top = 152
   end
   object ImageList1: TImageList
     Left = 174
