@@ -86,6 +86,7 @@ type
     acnRefresh: TAction;
     acnRefresh1: TMenuItem;
     acnNewDocType: TAction;
+    frxReport1: TfrxReport;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
