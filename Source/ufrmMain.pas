@@ -127,8 +127,6 @@ type
 
     procedure BuildTree;
     procedure getParameters(aReportData: TCMMReportData);
-    procedure freeUpDBComponents;
-    procedure freeUpReport;
     function prepareForOutput: integer;
     function validateReportData(aReportData: TCMMReportData;
       errors: TStringList): boolean;
@@ -535,15 +533,7 @@ begin
     end;
 end;
 
-procedure TfrmMain.freeUpDBComponents;
-begin
-  // Report.freeUpDBComponents;
-end;
 
-procedure TfrmMain.freeUpReport;
-begin
-  // FreeAndNil(FReport);
-end;
 
 procedure TfrmMain.getParameters(aReportData: TCMMReportData);
 begin
@@ -582,7 +572,6 @@ begin
   if (Node.Data <> nil) then
   begin
     report := Node.Data;
-    freeUpDBComponents;
     Memo1.Clear;
     Descr := TCMMReportData(Node.Data).description;
     if Descr <> '' then
