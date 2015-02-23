@@ -120,12 +120,11 @@ var
   RepNo: integer;
 begin
   RepNo := FReportData.ReportNo;
-  FreeAndNil(FReportData);
   if Copy(edStoredProc.Text,0,4) <> 'dbo.' then
     edStoredProc.Text := 'dbo.' + edStoredProc.Text;
   if Pos('.fr3',edTemplate.Text) = 0 then
     edTemplate.Text := edTemplate.Text + '.fr3';
-  FReportData := FReportController.UpdateReport(RepNo, edTemplate.Text, edDoctype.Text,
+  FReportController.UpdateReport(FReportData, edTemplate.Text, edDoctype.Text,
     edStoredProc.Text, edDataset.Text, edDescription.Text);
   if FReportData <> nil then
   begin
@@ -210,6 +209,7 @@ begin
           srl.Add(TCMSReportData(lbxSubReports.Items.Objects[i]));
         end;
       end;
+      FReportData.subReportsData.Free;
       FReportData.subReportsData := srl;
       Result := FReportData;
     end
