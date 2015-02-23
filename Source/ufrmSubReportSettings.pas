@@ -43,7 +43,7 @@ begin
   if (ShowModal = mrOK) then begin
     if Copy(edStoredProc.Text,0,4) <> 'dbo.' then
       edStoredProc.Text := 'dbo.' + edStoredProc.Text;
-    Result := TCMC.NewSubReport( aRepNo, edName.Text, edStoredProc.Text, edDataset.Text);
+    Result := TCMC.CreateSubReport( aRepNo, edName.Text, edStoredProc.Text, edDataset.Text);
   end
   else
     Result := nil;

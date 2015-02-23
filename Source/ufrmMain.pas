@@ -363,7 +363,7 @@ begin
     Node := ReportTree.Selected;
     NodeIndex := Node.Index;
     org := Node.Data;
-    reportCopy := FReportController.NewReport('COPY' + org.Template,
+    reportCopy := FReportController.CreateReport('COPY' + org.Template,
       intToStr(org.docType), org.storedProcName, org.datasetUserName,
       org.description);
     if reportCopy <> nil then
@@ -373,7 +373,7 @@ begin
       if org.subReportsData <> nil then
         for srOrg in org.subReportsData do
         begin
-          srcopy := FReportController.NewSubReport(reportCopy.ReportNo,
+          srcopy := FReportController.CreateSubReport(reportCopy.ReportNo,
             srOrg.name, srOrg.storedProcName, srOrg.datasetUserName);
           if srcopy <> nil then
           begin

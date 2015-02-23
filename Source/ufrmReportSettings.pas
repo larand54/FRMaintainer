@@ -74,7 +74,7 @@ begin
     edTemplate.Text := edTemplate.Text + '.fr3';
 
   FreeAndNil(FReportData);
-  FReportData := FReportController.NewReport(edTemplate.Text, edDoctype.Text,
+  FReportData := FReportController.CreateReport(edTemplate.Text, edDoctype.Text,
     edStoredProc.Text, edDataset.Text, edDescription.Text);
   if FReportData <> nil then
   begin
