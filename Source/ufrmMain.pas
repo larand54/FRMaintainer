@@ -510,7 +510,6 @@ begin
     FReportPath := FReportController.TemplatePath;
     BuildTree;
   finally
-//  Caption := Caption + '  Server: ' + dmFR.FDConnection1.Params.Values['Server']+' using '+ FReportPath+' as template path.';
     setCaption;
   end;
 end;
