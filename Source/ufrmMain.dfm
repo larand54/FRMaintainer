@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Fast Report Mainteenance'
-  ClientHeight = 760
+  ClientHeight = 768
   ClientWidth = 630
   Color = 9471349
   Font.Charset = DEFAULT_CHARSET
@@ -34,7 +34,7 @@ object frmMain: TfrmMain
     Left = 24
     Top = 32
     Width = 385
-    Height = 705
+    Height = 713
     BevelOuter = bvLowered
     BevelWidth = 2
     Caption = 'Panel1'
@@ -43,7 +43,7 @@ object frmMain: TfrmMain
       Left = 2
       Top = 2
       Width = 381
-      Height = 701
+      Height = 709
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -64,7 +64,7 @@ object frmMain: TfrmMain
     Left = 427
     Top = 34
     Width = 185
-    Height = 151
+    Height = 95
     BevelOuter = bvLowered
     BevelWidth = 2
     Caption = 'Panel2'
@@ -75,7 +75,7 @@ object frmMain: TfrmMain
       Left = 2
       Top = 2
       Width = 181
-      Height = 147
+      Height = 91
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -84,11 +84,12 @@ object frmMain: TfrmMain
       Lines.Strings = (
         'Memo1')
       TabOrder = 0
+      ExplicitHeight = 111
     end
   end
   object bbnClose: TBitBtn
     Left = 535
-    Top = 710
+    Top = 718
     Width = 75
     Height = 25
     Kind = bkClose
@@ -96,8 +97,8 @@ object frmMain: TfrmMain
     TabOrder = 2
   end
   object GroupBox1: TGroupBox
-    Left = 427
-    Top = 200
+    Left = 429
+    Top = 144
     Width = 183
     Height = 316
     Caption = 'Report operations'
@@ -163,6 +164,69 @@ object frmMain: TfrmMain
       Height = 25
       Action = acnPDF
       TabOrder = 6
+    end
+  end
+  object grbDatabase: TGroupBox
+    Left = 427
+    Top = 475
+    Width = 183
+    Height = 230
+    Caption = 'Database'
+    Color = 7695199
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 4
+    StyleElements = [seFont, seClient]
+    object lblDBStatus: TLabel
+      AlignWithMargins = True
+      Left = 10
+      Top = 155
+      Width = 163
+      Height = 62
+      Margins.Left = 1
+      Margins.Top = 1
+      Margins.Right = 1
+      Margins.Bottom = 1
+      AutoSize = False
+      WordWrap = True
+    end
+    object btnChangeDB: TButton
+      Left = 42
+      Top = 124
+      Width = 100
+      Height = 25
+      Action = acnChangeDatabase
+      TabOrder = 0
+    end
+    object rbVisVida: TRadioButton
+      Tag = 1
+      Left = 24
+      Top = 32
+      Width = 137
+      Height = 17
+      Caption = 'Production VIS.VIDA.SE'
+      TabOrder = 1
+      OnClick = acnDBSelectExecute
+    end
+    object rbAlveSQL03: TRadioButton
+      Tag = 2
+      Left = 24
+      Top = 64
+      Width = 129
+      Height = 17
+      Caption = 'Test ALVESQL03'
+      TabOrder = 2
+      OnClick = acnDBSelectExecute
+    end
+    object rbAlveSQLTest01: TRadioButton
+      Tag = 3
+      Left = 24
+      Top = 96
+      Width = 137
+      Height = 17
+      Caption = 'Test ALVESQLTEST01'
+      TabOrder = 3
+      OnClick = acnDBSelectExecute
     end
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
@@ -396,6 +460,11 @@ object frmMain: TfrmMain
     object acnNewDocType: TAction
       Category = 'Report'
       Caption = 'New DocType'
+    end
+    object acnChangeDatabase: TAction
+      Category = 'Application'
+      Caption = 'Change Database'
+      OnExecute = acnChangeDatabaseExecute
     end
   end
   object pmnuReport: TPopupMenu

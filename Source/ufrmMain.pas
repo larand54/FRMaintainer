@@ -87,6 +87,13 @@ type
     acnRefresh1: TMenuItem;
     acnNewDocType: TAction;
     frxReport1: TfrxReport;
+    grbDatabase: TGroupBox;
+    btnChangeDB: TButton;
+    rbVisVida: TRadioButton;
+    rbAlveSQL03: TRadioButton;
+    rbAlveSQLTest01: TRadioButton;
+    lblDBStatus: TLabel;
+    acnChangeDatabase: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -102,6 +109,8 @@ type
     procedure acnCopyExecute(Sender: TObject);
     procedure acnRefreshExecute(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure acnDBSelectExecute(Sender: TObject);
+    procedure acnChangeDatabaseExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -130,6 +139,7 @@ type
     function validateReportData(aReportData: TCMMReportData;
       errors: TStringList): boolean;
     procedure setCaption;
+    procedure setUpDBSelect;
 
   public
     { Public declarations }
@@ -347,6 +357,65 @@ begin
   Caption := 'FastReport' + '  Server: ' + dmFR.FDConnection1.Params.Values['Server']+' TemplatePath: '+ FReportPath;
 end;
 
+procedure TfrmMain.setUpDBSelect;
+var
+  server: string;
+begin
+  server := dmFR.FDConnection1.Params.Values['Server'];
+  if server = 'alvesql03' then begin
+    grbDatabase.Tag := rbAlveSQL03.Tag;
+    rbAlveSQL03.Checked := true
+  end
+  else if server = 'vis.vida.se' then begin
+    grbDatabase.Tag := rbVisVida.Tag;
+    rbVisVida.Checked := true
+  end
+  else if server = 'alvesqltest01' then begin
+    grbDatabase.Tag := rbAlveSQLTest01.Tag;
+    rbAlveSQLTest01.Checked := true
+  end
+  else begin
+    ShowMessage('DB-Connection not setup ERROR!!');
+  end;
+end;
+
+procedure TfrmMain.acnChangeDatabaseExecute(Sender: TObject);
+var
+  server: string;
+  iTag: integer;
+  SaveCursor: TCursor;
+begin
+  server := '';
+  iTag := 0;
+  SaveCursor := Screen.Cursor;
+  try
+    Screen.Cursor := crSQLWait;
+    if rbVisVida.Checked then begin
+      iTag := rbVisVida.Tag;
+      server := 'vis.vida.se'
+    end
+    else if rbAlveSQL03.Checked then begin
+      iTag := rbVisVida.Tag;
+      server := 'alvesql03'
+    end
+    else if rbAlveSQLTest01.Checked then begin
+      iTag := rbVisVida.Tag;
+      server := 'alvesqltest01';
+    end;
+
+    if dmFR.ReconnectDB(server) then begin
+      lblDBStatus.Caption := '';
+      grbDatabase.Tag := iTag;
+      setCaption;
+      BuildTree;
+    end
+    else
+      ShowMessage('Kunde inte koppla upp mot vald databas!');
+  finally
+    Screen.Cursor := SaveCursor;
+  end;
+end;
+
 procedure TfrmMain.acnCloseExecute(Sender: TObject);
 begin
   close;
@@ -395,6 +464,36 @@ begin
   end;
 end;
 
+procedure TfrmMain.acnDBSelectExecute(Sender: TObject);
+var
+  server: string;
+begin
+  lblDBStatus.Font.Color := clWindowText;
+  lblDBStatus.Caption := '';
+  btnChangeDB.Enabled := false;
+  if TRadioButton(Sender).Tag <> grbDatabase.Tag then begin
+
+    if TRadioButton(Sender).Tag = 1 then begin
+      server := 'vis.vida.se'
+    end
+    else if TRadioButton(Sender).Tag = 2 then begin
+      server := 'alvesql03'
+    end
+    else if TRadioButton(Sender).Tag = 3 then begin
+      server := 'alvesqltest01'
+    end;
+    if dmFR.CheckServer(server) then begin
+      lblDBStatus.Caption := AnsiUpperCase(server) +
+        ' vald och OK - Tryck på "RECONNECT" för att byta databas.';
+      btnChangeDB.Enabled := true;
+    end
+    else begin
+      lblDBStatus.Font.Color := clRed;
+      lblDBStatus.Caption := AnsiUpperCase(server) + ' Kan ej användas för närvarande';
+    end;
+  end;
+end;
+
 procedure TfrmMain.acnDesignExecute(Sender: TObject);
 var
   report: TCMMReportData;
@@ -402,16 +501,14 @@ var
   templateFile: string;
 begin
   report := ReportTree.Selected.Data;
-  if report <> nil then
-  begin
+  if report <> nil then begin
     reportController.DesignReport(prepareForOutput, FParams);
   end
-  else
-  begin
+  else begin
     // Create new template without any report connected
-    if MessageDlg('You are going to create a new template without any specified report'
-     , mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
+    if MessageDlg
+      ('You are going to create a new template without any specified report',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then begin
       frxReport1.DataSet := nil;
       frxReport1.DesignReport;
     end;
@@ -510,6 +607,7 @@ begin
     FReportPath := FReportController.TemplatePath;
     BuildTree;
   finally
+    setUpDBSelect;
     setCaption;
   end;
 end;
