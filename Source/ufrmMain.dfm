@@ -84,7 +84,6 @@ object frmMain: TfrmMain
       Lines.Strings = (
         'Memo1')
       TabOrder = 0
-      ExplicitHeight = 111
     end
   end
   object bbnClose: TBitBtn

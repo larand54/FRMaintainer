@@ -395,11 +395,11 @@ begin
       server := 'vis.vida.se'
     end
     else if rbAlveSQL03.Checked then begin
-      iTag := rbVisVida.Tag;
+      iTag := rbAlveSQL03.Tag;
       server := 'alvesql03'
     end
     else if rbAlveSQLTest01.Checked then begin
-      iTag := rbVisVida.Tag;
+      iTag := rbAlveSQLTest01.Tag;
       server := 'alvesqltest01';
     end;
 
