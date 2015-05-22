@@ -127,6 +127,14 @@
         </DCCReference>
         <DCCReference Include="..\..\CommonSources\FastReport\uReport.pas"/>
         <DCCReference Include="..\..\CommonSources\FastReport\uReportController.pas"/>
+        <DCCReference Include="c:\program files (x86)\embarcadero\studio\14.0\ObjRepos\EN\DelphiWin32\OKCANCL1.PAS">
+            <Form>OKBottomDlg</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ufrmCheckOrderNo.pas">
+            <Form>frmCheckOrderNo</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_FastReport\default.txvpck"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>

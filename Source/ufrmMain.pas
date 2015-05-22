@@ -156,7 +156,8 @@ var
 
 implementation
 
-uses udmFR, ufrmAddParams, ufrmReportSettings, printers, CommCtrl;
+uses udmFR, ufrmAddParams, ufrmReportSettings, printers, CommCtrl,
+  ufrmCheckOrderNo;
 {$R *.dfm}
 
 const
@@ -624,6 +625,10 @@ begin
       FReportController.RestoreTemplatePath;
       FReportPath := FReportController.TemplatePath;
       setCaption;
+    end;
+    If (GetKeyState(Ord('K'))<0) and (GetKeyState(Ord('L'))<0) and (GetKeyState(VK_CONTROL)<0) then begin
+      frmCheckOrderNo := TfrmCheckOrderNo.Create(nil);
+      frmCheckOrderNo.Show;
     end;
 end;
 
