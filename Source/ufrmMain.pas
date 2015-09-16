@@ -355,14 +355,14 @@ end;
 
 procedure TfrmMain.setCaption;
 begin
-  Caption := 'FastReport' + '  Server: ' + dmFR.FDConnection1.Params.Values['Server']+' TemplatePath: '+ FReportPath;
+  Caption := 'FastReport' + '  Server: ' + dmFR.DBConnection.Params.Values['Server']+' TemplatePath: '+ FReportPath;
 end;
 
 procedure TfrmMain.setUpDBSelect;
 var
   server: string;
 begin
-  server := dmFR.FDConnection1.Params.Values['Server'];
+  server := dmFR.DBConnection.Params.Values['Server'];
   if server = 'alvesql03' then begin
     grbDatabase.Tag := rbAlveSQL03.Tag;
     rbAlveSQL03.Checked := true

@@ -113,7 +113,7 @@ end;
 
 procedure TfrmCheckOrderNo.UpdateLoginText;
 begin
-  Label3.Caption := 'Inloggad på server: '+dmFR.FDConnection1.Params.Values['Server'];
+  Label3.Caption := 'Inloggad på server: '+dmFR.DBConnection.Params.Values['Server'];
 end;
 
 procedure TfrmCheckOrderNo.UpdateOrderNo;
