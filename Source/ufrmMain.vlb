@@ -1,10 +1,4 @@
-﻿[frxRichObject1]
-Coordinates=72,1,99,36
-
-[frxReport1]
-Coordinates=190,1,75,36
-
-[Label1]
+﻿[Label1]
 Coordinates=10,146,46,51
 
 [frxDesigner1]
@@ -30,7 +24,7 @@ Visible=True
 Coordinates=300,146,69,33
 
 []
-Coordinates=439,141,79,51
+Coordinates=190,1,75,36
 LayerNames=NewLayer0
 
 [Module Settings]

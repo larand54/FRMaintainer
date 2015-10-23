@@ -16,7 +16,9 @@ uses
   uReportController in '..\..\CommonSources\FastReport\uReportController.pas',
   OKCANCL1 in 'c:\program files (x86)\embarcadero\studio\14.0\ObjRepos\EN\DelphiWin32\OKCANCL1.PAS' {OKBottomDlg},
   ufrmCheckOrderNo in 'ufrmCheckOrderNo.pas' {frmCheckOrderNo},
-  uFR_Log in '..\..\CommonSources\FastReport\uFR_Log.pas';
+  uFR_Log in '..\..\CommonSources\FastReport\uFR_Log.pas',
+  ufrmCopyTables in 'ufrmCopyTables.pas' {frmCopyTables},
+  ufrmDocType in 'ufrmDocType.pas' {frmDocType};
 
 {$R *.res}
 
@@ -28,6 +30,8 @@ begin
   Application.CreateForm(TfrmAddParams, frmAddParams);
   Application.CreateForm(TfrmSubReportSettings, frmSubReportSettings);
   Application.CreateForm(TfrmReportSettings, frmReportSettings);
+  Application.CreateForm(TfrmCopyTables, frmCopyTables);
+  Application.CreateForm(TfrmDocType, frmDocType);
   //  Application.CreateForm(TfrmCheckOrderNo, frmCheckOrderNo);
   Application.Run;
 end.

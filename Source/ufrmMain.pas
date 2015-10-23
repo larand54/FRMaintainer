@@ -29,7 +29,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, cxNavigator, cxDBData;
+  cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables;
 
 type
   TErrorCode = class
@@ -94,6 +94,8 @@ type
     rbAlveSQLTest01: TRadioButton;
     lblDBStatus: TLabel;
     acnChangeDatabase: TAction;
+    acnCopyTables: TAction;
+    CopyDBTables1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -111,6 +113,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure acnDBSelectExecute(Sender: TObject);
     procedure acnChangeDatabaseExecute(Sender: TObject);
+    procedure acnCopyTablesExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -463,6 +466,11 @@ begin
     Org.Free;
     reportCopy.Free;
   end;
+end;
+
+procedure TfrmMain.acnCopyTablesExecute(Sender: TObject);
+begin
+  frmCopyTables.ShowModal;
 end;
 
 procedure TfrmMain.acnDBSelectExecute(Sender: TObject);

@@ -8,7 +8,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
   uReport, uReportController, ufrmSubReportSettings, siComp, siLngLnk,
   Vcl.DBCtrls, System.Rtti, System.Bindings.Outputs, Vcl.Bind.Editors,
-  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope;
+  Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope,
+  ufrmDocType;
 
 type
   TfrmReportSettings = class(TForm)
@@ -32,6 +33,7 @@ type
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     cboDocType: TComboBox;
+    sbnAddDocType: TSpeedButton;
     procedure bbnCrtMainClick(Sender: TObject);
     procedure bbnUpdMainClick(Sender: TObject);
     procedure sbtnAddSRClick(Sender: TObject);
@@ -39,8 +41,8 @@ type
     procedure lbxSubReportsDblClick(Sender: TObject);
     procedure cboDocTypeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure cboDocTypeExit(Sender: TObject);
     procedure edStoredProcChange(Sender: TObject);
+    procedure sbnAddDocTypeClick(Sender: TObject);
   private
     { Private declarations }
     FRepNo: integer;
@@ -142,22 +144,6 @@ begin
     edDoctype.Text := intToStr(integer(cboDocType.items.Objects[cboDocType.ItemIndex]));
 end;
 
-procedure TfrmReportSettings.cboDocTypeExit(Sender: TObject);
-var
-  dt: integer;
-begin
-  if (cboDocType.ItemIndex = -1) and (edDocType.Text = '') then
-    if MessageDlg('Do you want to create a new DocType? -- '+cboDocType.Text+' --', mtConfirmation, [mbYes, mbNo], 0) = mrYes then begin
-      dt := dmFr.addDocType(cboDocType.Text);
-      if dt > 0 then begin
-        FillDocTypeData(-1);
-        edDoctype.Text := intToStr(dt)
-      end
-      else
-        edDocType.Text := '';
-    end;
-end;
-
 procedure TfrmReportSettings.edStoredProcChange(Sender: TObject);
 begin
   if edDataset.Text = '' then
@@ -252,6 +238,14 @@ begin
    sr := frmSubReportSettings.Execute(FReportController, sr, FReportData.ReportNo);
  end;
 
+end;
+
+procedure TfrmReportSettings.sbnAddDocTypeClick(Sender: TObject);
+var
+  iDocType: integer;
+begin
+  iDocType := frmDocType.Execute;
+  FillDocTypeData(iDocType);
 end;
 
 procedure TfrmReportSettings.sbtnAddSRClick(Sender: TObject);

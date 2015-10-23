@@ -153,6 +153,14 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\CommonSources\FastReport\uFR_Log.pas"/>
+        <DCCReference Include="ufrmCopyTables.pas">
+            <Form>frmCopyTables</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ufrmDocType.pas">
+            <Form>frmDocType</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_FastReport\default.txvpck"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>

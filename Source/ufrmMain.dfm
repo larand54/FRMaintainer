@@ -465,6 +465,12 @@ object frmMain: TfrmMain
       Caption = 'Change Database'
       OnExecute = acnChangeDatabaseExecute
     end
+    object acnCopyTables: TAction
+      Category = 'Report'
+      Caption = 'Copy DB Tables'
+      Enabled = False
+      OnExecute = acnCopyTablesExecute
+    end
   end
   object pmnuReport: TPopupMenu
     Left = 96
@@ -496,6 +502,9 @@ object frmMain: TfrmMain
     object acnRefresh1: TMenuItem
       Action = acnRefresh
       Caption = 'Refresh'
+    end
+    object CopyDBTables1: TMenuItem
+      Action = acnCopyTables
     end
   end
   object frxReport1: TfrxReport
