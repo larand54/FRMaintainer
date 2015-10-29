@@ -49,6 +49,7 @@ type
     FReportData: TCMMReportData;
     FReportController: TCMReportController;
     procedure FillDocTypeData(aDocType: integer);
+    procedure sortComboDT;
   public
     { Public declarations }
     property RepNo: integer read FRepNo;
@@ -211,14 +212,30 @@ var
   iDocType: integer;
   sDocType: string;
   docType: TCMDocType;
+  sl: TStringList;
+  i: integer;
 begin
   docType := dmFR.DocType;
+  sl := TStringLIst.Create;
+  try
   for idocType in docType.keys do begin
     sDocType := docType[iDocType];
+    sl.AddObject(sDocType, TObject(iDocType));
+  end;
+  sl.Sort;
+  cboDocType.Clear;
+  for i:=0 to sl.Count-1 do
+  begin
+    sDocType := sl[i];
+    iDocType := Integer(sl.Objects[i]);
     cboDocType.Items.AddObject(sDocType, TObject(iDocType));
   end;
   if aDocType > 0 then begin
     cboDocType.Text := dmFR.DocType.Items[aDocType];
+    edDocType.Text := intToStr(aDocType);
+  end;
+  finally
+    freeAndNil(sl);
   end;
 end;
 
@@ -260,6 +277,11 @@ end;
 procedure TfrmReportSettings.sbtnRemoveSRClick(Sender: TObject);
 begin
   lbxSubReports.Items.Delete(lbxSubReports.ItemIndex);
+end;
+
+procedure TfrmReportSettings.sortComboDT;
+begin
+
 end;
 
 end.

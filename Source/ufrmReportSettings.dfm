@@ -151,7 +151,7 @@ object frmReportSettings: TfrmReportSettings
     Top = 60
     Width = 17
     Height = 22
-    Hint = 'Add new subreport'
+    Hint = 'Add/Delete/Modify Doctype'
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000000000000000000000000000000000000000000000000
