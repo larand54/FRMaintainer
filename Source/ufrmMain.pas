@@ -128,6 +128,7 @@ type
     FspList: TList<TFDStoredProc>;
     FfrxDSList: TList<TfrxDBDataset>;
     FReportData: TCMMReportData;
+    FReportsData: TCMMReportsData;
     FSReportData: TCMSReportData;
     FParams: TCMParams;
     FErrors: TStringList;
@@ -135,8 +136,10 @@ type
     DefReportTreeWndProc: TWndMethod;
 
     procedure ReportTreeWndProc(var Message: TMessage);
+    function TreeItemSearch(TV: TTreeView; SearchItem: string): TTreeNode;
 
     procedure BuildTree;
+    procedure updateTree;
     procedure getParameters(aReportData: TCMMReportData);
     function prepareForOutput: integer;
     function validateReportData(aReportData: TCMMReportData;
@@ -383,6 +386,66 @@ begin
   end;
 end;
 
+procedure TfrmMain.updateTree ;
+var
+  Node: TTreeNode;
+  subItem: TTreeNode;
+  qry: TFDQuery;
+  sp_name: string;
+  DsU_name: string;
+  RepNo: integer;
+  errMsg: String;
+  Descr: string;
+  Template: string;
+  docType, LastDocType: integer;
+  subItmIndx: integer;
+  Reportsdata: TCMMReportsdata;
+  Reportdata: TCMMReportData;
+  docTypeName: string;
+
+begin
+  ReportTree.Items.Clear;
+  Node := ReportTree.Items.Add(nil, 'Available Reports...');
+  Node.ImageIndex := 0;
+  try
+    dmFR.RefreshDocType;
+    reportsData := FReportsData;
+    ReportTree.Selected := Node; // Make the first node the root of the tree
+    LastDocType := -1; // To identify First record in the loop
+    for Reportdata in Reportsdata do
+    begin
+
+    docType := Reportdata.docType;
+    docTypeName := dmFR.getDocTypeName(docType);
+    Template := Reportdata.Template;
+    if LastDocType <> docType then
+    begin
+      Node := TreeItemSearch(ReportTree,docTypeName);
+      if not assigned(Node) then
+        Node := ReportTree.Items.AddChildObject(ReportTree.Selected,
+          docTypeName, nil);
+      // intToStr(docType), nil);
+      LastDocType := docType;
+    end;
+    subItem := ReportTree.Items.AddChildObject(Node, Template, Reportdata);
+
+//    subItem.ImageIndex := subItmIndx;
+//    subItem.SelectedIndex := subItmIndx;
+    FErrors.Clear;
+    if validateReportData(Reportdata, FErrors) then
+    begin
+      subItmIndx := 2;
+    end else
+      subItmIndx := 1;
+    subItem.ImageIndex := subItmIndx;
+    subItem.SelectedIndex := subItmIndx;
+  end;
+  ReportTree.items[0].expand(false);
+  finally
+    FReportsData := ReportsData;
+  end;
+end;
+
 procedure TfrmMain.acnChangeDatabaseExecute(Sender: TObject);
 var
   server: string;
@@ -431,11 +494,13 @@ var
   srcopy, srOrg: TCMSReportData;
   node: TTreeNode;
   nodeIndex: integer;
+  index: integer;
 begin
   try
     Node := ReportTree.Selected;
     NodeIndex := Node.Index;
     org := Node.Data;
+    index := FReportsData.IndexOf(org);
     reportCopy := FReportController.CreateReport('COPY' + org.Template,
       intToStr(org.docType), org.storedProcName, org.datasetUserName,
       org.description);
@@ -457,14 +522,16 @@ begin
         end;
       if dmFR.addReport(reportCopy.ReportNo, reportCopy) then
       begin
-        BuildTree;
+        FReportsData.Insert(index,reportCopy);
+        UpdateTree;
         ReportTree.Refresh;
-        ReportTree.Selected := ReportTree.Items[nodeIndex];
+        Node := TreeItemSearch(ReportTree, dmFR.getDocTypeName(org.docType));
+        Node.Selected := true;
+        Node.Expanded := true;
+//        ReportTree.Selected := ReportTree.Items.Item[index];
       end;
     end
   finally
-    Org.Free;
-    reportCopy.Free;
   end;
 end;
 
@@ -540,8 +607,11 @@ begin
   begin
     if dmFR.upDateReport(FReportData.ReportNo, FReportData) then
     begin
-      BuildTree;
+      UpdateTree;
       ReportTree.Refresh;
+      Node := TreeItemSearch(ReportTree, dmFR.getDocTypeName(FReportData.docType));
+      Node.Selected := true;
+      Node.Expanded := true;
     end;
   end;
 end;
@@ -556,8 +626,12 @@ begin
   begin
     if dmFR.addReport(FReportData.ReportNo, FReportData) then
     begin
-      BuildTree;
-      ReportTree.Refresh
+      FReportsData.Add(FReportData);
+      UpdateTree;
+      ReportTree.Refresh;
+      Node := TreeItemSearch(ReportTree, dmFR.getDocTypeName(FReportData.docType));
+      Node.Selected := true;
+      Node.Expanded := true;
     end;
   end;
 end;
@@ -610,6 +684,7 @@ begin
   // Initialization
   Memo1.Clear;
   FReportData := nil;
+  FReportsData := nil;
   FErrors := TStringList.create;
   try
     FReportController := TCMReportController.create;
@@ -748,8 +823,9 @@ begin
   try
     dmFR.RefreshDocType;
     dmFR.qryFastReports.Active;
-    Reportsdata := reportController.AllReports;
-    ReportTree.Selected := Node; // Make the first node the root of the tree
+    FReportsdata := reportController.AllReports;
+    updateTree;
+ {   ReportTree.Selected := Node; // Make the first node the root of the tree
     LastDocType := -1; // To identify First record in the loop
     for Reportdata in Reportsdata do
     begin
@@ -776,12 +852,35 @@ begin
       subItmIndx := 1;
     subItem.ImageIndex := subItmIndx;
     subItem.SelectedIndex := subItmIndx;
-  end;
+
+  end;                              }
   ReportTree.items[0].expand(false);
   finally
     dmFR.qryFastReports.close;
   end;
 end;
+
+function TfrmMain.TreeItemSearch(TV: TTreeView; SearchItem: string): TTreeNode;
+var
+  i: Integer;
+  iItem: string;
+begin
+  if (TV = nil) or (SearchItem = '') then Exit;
+  for i := 0 to TV.Items.Count - 1 do
+  begin
+    iItem := TV.Items[i].Text;
+    if SearchItem = iItem then
+    begin
+      Result := TV.Items[i];
+      Exit;
+    end
+    else
+    begin
+      Result := nil;
+    end;
+  end;
+end;
+
 
 
 constructor TErrorCode.create(aErrorCode: integer);
