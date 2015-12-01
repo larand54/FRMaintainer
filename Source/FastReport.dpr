@@ -18,7 +18,8 @@ uses
   ufrmCheckOrderNo in 'ufrmCheckOrderNo.pas' {frmCheckOrderNo},
   uFR_Log in '..\..\CommonSources\FastReport\uFR_Log.pas',
   ufrmCopyTables in 'ufrmCopyTables.pas' {frmCopyTables},
-  ufrmDocType in 'ufrmDocType.pas' {frmDocType};
+  ufrmDocType in 'ufrmDocType.pas' {frmDocType},
+  ufrmTranslations in 'ufrmTranslations.pas' {frmTranslations};
 
 {$R *.res}
 
@@ -32,6 +33,7 @@ begin
   Application.CreateForm(TfrmReportSettings, frmReportSettings);
   Application.CreateForm(TfrmCopyTables, frmCopyTables);
   Application.CreateForm(TfrmDocType, frmDocType);
+  Application.CreateForm(TfrmTranslations, frmTranslations);
   //  Application.CreateForm(TfrmCheckOrderNo, frmCheckOrderNo);
   Application.Run;
 end.
