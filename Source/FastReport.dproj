@@ -161,6 +161,10 @@
             <Form>frmDocType</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ufrmTranslations.pas">
+            <Form>frmTranslations</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_FastReport\default.txvpck"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>

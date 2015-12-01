@@ -29,7 +29,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables;
+  cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables, ufrmTranslations;
 
 type
   TErrorCode = class
@@ -96,6 +96,9 @@ type
     acnChangeDatabase: TAction;
     acnCopyTables: TAction;
     CopyDBTables1: TMenuItem;
+    btnTranslations: TButton;
+    acnTranslations: TAction;
+    ranslations1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -114,6 +117,7 @@ type
     procedure acnDBSelectExecute(Sender: TObject);
     procedure acnChangeDatabaseExecute(Sender: TObject);
     procedure acnCopyTablesExecute(Sender: TObject);
+    procedure btnTranslationsClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -673,6 +677,11 @@ begin
       ReportTree.Refresh;
     end;
   end;
+end;
+
+procedure TfrmMain.btnTranslationsClick(Sender: TObject);
+begin
+  frmTranslations.Show;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);

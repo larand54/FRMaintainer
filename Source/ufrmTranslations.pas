@@ -1,0 +1,327 @@
+unit ufrmTranslations;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, udmFR, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010, dxSkinXmas2008Blue,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit,
+  cxNavigator, Data.DB, cxDBData, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, cxGridLevel, cxClasses, cxGridCustomView,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
+  cxGridDBDataDefinitions,
+  System.Actions, Vcl.ActnList, Vcl.StdCtrls, FireDAC.UI.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL;
+
+type
+  TfrmTranslations = class(TForm)
+    edTextID: TEdit;
+    edEnglish: TEdit;
+    edSwedish: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    btnAdd: TButton;
+    btnExit: TButton;
+    ActionList1: TActionList;
+    acnUpdate: TAction;
+    acnAdd: TAction;
+    acnCancel: TAction;
+    acnExit: TAction;
+    acnFromFile: TAction;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    cxGrid1: TcxGrid;
+    tblTextTranslations: TFDTable;
+    dscTranslation: TDataSource;
+    tblTextTranslationsTextID: TStringField;
+    tblTextTranslationsEnglish: TStringField;
+    tblTextTranslationsSwedish: TStringField;
+    tblTextTranslationslastChanged: TSQLTimeStampField;
+    cxGrid1DBTableView1TextID: TcxGridDBColumn;
+    cxGrid1DBTableView1English: TcxGridDBColumn;
+    cxGrid1DBTableView1Swedish: TcxGridDBColumn;
+    cxGrid1DBTableView1lastChanged: TcxGridDBColumn;
+    qryExist: TFDQuery;
+    qryExistTextID: TStringField;
+    qryExistEnglish: TStringField;
+    qryExistSwedish: TStringField;
+    qryExistlastChanged: TSQLTimeStampField;
+    qryUpd: TFDQuery;
+    qryAdd: TFDQuery;
+    ConnectionALVESQL01: TFDConnection;
+    ConnectionALVESQL03: TFDConnection;
+    btnReplicate: TButton;
+    acnReplicateTable: TAction;
+    qryReplicateSrc: TFDQuery;
+    qryReplicateTarget: TFDQuery;
+    qryReplicateSrcTextID: TStringField;
+    qryReplicateSrcEnglish: TStringField;
+    qryReplicateSrcSwedish: TStringField;
+    qryReplicateSrclastChanged: TSQLTimeStampField;
+    qryTruncTarget: TFDQuery;
+    procedure edTextIDExit(Sender: TObject);
+    procedure edTextIDChange(Sender: TObject);
+    procedure edEnglishExit(Sender: TObject);
+    procedure edSwedishExit(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure acnAddExecute(Sender: TObject);
+    procedure acnUpdateExecute(Sender: TObject);
+    procedure acnExitExecute(Sender: TObject);
+    procedure acnCancelExecute(Sender: TObject);
+    procedure cxGrid1DBTableView1FocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure acnReplicateTableExecute(Sender: TObject);
+  private
+    { Private declarations }
+    FTextID_Changed: Boolean;
+    FEnglish_Changed: Boolean;
+    FSwedish_Changed: Boolean;
+    FTextID_Origin: string;
+    FEnglish_Origin: string;
+    FSwedish_Origin: string;
+    procedure addTranslation(aTextID, aEng, aSwe: string);
+    procedure updTranslation(aTextID, aEng, aSwe: string);
+    procedure btnAddToUpd;
+    procedure btnUpdToAdd;
+    procedure btnExitToCancel;
+    procedure btnCancelToExit;
+    procedure updTextFields;
+    function Exist(aTextID: string): Boolean;
+
+  public
+    { Public declarations }
+  end;
+
+var
+  frmTranslations: TfrmTranslations;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfrmTranslations.acnAddExecute(Sender: TObject);
+begin
+  addTranslation(edTextID.Text, edEnglish.Text, edSwedish.Text);
+end;
+
+procedure TfrmTranslations.acnCancelExecute(Sender: TObject);
+begin
+  acnExitExecute(Sender);
+end;
+
+procedure TfrmTranslations.acnExitExecute(Sender: TObject);
+begin
+  tblTextTranslations.Close;
+  qryExist.Close;
+  qryUpd.Close;
+  qryAdd.Close;
+end;
+
+procedure TfrmTranslations.acnReplicateTableExecute(Sender: TObject);
+begin
+  qryTruncTarget.ExecSQL;
+  qryReplicateTarget.prepare;
+  qryReplicateSrc.Active := false;
+  qryReplicateSrc.Active := true;
+  while not qryReplicateSrc.Eof do begin
+    qryReplicateTarget.ParamByName('TextID').AsString := qryReplicateSrc['TextID'];
+    qryReplicateTarget.ParamByName('English').AsString := qryReplicateSrc['English'];
+    qryReplicateTarget.ParamByName('Swedish').AsString := qryReplicateSrc['Swedish'];
+    qryReplicateTarget.ParamByName('lastChanged').AsDateTime := qryReplicateSrc['lastChanged'];
+    qryReplicateTarget.ExecSQL;
+    qryReplicateSrc.Next;
+  end;
+end;
+
+procedure TfrmTranslations.acnUpdateExecute(Sender: TObject);
+begin
+  updTranslation(edTextID.Text, edEnglish.Text, edSwedish.Text);
+end;
+
+procedure TfrmTranslations.addTranslation(aTextID, aEng, aSwe: string);
+begin
+  try
+    qryAdd.Close;
+    qryAdd.prepare;
+    qryAdd.ParamByName('TextID').AsString := aTextID;
+    qryAdd.ParamByName('ENG').AsString := aEng;
+    qryAdd.ParamByName('SWE').AsString := aSwe;
+    qryAdd.ExecSQL;
+    if Exist(aTextID) then
+    begin
+      updTextFields();
+      tblTextTranslations.Refresh;
+    end;
+  finally
+    btnExit.Enabled := true;
+    btnCancelToExit;
+    btnAdd.Enabled := false;
+  end;
+end;
+
+procedure TfrmTranslations.btnAddToUpd;
+begin
+  btnAdd.Caption := 'Update';
+  btnAdd.Action := acnUpdate;
+  btnAdd.Enabled := true;
+end;
+
+procedure TfrmTranslations.btnCancelToExit;
+begin
+  btnExit.Caption := 'Exit';
+  btnExit.Action := acnExit;
+  btnExit.Enabled := true;
+end;
+
+procedure TfrmTranslations.btnExitToCancel;
+begin
+  btnExit.Caption := 'Cancel';
+  btnExit.Action := acnCancel;
+  btnExit.Enabled := true;
+end;
+
+procedure TfrmTranslations.btnUpdToAdd;
+begin
+  btnAdd.Caption := 'Add';
+  btnAdd.Action := acnAdd;
+  btnAdd.Enabled := true;
+  btnExit.Enabled := true;
+end;
+
+procedure TfrmTranslations.cxGrid1DBTableView1FocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+  RecIdx, Col1Idx, Col2Idx, Col3Idx: integer;
+  DC: TcxGridDBDataController;
+begin
+  If AFocusedRecord <> NIL then
+  begin
+    DC := TcxGridDBDataController(Sender.DataController);
+    IF Sender.DataController = NIL then exit;
+    with TcxCustomGridTableView(Sender) do
+    begin
+      RecIdx := Controller.SelectedRecords[0].RecordIndex;
+      Col1Idx := DC.GetItemByFieldName('TextID').Index;
+      Col2Idx := DC.GetItemByFieldName('English').Index;
+      Col3Idx := DC.GetItemByFieldName('Swedish').Index;
+      If Exist(DataController.Values[RecIdx, Col1Idx]) then begin
+        updTextFields;
+        btnAddToUpd;
+        btnExitToCancel;
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmTranslations.edEnglishExit(Sender: TObject);
+begin
+  FEnglish_Changed := FEnglish_Origin <> edEnglish.Text;
+  if FEnglish_Changed then btnExitToCancel;
+end;
+
+procedure TfrmTranslations.edSwedishExit(Sender: TObject);
+begin
+  FSwedish_Changed := FSwedish_Origin <> edSwedish.Text;
+  if FSwedish_Changed then btnExitToCancel;
+end;
+
+procedure TfrmTranslations.edTextIDChange(Sender: TObject);
+begin
+  FTextID_Changed := FTextID_Origin <> edTextID.Text;
+end;
+
+procedure TfrmTranslations.edTextIDExit(Sender: TObject);
+begin
+  if FTextID_Changed then
+    if Exist(edTextID.Text) then
+    begin
+      updTextFields;
+      btnAddToUpd
+    end
+    else
+    begin
+      edEnglish.Text := '';
+      edSwedish.Text := '';
+      btnUpdToAdd;
+      qryUpd.prepare;
+
+    end;
+end;
+
+function TfrmTranslations.Exist(aTextID: string): Boolean;
+begin
+  try
+    qryExist.Close;
+    qryExist.prepare;
+//    qryExist.ParamByName('TextID').AsString := edTextID.Text;
+    qryExist.ParamByName('TextID').AsString := aTextID;
+    qryExist.Active := true;
+  finally
+    Result := qryExist.RecordCount > 0;
+  end;
+end;
+
+procedure TfrmTranslations.FormCreate(Sender: TObject);
+begin
+  edTextID.Text := '';
+  edEnglish.Text := '';
+  edSwedish.Text := '';
+  btnExitToCancel;
+  tblTextTranslations.Open();
+  btnReplicate.Enabled := true;
+end;
+
+procedure TfrmTranslations.updTextFields;
+begin
+  edTextID.Text := qryExist['TextID'];
+  edEnglish.Text := qryExist['English'];
+  edSwedish.Text := qryExist['Swedish'];
+  FEnglish_Origin := edEnglish.Text;
+  FSwedish_Origin := edSwedish.Text;
+  FEnglish_Changed := false;
+  FSwedish_Changed := false;
+end;
+
+procedure TfrmTranslations.updTranslation(aTextID, aEng, aSwe: string);
+begin
+  try
+    qryUpd.Close;
+    qryUpd.prepare;
+    qryUpd.ParamByName('TextID').AsString := aTextID;
+    qryUpd.ParamByName('ENG').AsString := aEng;
+    qryUpd.ParamByName('SWE').AsString := aSwe;
+    qryUpd.ExecSQL;
+    if Exist(aTextID) then
+    begin
+      updTextFields();
+      tblTextTranslations.Refresh;
+    end;
+  finally
+    btnExit.Enabled := true;
+    btnCancelToExit;
+    btnAdd.Enabled := false;
+  end;
+end;
+
+end.

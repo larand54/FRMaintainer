@@ -166,7 +166,7 @@ object frmMain: TfrmMain
     end
   end
   object grbDatabase: TGroupBox
-    Left = 427
+    Left = 429
     Top = 475
     Width = 183
     Height = 230
@@ -226,6 +226,16 @@ object frmMain: TfrmMain
       Caption = 'Test ALVESQLTEST01'
       TabOrder = 3
       OnClick = acnDBSelectExecute
+    end
+    object btnTranslations: TButton
+      Left = 42
+      Top = 155
+      Width = 100
+      Height = 25
+      Caption = 'Translations'
+      DropDownMenu = pmnuReport
+      TabOrder = 4
+      OnClick = btnTranslationsClick
     end
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
@@ -468,8 +478,11 @@ object frmMain: TfrmMain
     object acnCopyTables: TAction
       Category = 'Report'
       Caption = 'Copy DB Tables'
-      Enabled = False
       OnExecute = acnCopyTablesExecute
+    end
+    object acnTranslations: TAction
+      Category = 'Report'
+      Caption = 'Translations'
     end
   end
   object pmnuReport: TPopupMenu
@@ -505,6 +518,9 @@ object frmMain: TfrmMain
     end
     object CopyDBTables1: TMenuItem
       Action = acnCopyTables
+    end
+    object ranslations1: TMenuItem
+      Action = acnTranslations
     end
   end
   object frxReport1: TfrxReport
