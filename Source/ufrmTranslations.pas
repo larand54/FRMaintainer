@@ -76,6 +76,10 @@ type
     qryReplicateSrcSwedish: TStringField;
     qryReplicateSrclastChanged: TSQLTimeStampField;
     qryTruncTarget: TFDQuery;
+    ConnectionALVESQLTest01: TFDConnection;
+    qryDelete: TFDQuery;
+    btnDltSelected: TButton;
+    acnDeleteSelected: TAction;
     procedure edTextIDExit(Sender: TObject);
     procedure edTextIDChange(Sender: TObject);
     procedure edEnglishExit(Sender: TObject);
@@ -90,6 +94,8 @@ type
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
     procedure acnReplicateTableExecute(Sender: TObject);
+    procedure acnDeleteSelectedExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FTextID_Changed: Boolean;
@@ -129,6 +135,33 @@ begin
   acnExitExecute(Sender);
 end;
 
+procedure TfrmTranslations.acnDeleteSelectedExecute(Sender: TObject);
+var
+  RecIdx, Col1Idx: integer;
+  DC: TcxGridDBDataController;
+  ID: string;
+begin
+  If cxGrid1DBTableView1.DataController.FocusedRowIndex > -1 then
+  begin
+    DC := cxGrid1DBTableView1.DataController;
+    IF DC = NIL then exit;
+    with cxGrid1DBTableView1 do
+    begin
+      RecIdx := Controller.SelectedRecords[0].RecordIndex;
+      Col1Idx := DC.GetItemByFieldName('TextID').Index;
+      ID := DC.Values[RecIdx, Col1Idx];
+      If messageDlg('Do you want to delete: '+ID+ ' ?',mtConfirmation, [mbYes, mbNo], 0, mbYes) = mrYes then
+      begin
+        qryDelete.Active := false;
+        qryDelete.Prepare;
+        qryDelete.ParamByName('TextID').AsString := ID;
+        qryDelete.ExecSQL;
+        tblTextTranslations.Refresh;
+      end;
+    end;
+  end;
+end;
+
 procedure TfrmTranslations.acnExitExecute(Sender: TObject);
 begin
   tblTextTranslations.Close;
@@ -156,6 +189,7 @@ end;
 procedure TfrmTranslations.acnUpdateExecute(Sender: TObject);
 begin
   updTranslation(edTextID.Text, edEnglish.Text, edSwedish.Text);
+  tblTextTranslations.Refresh;
 end;
 
 procedure TfrmTranslations.addTranslation(aTextID, aEng, aSwe: string);
@@ -265,7 +299,6 @@ begin
       edSwedish.Text := '';
       btnUpdToAdd;
       qryUpd.prepare;
-
     end;
 end;
 
@@ -290,6 +323,11 @@ begin
   btnExitToCancel;
   tblTextTranslations.Open();
   btnReplicate.Enabled := true;
+end;
+
+procedure TfrmTranslations.FormShow(Sender: TObject);
+begin
+  tblTextTranslations.Open;
 end;
 
 procedure TfrmTranslations.updTextFields;

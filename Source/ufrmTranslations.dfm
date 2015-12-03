@@ -1,7 +1,7 @@
 object frmTranslations: TfrmTranslations
   Left = 0
   Top = 0
-  Caption = 'Translation maintenance'
+  Caption = 'Translation maintenance   --  SERVER ALVESQL03'
   ClientHeight = 483
   ClientWidth = 947
   Color = clBtnFace
@@ -12,6 +12,7 @@ object frmTranslations: TfrmTranslations
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -118,8 +119,16 @@ object frmTranslations: TfrmTranslations
     Action = acnReplicateTable
     TabOrder = 6
   end
+  object btnDltSelected: TButton
+    Left = 560
+    Top = 104
+    Width = 113
+    Height = 25
+    Action = acnDeleteSelected
+    TabOrder = 7
+  end
   object ActionList1: TActionList
-    Left = 240
+    Left = 136
     object acnUpdate: TAction
       Caption = 'Update'
       OnExecute = acnUpdateExecute
@@ -142,6 +151,10 @@ object frmTranslations: TfrmTranslations
     object acnReplicateTable: TAction
       Caption = 'ReplicateTable'
       OnExecute = acnReplicateTableExecute
+    end
+    object acnDeleteSelected: TAction
+      Caption = 'Delete Selected'
+      OnExecute = acnDeleteSelectedExecute
     end
   end
   object tblTextTranslations: TFDTable
@@ -296,7 +309,7 @@ object frmTranslations: TfrmTranslations
       'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evCursorKind]
     LoginPrompt = False
-    Left = 328
+    Left = 232
   end
   object ConnectionALVESQL03: TFDConnection
     Params.Strings = (
@@ -311,7 +324,8 @@ object frmTranslations: TfrmTranslations
     FetchOptions.AssignedValues = [evCursorKind]
     Connected = True
     LoginPrompt = False
-    Left = 448
+    Left = 336
+    Top = 65528
   end
   object qryReplicateSrc: TFDQuery
     Connection = ConnectionALVESQL03
@@ -390,5 +404,35 @@ object frmTranslations: TfrmTranslations
       'TRUNCATE TABLE [VIS_VIDA].[dbo].[TextTranslation]')
     Left = 656
     Top = 64
+  end
+  object ConnectionALVESQLTest01: TFDConnection
+    Params.Strings = (
+      'Server=alvesqltest01'
+      'Database=vis_vida'
+      'OSAuthent=No'
+      'MetaDefCatalog=vis_vida'
+      'MetaDefSchema=dbo'
+      'User_Name=Lars'
+      'Password=woods2011'
+      'DriverID=MSSQL')
+    FetchOptions.AssignedValues = [evCursorKind]
+    LoginPrompt = False
+    Left = 408
+    Top = 8
+  end
+  object qryDelete: TFDQuery
+    Connection = ConnectionALVESQL03
+    SQL.Strings = (
+      'DELETE FROM [VIS_VIDA].[dbo].[TextTranslation]'
+      '      WHERE TextID = :TextID')
+    Left = 736
+    Top = 80
+    ParamData = <
+      item
+        Name = 'TEXTID'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
   end
 end
