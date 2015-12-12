@@ -27,37 +27,36 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   cxGridDBDataDefinitions,
   System.Actions, Vcl.ActnList, Vcl.StdCtrls, FireDAC.UI.Intf, FireDAC.Stan.Def,
-  FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL;
+  FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.MSSQL, Vcl.ExtCtrls;
 
 type
   TfrmTranslations = class(TForm)
-    edTextID: TEdit;
-    edEnglish: TEdit;
-    edSwedish: TEdit;
+    Panel1: TPanel;
+    Panel2: TPanel;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
+    edTextID: TEdit;
+    edEnglish: TEdit;
+    edSwedish: TEdit;
     btnAdd: TButton;
     btnExit: TButton;
+    btnReplicate: TButton;
+    btnDltSelected: TButton;
     ActionList1: TActionList;
     acnUpdate: TAction;
     acnAdd: TAction;
     acnCancel: TAction;
     acnExit: TAction;
     acnFromFile: TAction;
-    cxGrid1DBTableView1: TcxGridDBTableView;
-    cxGrid1Level1: TcxGridLevel;
-    cxGrid1: TcxGrid;
+    acnReplicateTable: TAction;
+    acnDeleteSelected: TAction;
     tblTextTranslations: TFDTable;
-    dscTranslation: TDataSource;
     tblTextTranslationsTextID: TStringField;
     tblTextTranslationsEnglish: TStringField;
     tblTextTranslationsSwedish: TStringField;
     tblTextTranslationslastChanged: TSQLTimeStampField;
-    cxGrid1DBTableView1TextID: TcxGridDBColumn;
-    cxGrid1DBTableView1English: TcxGridDBColumn;
-    cxGrid1DBTableView1Swedish: TcxGridDBColumn;
-    cxGrid1DBTableView1lastChanged: TcxGridDBColumn;
+    dscTranslation: TDataSource;
     qryExist: TFDQuery;
     qryExistTextID: TStringField;
     qryExistEnglish: TStringField;
@@ -67,19 +66,22 @@ type
     qryAdd: TFDQuery;
     ConnectionALVESQL01: TFDConnection;
     ConnectionALVESQL03: TFDConnection;
-    btnReplicate: TButton;
-    acnReplicateTable: TAction;
     qryReplicateSrc: TFDQuery;
-    qryReplicateTarget: TFDQuery;
     qryReplicateSrcTextID: TStringField;
     qryReplicateSrcEnglish: TStringField;
     qryReplicateSrcSwedish: TStringField;
     qryReplicateSrclastChanged: TSQLTimeStampField;
+    qryReplicateTarget: TFDQuery;
     qryTruncTarget: TFDQuery;
     ConnectionALVESQLTest01: TFDConnection;
     qryDelete: TFDQuery;
-    btnDltSelected: TButton;
-    acnDeleteSelected: TAction;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1DBTableView1TextID: TcxGridDBColumn;
+    cxGrid1DBTableView1English: TcxGridDBColumn;
+    cxGrid1DBTableView1Swedish: TcxGridDBColumn;
+    cxGrid1DBTableView1lastChanged: TcxGridDBColumn;
+    cxGrid1Level1: TcxGridLevel;
     procedure edTextIDExit(Sender: TObject);
     procedure edTextIDChange(Sender: TObject);
     procedure edEnglishExit(Sender: TObject);

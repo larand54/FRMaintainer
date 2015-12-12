@@ -2,7 +2,7 @@ object frmTranslations: TfrmTranslations
   Left = 0
   Top = 0
   Caption = 'Translation maintenance   --  SERVER ALVESQL03'
-  ClientHeight = 483
+  ClientHeight = 665
   ClientWidth = 947
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,120 +15,153 @@ object frmTranslations: TfrmTranslations
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
-    Top = 27
-    Width = 40
-    Height = 13
-    Caption = 'Text ID:'
-  end
-  object Label2: TLabel
-    Left = 8
-    Top = 51
-    Width = 37
-    Height = 13
-    Caption = 'English:'
-  end
-  object Label3: TLabel
-    Left = 8
-    Top = 75
-    Width = 43
-    Height = 13
-    Caption = 'Swedish:'
-  end
-  object edTextID: TEdit
-    Left = 56
-    Top = 24
-    Width = 121
-    Height = 21
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 947
+    Height = 121
+    Align = alTop
     TabOrder = 0
-    Text = 'edTextID'
-    OnChange = edTextIDChange
-    OnExit = edTextIDExit
+    ExplicitWidth = 948
+    object Label1: TLabel
+      Left = 8
+      Top = 10
+      Width = 40
+      Height = 13
+      Caption = 'Text ID:'
+    end
+    object Label2: TLabel
+      Left = 11
+      Top = 37
+      Width = 37
+      Height = 13
+      Caption = 'English:'
+    end
+    object Label3: TLabel
+      Left = 5
+      Top = 64
+      Width = 43
+      Height = 13
+      Caption = 'Swedish:'
+    end
+    object edTextID: TEdit
+      Left = 54
+      Top = 7
+      Width = 121
+      Height = 21
+      TabOrder = 0
+      Text = 'edTextID'
+      OnChange = edTextIDChange
+      OnExit = edTextIDExit
+    end
+    object edEnglish: TEdit
+      Left = 54
+      Top = 34
+      Width = 883
+      Height = 21
+      MaxLength = 120
+      TabOrder = 1
+      Text = 'edEnglish'
+      OnExit = edEnglishExit
+    end
+    object edSwedish: TEdit
+      Left = 54
+      Top = 61
+      Width = 882
+      Height = 21
+      MaxLength = 120
+      TabOrder = 2
+      Text = 'edSwedish'
+      OnExit = edSwedishExit
+    end
+    object btnAdd: TButton
+      Left = 49
+      Top = 88
+      Width = 75
+      Height = 25
+      Action = acnAdd
+      TabOrder = 3
+    end
+    object btnExit: TButton
+      Left = 130
+      Top = 88
+      Width = 75
+      Height = 25
+      Action = acnCancel
+      TabOrder = 4
+    end
+    object btnReplicate: TButton
+      Left = 376
+      Top = 88
+      Width = 89
+      Height = 25
+      Action = acnReplicateTable
+      TabOrder = 5
+    end
+    object btnDltSelected: TButton
+      Left = 211
+      Top = 88
+      Width = 113
+      Height = 25
+      Action = acnDeleteSelected
+      TabOrder = 6
+    end
   end
-  object edEnglish: TEdit
-    Left = 56
-    Top = 48
-    Width = 313
-    Height = 21
+  object Panel2: TPanel
+    Left = 0
+    Top = 127
+    Width = 947
+    Height = 538
+    Align = alBottom
+    Caption = 'Panel2'
     TabOrder = 1
-    Text = 'edEnglish'
-    OnExit = edEnglishExit
-  end
-  object edSwedish: TEdit
-    Left = 57
-    Top = 75
-    Width = 313
-    Height = 21
-    TabOrder = 2
-    Text = 'edSwedish'
-    OnExit = edSwedishExit
-  end
-  object btnAdd: TButton
-    Left = 57
-    Top = 104
-    Width = 75
-    Height = 25
-    Action = acnAdd
-    TabOrder = 3
-  end
-  object btnExit: TButton
-    Left = 296
-    Top = 104
-    Width = 75
-    Height = 25
-    Action = acnCancel
-    TabOrder = 4
-  end
-  object cxGrid1: TcxGrid
-    Left = 10
-    Top = 135
-    Width = 929
-    Height = 340
-    TabOrder = 5
-    object cxGrid1DBTableView1: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
-      DataController.DataSource = dscTranslation
-      DataController.KeyFieldNames = 'TextID'
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      object cxGrid1DBTableView1TextID: TcxGridDBColumn
-        DataBinding.FieldName = 'TextID'
+    object cxGrid1: TcxGrid
+      Left = 1
+      Top = 1
+      Width = 945
+      Height = 536
+      Align = alClient
+      TabOrder = 0
+      ExplicitLeft = 5
+      ExplicitTop = 0
+      ExplicitWidth = 929
+      ExplicitHeight = 340
+      object cxGrid1DBTableView1: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
+        DataController.DataSource = dscTranslation
+        DataController.KeyFieldNames = 'TextID'
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        object cxGrid1DBTableView1TextID: TcxGridDBColumn
+          DataBinding.FieldName = 'TextID'
+          Options.AutoWidthSizable = False
+          Width = 121
+        end
+        object cxGrid1DBTableView1English: TcxGridDBColumn
+          DataBinding.FieldName = 'English'
+          Options.AutoWidthSizable = False
+          Width = 305
+        end
+        object cxGrid1DBTableView1Swedish: TcxGridDBColumn
+          DataBinding.FieldName = 'Swedish'
+          Options.AutoWidthSizable = False
+          Width = 346
+        end
+        object cxGrid1DBTableView1lastChanged: TcxGridDBColumn
+          DataBinding.FieldName = 'lastChanged'
+          Width = 154
+        end
       end
-      object cxGrid1DBTableView1English: TcxGridDBColumn
-        DataBinding.FieldName = 'English'
-      end
-      object cxGrid1DBTableView1Swedish: TcxGridDBColumn
-        DataBinding.FieldName = 'Swedish'
-      end
-      object cxGrid1DBTableView1lastChanged: TcxGridDBColumn
-        DataBinding.FieldName = 'lastChanged'
+      object cxGrid1Level1: TcxGridLevel
+        GridView = cxGrid1DBTableView1
       end
     end
-    object cxGrid1Level1: TcxGridLevel
-      GridView = cxGrid1DBTableView1
-    end
-  end
-  object btnReplicate: TButton
-    Left = 432
-    Top = 104
-    Width = 89
-    Height = 25
-    Action = acnReplicateTable
-    TabOrder = 6
-  end
-  object btnDltSelected: TButton
-    Left = 560
-    Top = 104
-    Width = 113
-    Height = 25
-    Action = acnDeleteSelected
-    TabOrder = 7
   end
   object ActionList1: TActionList
     Left = 136
+    Top = 176
     object acnUpdate: TAction
       Caption = 'Update'
       OnExecute = acnUpdateExecute
@@ -164,7 +197,7 @@ object frmTranslations: TfrmTranslations
     SchemaName = 'dbo'
     TableName = 'TextTranslation'
     Left = 888
-    Top = 8
+    Top = 184
     object tblTextTranslationsTextID: TStringField
       FieldName = 'TextID'
       Origin = 'TextID'
@@ -176,13 +209,13 @@ object frmTranslations: TfrmTranslations
       FieldName = 'English'
       Origin = 'English'
       Required = True
-      Size = 50
+      Size = 120
     end
     object tblTextTranslationsSwedish: TStringField
       FieldName = 'Swedish'
       Origin = 'Swedish'
       Required = True
-      Size = 50
+      Size = 120
     end
     object tblTextTranslationslastChanged: TSQLTimeStampField
       FieldName = 'lastChanged'
@@ -192,14 +225,14 @@ object frmTranslations: TfrmTranslations
   object dscTranslation: TDataSource
     DataSet = tblTextTranslations
     Left = 888
-    Top = 56
+    Top = 232
   end
   object qryExist: TFDQuery
     Connection = ConnectionALVESQL03
     SQL.Strings = (
       'SELECT * FROM TextTranslation WHERE TextID = :TextID')
     Left = 736
-    Top = 8
+    Top = 184
     ParamData = <
       item
         Name = 'TEXTID'
@@ -240,7 +273,7 @@ object frmTranslations: TfrmTranslations
       '      ,[LastChanged] = GETDATE()'
       ' WHERE TextID = :TEXTID')
     Left = 776
-    Top = 8
+    Top = 184
     ParamData = <
       item
         Name = 'ENG'
@@ -276,7 +309,7 @@ object frmTranslations: TfrmTranslations
       '           ,:SWE'
       '           ,GETDATE())')
     Left = 816
-    Top = 8
+    Top = 184
     ParamData = <
       item
         Name = 'TEXTID'
@@ -310,6 +343,7 @@ object frmTranslations: TfrmTranslations
     FetchOptions.AssignedValues = [evCursorKind]
     LoginPrompt = False
     Left = 232
+    Top = 176
   end
   object ConnectionALVESQL03: TFDConnection
     Params.Strings = (
@@ -325,14 +359,14 @@ object frmTranslations: TfrmTranslations
     Connected = True
     LoginPrompt = False
     Left = 336
-    Top = 65528
+    Top = 168
   end
   object qryReplicateSrc: TFDQuery
     Connection = ConnectionALVESQL03
     SQL.Strings = (
       'SELECT * FROM TextTranslation')
     Left = 568
-    Top = 8
+    Top = 184
     object qryReplicateSrcTextID: TStringField
       FieldName = 'TextID'
       Origin = 'TextID'
@@ -371,7 +405,7 @@ object frmTranslations: TfrmTranslations
       '           ,:Swedish'
       '           ,:lastChanged)')
     Left = 656
-    Top = 8
+    Top = 184
     ParamData = <
       item
         Name = 'TEXTID'
@@ -403,7 +437,7 @@ object frmTranslations: TfrmTranslations
     SQL.Strings = (
       'TRUNCATE TABLE [VIS_VIDA].[dbo].[TextTranslation]')
     Left = 656
-    Top = 64
+    Top = 240
   end
   object ConnectionALVESQLTest01: TFDConnection
     Params.Strings = (
@@ -418,7 +452,7 @@ object frmTranslations: TfrmTranslations
     FetchOptions.AssignedValues = [evCursorKind]
     LoginPrompt = False
     Left = 408
-    Top = 8
+    Top = 184
   end
   object qryDelete: TFDQuery
     Connection = ConnectionALVESQL03
@@ -426,7 +460,7 @@ object frmTranslations: TfrmTranslations
       'DELETE FROM [VIS_VIDA].[dbo].[TextTranslation]'
       '      WHERE TextID = :TextID')
     Left = 736
-    Top = 80
+    Top = 256
     ParamData = <
       item
         Name = 'TEXTID'
