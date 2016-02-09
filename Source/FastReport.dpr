@@ -19,7 +19,8 @@ uses
   uFR_Log in '..\..\CommonSources\FastReport\uFR_Log.pas',
   ufrmCopyTables in 'ufrmCopyTables.pas' {frmCopyTables},
   ufrmDocType in 'ufrmDocType.pas' {frmDocType},
-  ufrmTranslations in 'ufrmTranslations.pas' {frmTranslations};
+  ufrmTranslations in 'ufrmTranslations.pas' {frmTranslations},
+  uFRConstants in '..\..\CommonSources\FastReport\uFRConstants.pas';
 
 {$R *.res}
 
