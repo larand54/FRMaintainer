@@ -201,9 +201,9 @@ object frmMain: TfrmMain
       Tag = 1
       Left = 24
       Top = 32
-      Width = 137
+      Width = 156
       Height = 17
-      Caption = 'Production VIS.VIDA.SE'
+      Caption = 'Production visprodsql.vida.se'
       TabOrder = 1
       OnClick = acnDBSelectExecute
     end
@@ -240,7 +240,6 @@ object frmMain: TfrmMain
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
-    ScreenCursor = gcrHourGlass
     Left = 216
     Top = 88
   end
@@ -524,7 +523,7 @@ object frmMain: TfrmMain
     end
   end
   object frxReport1: TfrxReport
-    Version = '4.15.13'
+    Version = '5.4.3'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

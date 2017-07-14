@@ -377,7 +377,7 @@ begin
     grbDatabase.Tag := rbAlveSQL03.Tag;
     rbAlveSQL03.Checked := true
   end
-  else if server = 'vis.vida.se' then begin
+  else if server = 'visprodsql.vida.se' then begin
     grbDatabase.Tag := rbVisVida.Tag;
     rbVisVida.Checked := true
   end
@@ -463,11 +463,11 @@ begin
     Screen.Cursor := crSQLWait;
     if rbVisVida.Checked then begin
       iTag := rbVisVida.Tag;
-      server := 'vis.vida.se'
+      server := 'visprodsql.vida.se'
     end
     else if rbAlveSQL03.Checked then begin
       iTag := rbAlveSQL03.Tag;
-      server := 'alvesql03'
+      server := 'alvesql03.vida.se'
     end
     else if rbAlveSQLTest01.Checked then begin
       iTag := rbAlveSQLTest01.Tag;
@@ -642,6 +642,7 @@ end;
 
 procedure TfrmMain.acnPDFExecute(Sender: TObject);
 begin
+  reportController.setExportFile('PDFReport.PDF');
   reportController.RunReport(prepareForOutput, FParams, frFile, 0);
 end;
 

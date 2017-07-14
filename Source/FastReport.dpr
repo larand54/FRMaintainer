@@ -20,7 +20,13 @@ uses
   ufrmCopyTables in 'ufrmCopyTables.pas' {frmCopyTables},
   ufrmDocType in 'ufrmDocType.pas' {frmDocType},
   ufrmTranslations in 'ufrmTranslations.pas' {frmTranslations},
-  uFRConstants in '..\..\CommonSources\FastReport\uFRConstants.pas';
+  uFRConstants in '..\..\CommonSources\FastReport\uFRConstants.pas',
+  uDBLogg in '..\..\CommonSources\DelphiLogg\uDBLogg.pas',
+  uIDBConnector in '..\..\CommonSources\DelphiLogg\uIDBConnector.pas',
+  uIDBLogg in '..\..\CommonSources\DelphiLogg\uIDBLogg.pas',
+  uILogger in '..\..\CommonSources\DelphiLogg\uILogger.pas',
+  uLogger in '..\..\CommonSources\DelphiLogg\uLogger.pas',
+  uVIS_UTILS in '..\..\CommonSources\uVIS_UTILS.pas';
 
 {$R *.res}
 
