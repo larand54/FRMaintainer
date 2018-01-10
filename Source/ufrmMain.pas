@@ -467,11 +467,11 @@ begin
     end
     else if rbAlveSQL03.Checked then begin
       iTag := rbAlveSQL03.Tag;
-      server := 'alvesql03.vida.se'
+      server := 'vistestsql.vida.se'
     end
     else if rbAlveSQLTest01.Checked then begin
       iTag := rbAlveSQLTest01.Tag;
-      server := 'alvesqltest01';
+      server := 'vistestsql.vida.se';
     end;
 
     if dmFR.ReconnectDB(server) then begin
@@ -534,7 +534,8 @@ begin
         Node.Expanded := true;
 //        ReportTree.Selected := ReportTree.Items.Item[index];
       end;
-    end
+    end;
+//    CopyFile(PChar(dmFR.getTemplatePath+org.Template), PChar(dmFR.getTemplatePath+reportCopy.Template), true);
   finally
   end;
 end;
@@ -554,13 +555,13 @@ begin
   if TRadioButton(Sender).Tag <> grbDatabase.Tag then begin
 
     if TRadioButton(Sender).Tag = 1 then begin
-      server := 'vis.vida.se'
+      server := 'visprodsql.vida.se'
     end
     else if TRadioButton(Sender).Tag = 2 then begin
-      server := 'alvesql03'
+      server := 'vistestsql.vida.se'
     end
     else if TRadioButton(Sender).Tag = 3 then begin
-      server := 'alvesqltest01'
+      server := 'vistestsql.vida.se'
     end;
     if dmFR.CheckServer(server) then begin
       lblDBStatus.Caption := AnsiUpperCase(server) +

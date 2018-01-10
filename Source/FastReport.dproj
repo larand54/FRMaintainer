@@ -107,12 +107,13 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Build>4</VerInfo_Build>
         <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_Define>madExcept;$(DCC_Define)</DCC_Define>
@@ -150,10 +151,6 @@
         </DCCReference>
         <DCCReference Include="..\..\CommonSources\FastReport\uReport.pas"/>
         <DCCReference Include="..\..\CommonSources\FastReport\uReportController.pas"/>
-        <DCCReference Include="c:\program files (x86)\embarcadero\studio\14.0\ObjRepos\EN\DelphiWin32\OKCANCL1.PAS">
-            <Form>OKBottomDlg</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="ufrmCheckOrderNo.pas">
             <Form>frmCheckOrderNo</Form>
             <FormType>dfm</FormType>
@@ -178,6 +175,7 @@
         <DCCReference Include="..\..\CommonSources\DelphiLogg\uILogger.pas"/>
         <DCCReference Include="..\..\CommonSources\DelphiLogg\uLogger.pas"/>
         <DCCReference Include="..\..\CommonSources\uVIS_UTILS.pas"/>
+        <DCCReference Include="..\..\CommonSources\FastReport\uIdmFR.pas"/>
         <None Include="ModelSupport_FastReport\default.txvpck"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>

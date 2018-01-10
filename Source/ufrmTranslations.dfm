@@ -22,7 +22,6 @@ object frmTranslations: TfrmTranslations
     Height = 121
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 948
     object Label1: TLabel
       Left = 8
       Top = 10
@@ -122,10 +121,6 @@ object frmTranslations: TfrmTranslations
       Height = 536
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 5
-      ExplicitTop = 0
-      ExplicitWidth = 929
-      ExplicitHeight = 340
       object cxGrid1DBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = cxGrid1DBTableView1FocusedRecordChanged
@@ -332,7 +327,7 @@ object frmTranslations: TfrmTranslations
   end
   object ConnectionALVESQL01: TFDConnection
     Params.Strings = (
-      'Server=alvesql01'
+      'Server=visprodsql.vida.se'
       'Database=vis_vida'
       'OSAuthent=No'
       'MetaDefCatalog=vis_vida'
@@ -347,7 +342,7 @@ object frmTranslations: TfrmTranslations
   end
   object ConnectionALVESQL03: TFDConnection
     Params.Strings = (
-      'Server=alvesql03'
+      'Server=vistestsql.vida.se'
       'Database=vis_vida'
       'OSAuthent=No'
       'MetaDefCatalog=vis_vida'
@@ -356,7 +351,6 @@ object frmTranslations: TfrmTranslations
       'Password=woods2011'
       'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evCursorKind]
-    Connected = True
     LoginPrompt = False
     Left = 336
     Top = 168
@@ -441,7 +435,7 @@ object frmTranslations: TfrmTranslations
   end
   object ConnectionALVESQLTest01: TFDConnection
     Params.Strings = (
-      'Server=alvesqltest01'
+      'Server=vistestsql.vida.se'
       'Database=vis_vida'
       'OSAuthent=No'
       'MetaDefCatalog=vis_vida'

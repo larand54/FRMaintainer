@@ -213,7 +213,7 @@ object frmMain: TfrmMain
       Top = 64
       Width = 129
       Height = 17
-      Caption = 'Test ALVESQL03'
+      Caption = 'Test vistestsql.vida.se'
       TabOrder = 2
       OnClick = acnDBSelectExecute
     end
@@ -223,7 +223,7 @@ object frmMain: TfrmMain
       Top = 96
       Width = 137
       Height = 17
-      Caption = 'Test ALVESQLTEST01'
+      Caption = 'Test vistest.sql.vida.se'
       TabOrder = 3
       OnClick = acnDBSelectExecute
     end
