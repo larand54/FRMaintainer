@@ -373,7 +373,7 @@ var
   server: string;
 begin
   server := dmFR.DBConnection.Params.Values['Server'];
-  if server = 'alvesql03' then begin
+  if server = 'vistestsql.vida.se' then begin
     grbDatabase.Tag := rbAlveSQL03.Tag;
     rbAlveSQL03.Checked := true
   end
