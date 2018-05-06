@@ -29,7 +29,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables, ufrmTranslations;
+  cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables, ufrmTranslations,
+  udmFR, Vcl.Grids, Vcl.DBGrids;
 
 type
   TErrorCode = class
@@ -39,6 +40,7 @@ type
     property ec: integer read FErrorCode;
     constructor create(aErrorCode: integer);
   end;
+
   ICMFastReport = Interface
     ['{A0CA085E-2986-4ACE-BCD4-9F81DD70E274}']
 
@@ -91,7 +93,7 @@ type
     btnChangeDB: TButton;
     rbVisVida: TRadioButton;
     rbAlveSQL03: TRadioButton;
-    rbAlveSQLTest01: TRadioButton;
+    rbLocal: TRadioButton;
     lblDBStatus: TLabel;
     acnChangeDatabase: TAction;
     acnCopyTables: TAction;
@@ -99,6 +101,9 @@ type
     btnTranslations: TButton;
     acnTranslations: TAction;
     ranslations1: TMenuItem;
+    memoSQL: TMemo;
+    btnExecSQL: TButton;
+    grdSQLResult: TDBGrid;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -118,6 +123,7 @@ type
     procedure acnChangeDatabaseExecute(Sender: TObject);
     procedure acnCopyTablesExecute(Sender: TObject);
     procedure btnTranslationsClick(Sender: TObject);
+    procedure btnExecSQLClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -136,6 +142,7 @@ type
     FSReportData: TCMSReportData;
     FParams: TCMParams;
     FErrors: TStringList;
+
     FValidKeyCombo: Boolean; //Used for detecting key sequences
     DefReportTreeWndProc: TWndMethod;
 
@@ -150,6 +157,9 @@ type
       errors: TStringList): boolean;
     procedure setCaption;
     procedure setUpDBSelect;
+    function getLocalDatabase: TDatabaseInfo;
+    procedure ToggleSQLCommand;
+    procedure enableCARMAK;
 
   public
     { Public declarations }
@@ -166,8 +176,8 @@ var
 
 implementation
 
-uses udmFR, ufrmAddParams, ufrmReportSettings, printers, CommCtrl,
-  ufrmCheckOrderNo;
+uses ufrmAddParams, ufrmReportSettings, printers, CommCtrl,
+  ufrmCheckOrderNo, ufrmSelectDB;
 {$R *.dfm}
 
 const
@@ -365,14 +375,20 @@ end;
 
 procedure TfrmMain.setCaption;
 begin
-  Caption := 'FastReport' + '  Server: ' + dmFR.DBConnection.Params.Values['Server']+' TemplatePath: '+ FReportPath;
+  Caption := 'FastReport' + '  Server: ' + dmFR.DBConnection.Params.Values['Server']+' Database: ' + dmFR.DBConnection.Params.Values['Database'] +' TemplatePath: '+ FReportPath;
 end;
 
 procedure TfrmMain.setUpDBSelect;
 var
   server: string;
+  database: string;
+  dbi: TDatabaseInfo;
 begin
-  server := dmFR.DBConnection.Params.Values['Server'];
+  dbi := dmFR.getDBInfo;
+  server := dbi.DBServer;
+  database := dbi.DBname;
+ // dmFR.SetupDBInfo(server, database);
+
   if server = 'vistestsql.vida.se' then begin
     grbDatabase.Tag := rbAlveSQL03.Tag;
     rbAlveSQL03.Checked := true
@@ -381,9 +397,9 @@ begin
     grbDatabase.Tag := rbVisVida.Tag;
     rbVisVida.Checked := true
   end
-  else if server = 'alvesqltest01' then begin
-    grbDatabase.Tag := rbAlveSQLTest01.Tag;
-    rbAlveSQLTest01.Checked := true
+  else if server = 'Local' then begin
+    grbDatabase.Tag := rbLocal.Tag;
+    rbLocal.Checked := true
   end
   else begin
     ShowMessage('DB-Connection not setup ERROR!!');
@@ -453,28 +469,42 @@ end;
 procedure TfrmMain.acnChangeDatabaseExecute(Sender: TObject);
 var
   server: string;
+  database: string;
+  userName: string;
+  password: string;
+  osAuthent: Boolean;
   iTag: integer;
   SaveCursor: TCursor;
+  dbi: TDataBaseInfo;
 begin
   server := '';
   iTag := 0;
   SaveCursor := Screen.Cursor;
+  database := 'VIS_VIDA';
+  dbi := dmFR.getDBInfo;
   try
     Screen.Cursor := crSQLWait;
     if rbVisVida.Checked then begin
       iTag := rbVisVida.Tag;
-      server := 'visprodsql.vida.se'
+      dbi.DBServer := 'visprodsql.vida.se';
+      dbi.DBname := database;
+      dbi.UserName := 'Lars';
+      dbi.Password := 'woods2011';
+      dbi.OsAuthent := False;
     end
     else if rbAlveSQL03.Checked then begin
       iTag := rbAlveSQL03.Tag;
-      server := 'vistestsql.vida.se'
+      dbi.DBserver := 'vistestsql.vida.se';
+      dbi.DBname := database;
+      dbi.UserName := 'Lars';
+      dbi.Password := 'woods2011';
+      dbi.OsAuthent := False;
     end
-    else if rbAlveSQLTest01.Checked then begin
-      iTag := rbAlveSQLTest01.Tag;
-      server := 'vistestsql.vida.se';
+    else if rbLocal.Checked then begin
+      iTag := rbLocal.Tag;
+      dbi := getLocalDatabase;
     end;
-
-    if dmFR.ReconnectDB(server) then begin
+    if dmFR.ReconnectDB(dbi) then begin
       lblDBStatus.Caption := '';
       grbDatabase.Tag := iTag;
       setCaption;
@@ -548,6 +578,8 @@ end;
 procedure TfrmMain.acnDBSelectExecute(Sender: TObject);
 var
   server: string;
+  database: string;
+  dbi: TDatabaseInfo;
 begin
   lblDBStatus.Font.Color := clWindowText;
   lblDBStatus.Caption := '';
@@ -561,7 +593,7 @@ begin
       server := 'vistestsql.vida.se'
     end
     else if TRadioButton(Sender).Tag = 3 then begin
-      server := 'vistestsql.vida.se'
+      server := 'Local';
     end;
     if dmFR.CheckServer(server) then begin
       lblDBStatus.Caption := AnsiUpperCase(server) +
@@ -681,6 +713,15 @@ begin
   end;
 end;
 
+procedure TfrmMain.btnExecSQLClick(Sender: TObject);
+begin
+  with dmFR do begin
+    qryTemp.Active := False;
+    qryTemp.SQL.Text := memoSQL.Text;
+    qryTemp.Active := True;
+  end;
+end;
+
 procedure TfrmMain.btnTranslationsClick(Sender: TObject);
 begin
   frmTranslations.Show;
@@ -697,6 +738,7 @@ begin
   FReportData := nil;
   FReportsData := nil;
   FErrors := TStringList.create;
+  enableCARMAK;
   try
     FReportController := TCMReportController.create;
     FReportPath := FReportController.TemplatePath;
@@ -709,6 +751,7 @@ end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+
 begin
     If (GetKeyState(Ord('L'))<0) and (GetKeyState(Ord('G'))<0) and (GetKeyState(VK_CONTROL)<0) then begin
       FReportController.SetTemplatePath('D:\git\delphi\FastReportProject\fr3\');
@@ -724,9 +767,35 @@ begin
       frmCheckOrderNo := TfrmCheckOrderNo.Create(nil);
       frmCheckOrderNo.Show;
     end;
+    If (GetKeyState(Ord('K'))<0) and (GetKeyState(Ord('S'))<0) and (GetKeyState(VK_CONTROL)<0) then begin
+      ToggleSQLCommand;
+    end;
 end;
 
 
+
+function TfrmMain.getLocalDatabase: TDatabaseInfo;
+var
+  server: string;
+  database: string;
+  dbi: TDatabaseInfo;
+begin
+  dbi := dmFR.getDBInfo;
+  server := GetEnvironmentVariable('COMPUTERNAME')+'\'+'SQLEXPRESS';
+  frmSelectDB := TfrmSelectDB.Create(self);
+  database := ufrmSelectDB.frmSelectDB.execute;
+  if database = '' then begin
+    showMessage('Ingen databas vald - ingen åtgärd!');
+    Result := dbi;
+    Exit;
+  end;
+  dbi.DBserver := server;
+  dbi.DBname := database;
+  dbi.UserName := 'sa';
+  dbi.Password := 'woods2011';
+  dbi.OsAuthent := False;
+  Result := dbi;
+end;
 
 procedure TfrmMain.getParameters(aReportData: TCMMReportData);
 begin
@@ -833,7 +902,13 @@ begin
   Node.ImageIndex := 0;
   try
     dmFR.RefreshDocType;
+(*    dmFR.QryFastReports.SQL.SaveToFile('QueryFastReports');
+    mmo1.Text := dmFR.QryFastReports.SQL.text;
+    dmFR.qryTemp.Active := False;
+    dmFR.qryTemp.SQL.Text := mmo1.Text;
+    dmFR.qryTemp.Active := True;
     dmFR.qryFastReports.Active;
+*)
     FReportsdata := reportController.AllReports;
     updateTree;
  {   ReportTree.Selected := Node; // Make the first node the root of the tree
@@ -869,6 +944,27 @@ begin
   finally
     dmFR.qryFastReports.close;
   end;
+end;
+
+procedure TfrmMain.enableCARMAK;
+begin
+  if copy(GetEnvironmentVariable('COMPUTERNAME'),1,6) = 'CARMAK' then begin
+    rbLocal.Enabled := true;
+    rbLocal.Visible := true;
+  end else begin
+    rbLocal.Enabled := False;
+    rbLocal.Visible := False;
+  end;
+end;
+
+procedure TfrmMain.ToggleSQLCommand;
+var
+  SQL: Boolean;
+begin
+    SQL := not btnExecSQL.Visible;
+    btnExecSQL.Visible := SQL;
+    memoSQL.Visible := SQL;
+    grdSQLResult.Visible := SQL;
 end;
 
 function TfrmMain.TreeItemSearch(TV: TTreeView; SearchItem: string): TTreeNode;

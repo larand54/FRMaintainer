@@ -176,6 +176,10 @@
         <DCCReference Include="..\..\CommonSources\DelphiLogg\uLogger.pas"/>
         <DCCReference Include="..\..\CommonSources\uVIS_UTILS.pas"/>
         <DCCReference Include="..\..\CommonSources\FastReport\uIdmFR.pas"/>
+        <DCCReference Include="ufrmSelectDB.pas">
+            <Form>frmSelectDB</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_FastReport\default.txvpck"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txaPackage"/>
         <None Include="ModelSupport_FastReport\uReportController\default.txvpck"/>

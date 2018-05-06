@@ -59,6 +59,30 @@ object frmMain: TfrmMain
       OnClick = ReportTreeClick
       OnHint = ReportTreeHint
     end
+    object memoSQL: TMemo
+      Left = 23
+      Top = 392
+      Width = 329
+      Height = 60
+      Lines.Strings = (
+        'exec dbo.LGlager_PkgList 10, 8')
+      TabOrder = 1
+      Visible = False
+    end
+    object grdSQLResult: TDBGrid
+      Left = 32
+      Top = 496
+      Width = 320
+      Height = 120
+      DataSource = dmFR.dsTemp
+      TabOrder = 2
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Visible = False
+    end
   end
   object Panel2: TPanel
     Left = 427
@@ -217,13 +241,13 @@ object frmMain: TfrmMain
       TabOrder = 2
       OnClick = acnDBSelectExecute
     end
-    object rbAlveSQLTest01: TRadioButton
+    object rbLocal: TRadioButton
       Tag = 3
       Left = 24
       Top = 96
       Width = 137
       Height = 17
-      Caption = 'Test vistest.sql.vida.se'
+      Caption = 'Local database'
       TabOrder = 3
       OnClick = acnDBSelectExecute
     end
@@ -237,6 +261,16 @@ object frmMain: TfrmMain
       TabOrder = 4
       OnClick = btnTranslationsClick
     end
+  end
+  object btnExecSQL: TButton
+    Left = 439
+    Top = 718
+    Width = 75
+    Height = 25
+    Caption = 'ExecSQL'
+    TabOrder = 5
+    Visible = False
+    OnClick = btnExecSQLClick
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
