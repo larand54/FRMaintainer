@@ -27,7 +27,8 @@ uses
   uLogger in '..\..\CommonSources\DelphiLogg\uLogger.pas',
   uVIS_UTILS in '..\..\CommonSources\uVIS_UTILS.pas',
   uIdmFR in '..\..\CommonSources\FastReport\uIdmFR.pas',
-  ufrmSelectDB in 'ufrmSelectDB.pas' {frmSelectDB};
+  ufrmSelectDB in 'ufrmSelectDB.pas' {frmSelectDB},
+  VidaUser in '..\..\..\VIDA\CommonUnits\VidaUser.pas';
 
 {$R *.res}
 

@@ -43,6 +43,13 @@ object frmTranslations: TfrmTranslations
       Height = 13
       Caption = 'Swedish:'
     end
+    object lblSelectDBServer: TLabel
+      Left = 278
+      Top = 10
+      Width = 68
+      Height = 13
+      Caption = 'V'#228'lj DB-server'
+    end
     object edTextID: TEdit
       Left = 54
       Top = 7
@@ -104,6 +111,18 @@ object frmTranslations: TfrmTranslations
       Height = 25
       Action = acnDeleteSelected
       TabOrder = 6
+    end
+    object cbbSelectDBServer: TComboBox
+      Left = 352
+      Top = 7
+      Width = 145
+      Height = 21
+      TabOrder = 7
+      Text = 'cbbSelectDBServer'
+      OnChange = cbbSelectDBServerChange
+      Items.Strings = (
+        'vistestsql.vida.se'
+        'visprodsql.vida.se')
     end
   end
   object Panel2: TPanel
@@ -187,7 +206,7 @@ object frmTranslations: TfrmTranslations
   end
   object tblTextTranslations: TFDTable
     IndexFieldNames = 'TextID'
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'TextTranslation'
     SchemaName = 'dbo'
     TableName = 'TextTranslation'
@@ -223,7 +242,7 @@ object frmTranslations: TfrmTranslations
     Top = 232
   end
   object qryExist: TFDQuery
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     SQL.Strings = (
       'SELECT * FROM TextTranslation WHERE TextID = :TextID')
     Left = 736
@@ -260,7 +279,7 @@ object frmTranslations: TfrmTranslations
     end
   end
   object qryUpd: TFDQuery
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     SQL.Strings = (
       'UPDATE [vis_vida].[dbo].[TextTranslation]'
       '   SET [English] = :ENG'
@@ -290,7 +309,7 @@ object frmTranslations: TfrmTranslations
       end>
   end
   object qryAdd: TFDQuery
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     SQL.Strings = (
       'INSERT INTO [vis_vida].[dbo].[TextTranslation]'
       '           (TextID'
@@ -325,7 +344,7 @@ object frmTranslations: TfrmTranslations
         Value = 'Denna bil skall samlasta'
       end>
   end
-  object ConnectionALVESQL01: TFDConnection
+  object FDConnection1: TFDConnection
     Params.Strings = (
       'Server=visprodsql.vida.se'
       'Database=vis_vida'
@@ -340,23 +359,8 @@ object frmTranslations: TfrmTranslations
     Left = 232
     Top = 176
   end
-  object ConnectionALVESQL03: TFDConnection
-    Params.Strings = (
-      'Server=vistestsql.vida.se'
-      'Database=vis_vida'
-      'OSAuthent=No'
-      'MetaDefCatalog=vis_vida'
-      'MetaDefSchema=dbo'
-      'User_Name=Lars'
-      'Password=woods2011'
-      'DriverID=MSSQL')
-    FetchOptions.AssignedValues = [evCursorKind]
-    LoginPrompt = False
-    Left = 336
-    Top = 168
-  end
   object qryReplicateSrc: TFDQuery
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     SQL.Strings = (
       'SELECT * FROM TextTranslation')
     Left = 568
@@ -386,7 +390,7 @@ object frmTranslations: TfrmTranslations
     end
   end
   object qryReplicateTarget: TFDQuery
-    Connection = ConnectionALVESQL01
+    Connection = FDConnection1
     SQL.Strings = (
       'INSERT INTO [VIS_VIDA].[dbo].[TextTranslation]'
       '           ([TextID]'
@@ -427,29 +431,14 @@ object frmTranslations: TfrmTranslations
       end>
   end
   object qryTruncTarget: TFDQuery
-    Connection = ConnectionALVESQL01
+    Connection = FDConnection1
     SQL.Strings = (
       'TRUNCATE TABLE [VIS_VIDA].[dbo].[TextTranslation]')
     Left = 656
     Top = 240
   end
-  object ConnectionALVESQLTest01: TFDConnection
-    Params.Strings = (
-      'Server=vistestsql.vida.se'
-      'Database=vis_vida'
-      'OSAuthent=No'
-      'MetaDefCatalog=vis_vida'
-      'MetaDefSchema=dbo'
-      'User_Name=Lars'
-      'Password=woods2011'
-      'DriverID=MSSQL')
-    FetchOptions.AssignedValues = [evCursorKind]
-    LoginPrompt = False
-    Left = 408
-    Top = 184
-  end
   object qryDelete: TFDQuery
-    Connection = ConnectionALVESQL03
+    Connection = FDConnection1
     SQL.Strings = (
       'DELETE FROM [VIS_VIDA].[dbo].[TextTranslation]'
       '      WHERE TextID = :TextID')

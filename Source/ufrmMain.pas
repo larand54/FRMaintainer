@@ -30,7 +30,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinWhiteprint, dxSkinVS2010,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, cxNavigator, cxDBData, ufrmCopyTables, ufrmTranslations,
-  udmFR, Vcl.Grids, Vcl.DBGrids;
+  udmFR, Vcl.Grids, Vcl.DBGrids, Vcl.ExtDlgs, System.ImageList;
 
 type
   TErrorCode = class
@@ -104,6 +104,12 @@ type
     memoSQL: TMemo;
     btnExecSQL: TButton;
     grdSQLResult: TDBGrid;
+    rbDev: TRadioButton;
+    btnCopyDatabaseFiles: TButton;
+    dlgReportPath: TOpenTextFileDialog;
+    edReportPath: TEdit;
+    lblRapportsökväg: TLabel;
+    spBtnReportPath: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure ReportTreeClick(Sender: TObject);
     procedure ReportTreeHint(Sender: TObject; const Node: TTreeNode;
@@ -124,6 +130,7 @@ type
     procedure acnCopyTablesExecute(Sender: TObject);
     procedure btnTranslationsClick(Sender: TObject);
     procedure btnExecSQLClick(Sender: TObject);
+    procedure spBtnReportPathClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -160,6 +167,7 @@ type
     function getLocalDatabase: TDatabaseInfo;
     procedure ToggleSQLCommand;
     procedure enableCARMAK;
+    procedure clearLists;
 
   public
     { Public declarations }
@@ -177,7 +185,7 @@ var
 implementation
 
 uses ufrmAddParams, ufrmReportSettings, printers, CommCtrl,
-  ufrmCheckOrderNo, ufrmSelectDB;
+  ufrmCheckOrderNo, ufrmSelectDB, uVIS_UTILS;
 {$R *.dfm}
 
 const
@@ -397,12 +405,30 @@ begin
     grbDatabase.Tag := rbVisVida.Tag;
     rbVisVida.Checked := true
   end
-  else if server = 'Local' then begin
+  else if server = 'visdevsql.vida.se' then begin
+    grbDatabase.Tag := rbDev.Tag;
+    rbVisVida.Checked := true
+  end
+  else if server = 'CARMAK-FASTER\SQLEXPRESS' then begin
     grbDatabase.Tag := rbLocal.Tag;
     rbLocal.Checked := true
   end
   else begin
     ShowMessage('DB-Connection not setup ERROR!!');
+  end;
+end;
+
+procedure TfrmMain.spBtnReportPathClick(Sender: TObject);
+begin
+with TFileOpenDialog.Create(nil) do
+  try
+    Options := [fdoPickFolders];
+    if Execute then begin
+      edReportPath.text := FileName;
+
+    end;
+  finally
+    Free;
   end;
 end;
 
@@ -500,6 +526,14 @@ begin
       dbi.Password := 'woods2011';
       dbi.OsAuthent := False;
     end
+    else if rbDev.Checked then begin
+      iTag := rbDev.Tag;
+      dbi.DBserver := 'visdevsql.vida.se';
+      dbi.DBname := database;
+      dbi.UserName := 'Lars';
+      dbi.Password := 'woods2011';
+      dbi.OsAuthent := False;
+    end
     else if rbLocal.Checked then begin
       iTag := rbLocal.Tag;
       dbi := getLocalDatabase;
@@ -572,7 +606,7 @@ end;
 
 procedure TfrmMain.acnCopyTablesExecute(Sender: TObject);
 begin
-  frmCopyTables.ShowModal;
+  frmCopyTables.execute;
 end;
 
 procedure TfrmMain.acnDBSelectExecute(Sender: TObject);
@@ -593,6 +627,9 @@ begin
       server := 'vistestsql.vida.se'
     end
     else if TRadioButton(Sender).Tag = 3 then begin
+      server := 'visdevsql.vida.se'
+    end
+    else if TRadioButton(Sender).Tag = 4 then begin
       server := 'Local';
     end;
     if dmFR.CheckServer(server) then begin
@@ -741,7 +778,13 @@ begin
   enableCARMAK;
   try
     FReportController := TCMReportController.create;
-    FReportPath := FReportController.TemplatePath;
+    if ComputerName = 'CARMAK-FASTER' then
+      FReportPath := edReportPath.Text
+    else begin
+      FReportPath := FReportController.TemplatePath;
+      edReportPath.visible := false;
+      spbtnReportPath.visible := false;
+    end;
     BuildTree;
   finally
     setUpDBSelect;
@@ -789,6 +832,7 @@ begin
     Result := dbi;
     Exit;
   end;
+  clearLists;
   dbi.DBserver := server;
   dbi.DBname := database;
   dbi.UserName := 'sa';
@@ -946,14 +990,38 @@ begin
   end;
 end;
 
+procedure TfrmMain.clearLists;
+begin
+    if assigned(FspList) then FspList.Clear;
+    if assigned(FfrxDSList) then FfrxDSList.Clear;
+//    FReportData: TCMMReportData;
+    if assigned(FReportsData) then FReportsData.Clear;
+//    FSReportData: TCMSReportData;
+    if assigned(FParams) then FParams.Clear;
+    if assigned(FErrors) then FErrors.Clear;
+
+end;
+
 procedure TfrmMain.enableCARMAK;
+var
+  dbi: TDatabaseInfo;
 begin
   if copy(GetEnvironmentVariable('COMPUTERNAME'),1,6) = 'CARMAK' then begin
     rbLocal.Enabled := true;
     rbLocal.Visible := true;
+    btnCopyDatabaseFiles.Visible := true;
+    btnCopyDatabaseFiles.Enabled := true;
+    if ComputerName = 'CARMAK-FASTER' then begin
+      dbi := getLocalDatabase;
+      dmFR.ReconnectDB(dbi);
+      rbLocal.Checked := true;
+    end;
+
   end else begin
     rbLocal.Enabled := False;
     rbLocal.Visible := False;
+    btnCopyDatabaseFiles.Visible := false;
+    btnCopyDatabaseFiles.Enabled := false;
   end;
 end;
 

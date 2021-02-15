@@ -1,8 +1,8 @@
-object frmMain: TfrmMain
+﻿object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Fast Report Mainteenance'
-  ClientHeight = 768
+  ClientHeight = 820
   ClientWidth = 630
   Color = 9471349
   Font.Charset = DEFAULT_CHARSET
@@ -18,21 +18,36 @@ object frmMain: TfrmMain
   TextHeight = 13
   object Label1: TLabel
     Left = 26
-    Top = 15
+    Top = 50
     Width = 112
     Height = 13
     Caption = 'List of available reports'
   end
   object Label2: TLabel
     Left = 429
-    Top = 17
+    Top = 52
     Width = 53
     Height = 13
     Caption = 'Description'
   end
+  object lblRapportsökväg: TLabel
+    Left = 26
+    Top = 16
+    Width = 73
+    Height = 13
+    Caption = 'Rapports'#246'kv'#228'g'
+  end
+  object spBtnReportPath: TSpeedButton
+    Left = 415
+    Top = 13
+    Width = 23
+    Height = 22
+    Caption = '...'
+    OnClick = spBtnReportPathClick
+  end
   object Panel1: TPanel
     Left = 24
-    Top = 32
+    Top = 68
     Width = 385
     Height = 713
     BevelOuter = bvLowered
@@ -58,6 +73,7 @@ object frmMain: TfrmMain
       TabOrder = 0
       OnClick = ReportTreeClick
       OnHint = ReportTreeHint
+      ExplicitHeight = 703
     end
     object memoSQL: TMemo
       Left = 23
@@ -86,7 +102,7 @@ object frmMain: TfrmMain
   end
   object Panel2: TPanel
     Left = 427
-    Top = 34
+    Top = 68
     Width = 185
     Height = 95
     BevelOuter = bvLowered
@@ -112,7 +128,7 @@ object frmMain: TfrmMain
   end
   object bbnClose: TBitBtn
     Left = 535
-    Top = 718
+    Top = 753
     Width = 75
     Height = 25
     Kind = bkClose
@@ -121,7 +137,7 @@ object frmMain: TfrmMain
   end
   object GroupBox1: TGroupBox
     Left = 429
-    Top = 144
+    Top = 179
     Width = 183
     Height = 316
     Caption = 'Report operations'
@@ -191,7 +207,7 @@ object frmMain: TfrmMain
   end
   object grbDatabase: TGroupBox
     Left = 429
-    Top = 475
+    Top = 510
     Width = 183
     Height = 230
     Caption = 'Database'
@@ -203,22 +219,24 @@ object frmMain: TfrmMain
     object lblDBStatus: TLabel
       AlignWithMargins = True
       Left = 10
-      Top = 155
+      Top = 112
       Width = 163
-      Height = 62
+      Height = 48
       Margins.Left = 1
       Margins.Top = 1
       Margins.Right = 1
       Margins.Bottom = 1
+      Alignment = taCenter
       AutoSize = False
       WordWrap = True
     end
     object btnChangeDB: TButton
       Left = 42
-      Top = 124
+      Top = 164
       Width = 100
       Height = 25
       Action = acnChangeDatabase
+      Caption = 'Reconnect'
       TabOrder = 0
     end
     object rbVisVida: TRadioButton
@@ -234,7 +252,7 @@ object frmMain: TfrmMain
     object rbAlveSQL03: TRadioButton
       Tag = 2
       Left = 24
-      Top = 64
+      Top = 48
       Width = 129
       Height = 17
       Caption = 'Test vistestsql.vida.se'
@@ -242,9 +260,9 @@ object frmMain: TfrmMain
       OnClick = acnDBSelectExecute
     end
     object rbLocal: TRadioButton
-      Tag = 3
+      Tag = 4
       Left = 24
-      Top = 96
+      Top = 80
       Width = 137
       Height = 17
       Caption = 'Local database'
@@ -253,7 +271,7 @@ object frmMain: TfrmMain
     end
     object btnTranslations: TButton
       Left = 42
-      Top = 155
+      Top = 193
       Width = 100
       Height = 25
       Caption = 'Translations'
@@ -261,16 +279,42 @@ object frmMain: TfrmMain
       TabOrder = 4
       OnClick = btnTranslationsClick
     end
+    object rbDev: TRadioButton
+      Tag = 3
+      Left = 24
+      Top = 64
+      Width = 137
+      Height = 17
+      Caption = 'Test visdevsql.vida.se'
+      TabOrder = 5
+      OnClick = acnDBSelectExecute
+    end
   end
   object btnExecSQL: TButton
     Left = 439
-    Top = 718
+    Top = 753
     Width = 75
     Height = 25
     Caption = 'ExecSQL'
     TabOrder = 5
     Visible = False
     OnClick = btnExecSQLClick
+  end
+  object btnCopyDatabaseFiles: TButton
+    Left = 471
+    Top = 784
+    Width = 100
+    Height = 25
+    Action = acnCopyTables
+    TabOrder = 6
+  end
+  object edReportPath: TEdit
+    Left = 105
+    Top = 13
+    Width = 304
+    Height = 21
+    TabOrder = 7
+    Text = 'edReportPath'
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
@@ -557,7 +601,7 @@ object frmMain: TfrmMain
     end
   end
   object frxReport1: TfrxReport
-    Version = '5.4.3'
+    Version = '6.6'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -576,5 +620,11 @@ object frmMain: TfrmMain
     Datasets = <>
     Variables = <>
     Style = <>
+  end
+  object dlgReportPath: TOpenTextFileDialog
+    DefaultExt = 'fr3'
+    InitialDir = '..\..\fr3'
+    Left = 288
+    Top = 48
   end
 end

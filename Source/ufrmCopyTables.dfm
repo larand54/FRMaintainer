@@ -26,11 +26,11 @@ object frmCopyTables: TfrmCopyTables
     Width = 185
     Height = 90
     Caption = 'Destination server'
-    ItemIndex = 2
+    ItemIndex = 1
     Items.Strings = (
-      'Alvesql01'
-      'Alvesql03'
-      'AlvesqlTest01')
+      'visprodsql.vida.se'
+      'vistestsql.vida.se'
+      'visdevsql.vida.se')
     TabOrder = 0
     OnClick = rgDestClick
   end
@@ -40,11 +40,11 @@ object frmCopyTables: TfrmCopyTables
     Width = 185
     Height = 90
     Caption = 'Source server'
-    ItemIndex = 1
+    ItemIndex = 0
     Items.Strings = (
-      'Alvesql01'
-      'Alvesql03'
-      'AlvesqlTest01')
+      'visprodsql.vida.se'
+      'vistestsql.vida.se'
+      'visdevsql.vida.se')
     TabOrder = 1
     OnClick = rgSourceClick
   end
@@ -92,6 +92,15 @@ object frmCopyTables: TfrmCopyTables
     DataSource = DataSource1
     TabOrder = 5
   end
+  object Button1: TButton
+    Left = 600
+    Top = 152
+    Width = 113
+    Height = 65
+    Caption = 'Copy MaxKeyValue'
+    TabOrder = 6
+    OnClick = Button1Click
+  end
   object destConnection: TFDConnection
     Params.Strings = (
       'Database=vis_vida'
@@ -117,7 +126,7 @@ object frmCopyTables: TfrmCopyTables
     Top = 8
   end
   object qrySrc: TFDQuery
-    Connection = destConnection
+    Connection = srcConnection
     Left = 496
     Top = 120
   end

@@ -64,8 +64,7 @@ type
     qryExistlastChanged: TSQLTimeStampField;
     qryUpd: TFDQuery;
     qryAdd: TFDQuery;
-    ConnectionALVESQL01: TFDConnection;
-    ConnectionALVESQL03: TFDConnection;
+    FDConnection1: TFDConnection;
     qryReplicateSrc: TFDQuery;
     qryReplicateSrcTextID: TStringField;
     qryReplicateSrcEnglish: TStringField;
@@ -73,7 +72,6 @@ type
     qryReplicateSrclastChanged: TSQLTimeStampField;
     qryReplicateTarget: TFDQuery;
     qryTruncTarget: TFDQuery;
-    ConnectionALVESQLTest01: TFDConnection;
     qryDelete: TFDQuery;
     cxGrid1: TcxGrid;
     cxGrid1DBTableView1: TcxGridDBTableView;
@@ -82,6 +80,8 @@ type
     cxGrid1DBTableView1Swedish: TcxGridDBColumn;
     cxGrid1DBTableView1lastChanged: TcxGridDBColumn;
     cxGrid1Level1: TcxGridLevel;
+    cbbSelectDBServer: TComboBox;
+    lblSelectDBServer: TLabel;
     procedure edTextIDExit(Sender: TObject);
     procedure edTextIDChange(Sender: TObject);
     procedure edEnglishExit(Sender: TObject);
@@ -98,6 +98,7 @@ type
     procedure acnReplicateTableExecute(Sender: TObject);
     procedure acnDeleteSelectedExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure cbbSelectDBServerChange(Sender: TObject);
   private
     { Private declarations }
     FTextID_Changed: Boolean;
@@ -114,6 +115,8 @@ type
     procedure btnCancelToExit;
     procedure updTextFields;
     function Exist(aTextID: string): Boolean;
+    procedure ReconnectDBServer(const aDBServer: string);
+    procedure setCaption;
 
   public
     { Public declarations }
@@ -244,6 +247,11 @@ begin
   btnExit.Enabled := true;
 end;
 
+procedure TfrmTranslations.cbbSelectDBServerChange(Sender: TObject);
+begin
+  ReconnectDBServer(cbbSelectDBServer.Text);
+end;
+
 procedure TfrmTranslations.cxGrid1DBTableView1FocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
@@ -329,7 +337,25 @@ end;
 
 procedure TfrmTranslations.FormShow(Sender: TObject);
 begin
+  cbbSelectDBServer.ItemIndex := 0;
+  ReconnectDBServer(cbbSelectDBServer.Text);
   tblTextTranslations.Open;
+end;
+
+procedure TfrmTranslations.ReconnectDBServer(const aDBServer: string);
+var
+  ix : integer;
+begin
+  FDConnection1.Close;
+  ix := FDConnection1.Params.IndexOfName('Server');
+  FDConnection1.Params[ix] := 'server='+aDBServer;
+  setCaption;
+  tblTextTranslations.Open;
+end;
+
+procedure TfrmTranslations.setCaption;
+begin
+  Caption := 'FASTREPORT TRANSLATIONS' + '   Server: ' + FDConnection1.Params.Values['Server']+'   Database: ' + FDConnection1.Params.Values['Database'];
 end;
 
 procedure TfrmTranslations.updTextFields;
